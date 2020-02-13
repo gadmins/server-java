@@ -1,0 +1,27 @@
+
+server:
+  port: 9999
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: root
+    password: java
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  devtools:
+    restart:
+      enabled: true
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: enable
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    org.springframework.web: TRACE
