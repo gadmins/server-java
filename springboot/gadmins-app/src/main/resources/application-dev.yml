@@ -1,0 +1,19 @@
+server:
+  port: 9999
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://localhost:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: root
+    password: java
+  devtools:
+    restart:
+      enabled: true
+decorator:
+  datasource:
+    p6spy:
+      log-format: "%(currentTime) | SQL耗时： %(executionTime) ms | 连接信息： %(category)-%(connectionId) | 执行语句： %(sql)"
+logging:
+  level:
+    org.springframework.web: TRACE

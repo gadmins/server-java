@@ -45,7 +45,7 @@ public class CodeGen {
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
         strategy.setSuperEntityClass("com.itfenbao.gadmins.common.entity.BaseEntity");
-        strategy.setSuperEntityColumns("id");
+        strategy.setSuperEntityColumns("id", "created_by", "updated_by", "created_at", "updated_at", "enable");
 //        strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(tablePrefix);
 //        strategy.setNameConvert(new INameConvert() {

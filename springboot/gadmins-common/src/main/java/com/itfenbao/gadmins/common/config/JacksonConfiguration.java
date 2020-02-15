@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.config;
+package com.itfenbao.gadmins.common.config;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;

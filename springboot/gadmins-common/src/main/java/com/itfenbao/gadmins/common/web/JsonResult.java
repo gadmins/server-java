@@ -1,15 +1,15 @@
 package com.itfenbao.gadmins.common.web;
 
 public class JsonResult<T> {
-    private String code;
+    private Integer code;
     private String msg;
     private T data;
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
@@ -75,6 +75,26 @@ public class JsonResult<T> {
         return ret;
     }
 
+    public static <T> JsonResult<T> paramsError() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.PARAMETER_ERROR.getCode());
+        ret.setMsg(JsonReturnCode.PARAMETER_ERROR.getDesc());
+        return ret;
+    }
+
+    public static <T> JsonResult<T> paramsErrorMessage(String msg) {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.PARAMETER_ERROR.getCode());
+        ret.setMsg(msg);
+        return ret;
+    }
+
+    public static <T> JsonResult<T> http404() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.NOT_FOUND.getCode());
+        ret.setMsg(JsonReturnCode.NOT_FOUND.getDesc());
+        return ret;
+    }
     public static <T> JsonResult<T> http404(T data) {
         JsonResult<T> ret = new JsonResult<T>();
         ret.setCode(JsonReturnCode.NOT_FOUND.getCode());
@@ -83,11 +103,24 @@ public class JsonResult<T> {
         return ret;
     }
 
+    public static <T> JsonResult<T> http403() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.ACCESS_ERROR.getCode());
+        ret.setMsg(JsonReturnCode.ACCESS_ERROR.getDesc());
+        return ret;
+    }
     public static <T> JsonResult<T> http403(T data) {
         JsonResult<T> ret = new JsonResult<T>();
         ret.setCode(JsonReturnCode.ACCESS_ERROR.getCode());
         ret.setMsg(JsonReturnCode.ACCESS_ERROR.getDesc());
         ret.setData(data);
+        return ret;
+    }
+
+    public static <T> JsonResult<T> noLogin() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.NOT_LOGIN.getCode());
+        ret.setMsg(JsonReturnCode.NOT_LOGIN.getDesc());
         return ret;
     }
 }

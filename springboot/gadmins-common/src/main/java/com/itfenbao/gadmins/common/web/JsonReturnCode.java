@@ -1,24 +1,25 @@
 package com.itfenbao.gadmins.common.web;
 
 public enum JsonReturnCode {
-    NOT_LOGIN("401", "未登录"),
-    SUCCESS("200", "成功"),
-    FAIL("500", "内部失败"),
-    ACCESS_ERROR("403", "禁止访问"),
-    NOT_FOUND("404", "页面未发现");
-    private String code;
+    PARAMETER_ERROR(400, "参数错误"),
+    NOT_LOGIN(401, "未登录"),
+    SUCCESS(200, "成功"),
+    FAIL(500, "内部失败"),
+    ACCESS_ERROR(403, "禁止访问"),
+    NOT_FOUND(404, "未发现");
+    private Integer code;
     private String desc;
 
-    JsonReturnCode(String code, String desc) {
+    JsonReturnCode(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 

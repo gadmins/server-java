@@ -17,6 +17,8 @@
 
     <properties>
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
+        <p6spy.version>1.6.1</p6spy.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -25,6 +27,16 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.gavlyukovskiy</groupId>
+                <artifactId>p6spy-spring-boot-starter</artifactId>
+                <version>${p6spy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

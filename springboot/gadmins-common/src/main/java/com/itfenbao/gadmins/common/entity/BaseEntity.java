@@ -43,8 +43,56 @@ public class BaseEntity implements Serializable {
     protected LocalDateTime updatedAt;
 
     /**
-     * 逻辑删除
+     * 是否启用/逻辑删除
      */
     @TableLogic
     protected Boolean enable;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Integer createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Integer getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Integer updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
+    }
 }
