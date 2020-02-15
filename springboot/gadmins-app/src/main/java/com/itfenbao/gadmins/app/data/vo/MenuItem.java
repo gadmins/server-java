@@ -13,11 +13,12 @@ public class MenuItem {
     private Integer parentId;
 
     private String code;
-    private String title;
+    private Integer funcId;
+    private String name;
     private String icon;
     private String path;
-    private List<MenuItem> authBtns;
-    private List<MenuItem> menus;
+    private List<MenuItem> funcs;
+    private List<MenuItem> children;
 
     @JsonIgnore
     public boolean isRoot() {

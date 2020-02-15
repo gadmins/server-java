@@ -1,7 +1,7 @@
 package com.itfenbao.gadmins.app.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.itfenbao.gadmins.common.entity.BaseEntity;
+import com.itfenbao.gadmins.core.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-02-14
+ * @since 2020-02-15
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -38,12 +38,12 @@ public class FunctionConfig extends BaseEntity {
     private String apiMethod;
 
     /**
-     * 表单schema
+     * 通用schema
      */
-    private String formSchema;
+    private String commonSchema;
 
     /**
-     * 查询form
+     * 查询schema
      */
     private String searchSchema;
 

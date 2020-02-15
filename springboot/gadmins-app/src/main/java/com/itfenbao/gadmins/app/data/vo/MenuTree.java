@@ -31,7 +31,7 @@ public class MenuTree {
             }
         }
         if (!CollectionUtils.isEmpty(chilMenus)) {
-            pNode.setMenus(chilMenus);
+            pNode.setChildren(chilMenus);
         }
         return pNode;
     }

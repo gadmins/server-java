@@ -8,7 +8,7 @@ import com.itfenbao.gadmins.app.entity.Menu;
 import com.itfenbao.gadmins.app.mapper.MenuMapper;
 import com.itfenbao.gadmins.app.service.IFunctionService;
 import com.itfenbao.gadmins.app.service.IMenuService;
-import com.itfenbao.gadmins.common.AppConfig;
+import com.itfenbao.gadmins.core.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -37,22 +37,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
             MenuItem menuItem = new MenuItem();
             menuItem.setId(menu.getId());
+            menuItem.setFuncId(menu.getFunId());
             menuItem.setParentId(menu.getPId());
             menuItem.setCode(menu.getMCode());
-            menuItem.setTitle(menu.getTxt());
+            menuItem.setName(menu.getTxt());
             menuItem.setIcon(menu.getIcon());
             menuItem.setPath(menu.getFrontUrl());
             if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFunId() != null) {
                 List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFunId()).list();
-                List<MenuItem> authBtns = functions.stream().map(func -> {
+                List<MenuItem> funcs = functions.stream().map(func -> {
                     MenuItem authBtn = new MenuItem();
+                    authBtn.setFuncId(func.getId());
                     authBtn.setCode(func.getFunCode());
-                    authBtn.setTitle(func.getTitle());
+                    authBtn.setName(func.getTitle());
                     authBtn.setPath(func.getFrontUrl());
                     return authBtn;
                 }).collect(Collectors.toList());
-                if (!CollectionUtils.isEmpty(authBtns)) {
-                    menuItem.setAuthBtns(authBtns);
+                if (!CollectionUtils.isEmpty(funcs)) {
+                    menuItem.setFuncs(funcs);
                 }
             }
             return menuItem;

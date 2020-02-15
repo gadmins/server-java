@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.45)
 # Database: gadmins
-# Generation Time: 2020-02-14 09:53:29 +0000
+# Generation Time: 2020-02-15 04:09:28 +0000
 # ************************************************************
 
 
@@ -75,8 +75,8 @@ CREATE TABLE `sys_admin_function_config` (
   `fun_id` int(11) NOT NULL COMMENT '功能ID',
   `api_url` varchar(255) DEFAULT NULL COMMENT '功能接口api',
   `api_method` enum('GET','POST','PUT','DELETE') DEFAULT 'GET' COMMENT '请求方法',
-  `form_schema` longtext COMMENT '表单schema',
-  `search_schema` longtext COMMENT '查询form',
+  `common_schema` longtext COMMENT '通用schema',
+  `search_schema` longtext COMMENT '查询schema',
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
