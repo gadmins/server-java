@@ -1,7 +1,10 @@
 package com.itfenbao.gadmins.app.service.impl;
 
+import cn.hutool.core.map.CamelCaseLinkedMap;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.app.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.app.data.vo.MenuItem;
+import com.itfenbao.gadmins.app.data.vo.MenuTree;
 import com.itfenbao.gadmins.app.data.vo.MenuVO;
 import com.itfenbao.gadmins.app.entity.Function;
 import com.itfenbao.gadmins.app.entity.Menu;
@@ -15,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -32,15 +36,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     IFunctionService functionService;
 
     @Override
-    public List<MenuItem> getAllMenu() {
+    public CoreMenuData getCoreMenuData() {
         List<MenuVO> allMenu = this.baseMapper.getAllMenu();
-        return allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
+        Map<String, String> defMenuTxtMap = new CamelCaseLinkedMap();
+        List<MenuItem> menuItems = allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
+            defMenuTxtMap.put(menu.getMCode(), menu.getTxt());
             MenuItem menuItem = new MenuItem();
             menuItem.setId(menu.getId());
             menuItem.setFuncId(menu.getFunId());
             menuItem.setParentId(menu.getPId());
-            menuItem.setCode(menu.getMCode());
-            menuItem.setName(menu.getTxt());
+            menuItem.setName(menu.getMCode());
             menuItem.setIcon(menu.getIcon());
             menuItem.setPath(menu.getFrontUrl());
             if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFunId() != null) {
@@ -48,7 +53,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
                 List<MenuItem> funcs = functions.stream().map(func -> {
                     MenuItem authBtn = new MenuItem();
                     authBtn.setFuncId(func.getId());
-                    authBtn.setCode(func.getFunCode());
                     authBtn.setName(func.getTitle());
                     authBtn.setPath(func.getFrontUrl());
                     return authBtn;
@@ -59,5 +63,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             }
             return menuItem;
         }).collect(Collectors.toList());
+        return new CoreMenuData(new MenuTree(menuItems).builTree(), defMenuTxtMap);
     }
 }

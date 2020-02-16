@@ -1,10 +1,13 @@
 package com.itfenbao.gadmins.app.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.app.entity.Role;
 import com.itfenbao.gadmins.app.mapper.RoleMapper;
 import com.itfenbao.gadmins.app.service.IRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
+    @Override
+    public List<Role> getListNotSuperAdmin() {
+        return this.list(Wrappers.<Role>lambdaQuery().eq(Role::getSuperAdmin, 0));
+    }
 }

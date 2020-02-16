@@ -9,40 +9,30 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 系统角色表
+ * 系统用户表
  * </p>
  *
  * @author itfenbao
- * @since 2020-02-15
+ * @since 2020-02-16
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("sys_admin_role")
-public class Role extends BaseEntity {
+@TableName("sys_admin_accout")
+public class Accout extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 角色编码
-     */
-    private String rCode;
-
-    /**
-     * 角色名
+     * 用户名
      */
     private String name;
 
     /**
-     * 描述
-     */
-    private String rDesc;
-
-    /**
-     * 是否超管
+     * 密码
      */
     @JsonIgnore
-    private Boolean superAdmin;
+    private String password;
 
 
 }

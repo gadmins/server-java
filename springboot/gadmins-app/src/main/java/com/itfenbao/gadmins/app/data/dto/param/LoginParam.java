@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.app.data.dto;
+package com.itfenbao.gadmins.app.data.dto.param;
 
 import lombok.Data;
 

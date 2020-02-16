@@ -1,10 +1,8 @@
 package com.itfenbao.gadmins.app.service;
 
-import com.itfenbao.gadmins.app.data.vo.MenuItem;
+import com.itfenbao.gadmins.app.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.app.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
  * <p>
@@ -16,5 +14,9 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
 
-    List<MenuItem> getAllMenu();
+    /**
+     * 获取前端核心菜单
+     * @return
+     */
+    CoreMenuData getCoreMenuData();
 }

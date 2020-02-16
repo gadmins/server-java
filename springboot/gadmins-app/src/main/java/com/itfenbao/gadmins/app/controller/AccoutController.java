@@ -1,12 +1,18 @@
 package com.itfenbao.gadmins.app.controller;
 
 
-import com.itfenbao.gadmins.app.data.dto.LoginParam;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.itfenbao.gadmins.app.data.dto.param.LoginParam;
+import com.itfenbao.gadmins.app.data.dto.query.AccoutQuery;
+import com.itfenbao.gadmins.app.data.vo.AccoutVO;
+import com.itfenbao.gadmins.app.entity.Accout;
 import com.itfenbao.gadmins.app.entity.User;
-import com.itfenbao.gadmins.app.service.IUserService;
+import com.itfenbao.gadmins.app.service.IAccoutService;
+import com.itfenbao.gadmins.app.service.IMenuService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.web.JsonResult;
+import com.itfenbao.gadmins.core.utils.PageList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -19,17 +25,31 @@ import org.springframework.web.bind.annotation.*;
  * </p>
  *
  * @author itfenbao
- * @since 2020-02-13
+ * @since 2020-02-16
  */
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.ADMIN_USER)
-public class UserController {
+@RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUT)
+public class AccoutController {
 
     @Autowired
-    IUserService userService;
+    IAccoutService accoutService;
 
-    @PostMapping("/login/account")
+    @Autowired
+    IMenuService menuService;
+
+    @GetMapping()
+    public JsonResult list(AccoutQuery query) {
+        Page<AccoutVO> page = accoutService.getListByPage(query);
+        return JsonResult.success(PageList.get(page));
+    }
+
+    @GetMapping("/menu")
+    public JsonResult menu() {
+        return JsonResult.success(menuService.getCoreMenuData());
+    }
+
+    @PostMapping("/login")
     @PassToken
     public JsonResult login(@RequestBody @Validated LoginParam login) {
         if (LoginParam.LOGIN_TYPE_ACCOUNT.equals(login.getType().toLowerCase())) {
@@ -39,8 +59,8 @@ public class UserController {
             if (StringUtils.isEmpty(login.getPassword())) {
                 return JsonResult.paramsErrorMessage("密码不能为空");
             }
-            User user = this.userService.findByNameAndPassword(login.getUserName(), login.getPassword());
-            return user != null ? JsonResult.success("登录成功") : JsonResult.paramsErrorMessage("用户名和密码错误");
+            Accout accout = this.accoutService.findByNameAndPassword(login.getUserName(), login.getPassword());
+            return accout != null ? JsonResult.success("登录成功") : JsonResult.paramsErrorMessage("用户名和密码错误");
         } else if (LoginParam.LOGIN_TYPE_MOBILE.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getMobile())) {
                 return JsonResult.paramsErrorMessage("手机号不能为空");
@@ -48,7 +68,7 @@ public class UserController {
             if (StringUtils.isEmpty(login.getCaptcha())) {
                 return JsonResult.paramsErrorMessage("验证码不能为空");
             }
-            JsonResult.paramsErrorMessage("暂未实现手机号登录");
+            return JsonResult.paramsErrorMessage("暂未实现手机号登录");
         }
         return JsonResult.paramsErrorMessage("登录失败");
     }
@@ -62,7 +82,7 @@ public class UserController {
         return JsonResult.success("发送成功", "1234");
     }
 
-    @GetMapping("/currentUser")
+    @GetMapping("/currentAccout")
     public JsonResult currentUser() {
         User user = new User();
         user.setName("admin");

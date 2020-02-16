@@ -20,6 +20,7 @@ public final class AppConfig {
      */
     public static final class AdminRoute {
         public static final String ADMIN = "/adminapi";
+        public static final String ADMIN_ACCOUT = ADMIN + "/accout";
         public static final String ADMIN_FUNCTION = ADMIN + "/function";
         public static final String ADMIN_FUNCTION_CONFIG = ADMIN + "/functionconfig";
         public static final String ADMIN_LOG = ADMIN + "/log";
@@ -29,7 +30,6 @@ public final class AppConfig {
         public static final String ADMIN_RL_USER_ROLE = ADMIN + "/rluserrole";
         public static final String ADMIN_RL_ROLE = ADMIN + "/rlrole";
         public static final String ADMIN_ROLE = ADMIN + "/role";
-        public static final String ADMIN_USER = ADMIN + "/user";
     }
 
     /**

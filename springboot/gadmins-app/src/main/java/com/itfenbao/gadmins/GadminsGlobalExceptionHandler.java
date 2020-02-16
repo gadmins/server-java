@@ -3,6 +3,7 @@ package com.itfenbao.gadmins;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,6 +19,7 @@ public class GadminsGlobalExceptionHandler {
 
     /**
      * 异常处理
+     *
      * @param request
      * @param e
      * @return
@@ -28,6 +30,8 @@ public class GadminsGlobalExceptionHandler {
         log.error("Gadmins Exception", e);
         if (e instanceof NotLoginException) {
             return JsonResult.noLogin();
+        } else if (e instanceof BindException) {
+            return JsonResult.paramsErrorMessage("参数绑定异常");
         } else if (e instanceof MethodArgumentNotValidException) {
             String msg = ((MethodArgumentNotValidException) e)
                     .getBindingResult()

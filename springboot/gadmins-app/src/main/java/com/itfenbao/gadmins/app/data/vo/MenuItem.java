@@ -12,7 +12,6 @@ public class MenuItem {
     @JsonIgnore
     private Integer parentId;
 
-    private String code;
     private Integer funcId;
     private String name;
     private String icon;

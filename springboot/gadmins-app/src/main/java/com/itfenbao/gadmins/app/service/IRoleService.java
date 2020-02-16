@@ -3,6 +3,8 @@ package com.itfenbao.gadmins.app.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.app.entity.Role;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统角色表 服务类
@@ -13,4 +15,5 @@ import com.itfenbao.gadmins.app.entity.Role;
  */
 public interface IRoleService extends IService<Role> {
 
+    List<Role> getListNotSuperAdmin();
 }
