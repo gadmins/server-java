@@ -6,10 +6,28 @@ import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
+/**
+ * 代码生成器
+ * @author itfenbao
+ */
 public class CodeGen {
-    private final static String moduleId = "gadmins-app";
-    private final static String parent = "com.itfenbao.gadmins.app";
-    private final static String tablePrefix = "sys_admin_";
+    /**
+     * 决定生成代码路径
+     */
+    private final static String MODULE_ID = "gadmins-module-admin";
+    /**
+     * 包名
+     */
+    private final static String PARENT = "com.itfenbao.gadmins";
+    /**
+     * 模块名
+     */
+    private final static String MODULE_NAME = "admin";
+    /**
+     * 表前缀
+     */
+    private final static String TABLE_PREFIX = "sys_admin_";
+
     private final static String db = "gadmins";
     private final static String username = "root";
     private final static String password = "java";
@@ -19,9 +37,10 @@ public class CodeGen {
         AutoGenerator mpg = new AutoGenerator();
         // 全局配置
         GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.setOutputDir(System.getProperty("user.dir") + "/" + moduleId + "/src/main/java");
+        globalConfig.setOutputDir(System.getProperty("user.dir") + "/" + MODULE_ID + "/src/main/java");
         globalConfig.setAuthor("itfenbao");
         globalConfig.setOpen(false);
+        globalConfig.setSwagger2(true);
         mpg.setGlobalConfig(globalConfig);
 
         // 数据源配置
@@ -34,8 +53,8 @@ public class CodeGen {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-//        pc.setModuleName("app");
-        pc.setParent(parent);
+        pc.setParent(PARENT);
+        pc.setModuleName(MODULE_NAME);
         mpg.setPackageInfo(pc);
 
         // 策略配置
@@ -44,22 +63,9 @@ public class CodeGen {
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
-        strategy.setSuperEntityClass("com.itfenbao.gadmins.common.core.BaseEntity");
+        strategy.setSuperEntityClass("com.itfenbao.gadmins.core.entity.BaseEntity");
         strategy.setSuperEntityColumns("id", "created_by", "updated_by", "created_at", "updated_at", "enable");
-//        strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(tablePrefix);
-//        strategy.setNameConvert(new INameConvert() {
-//            @Override
-//            public String entityNameConvert(TableInfo tableInfo) {
-//                return null;
-//            }
-//
-//            @Override
-//            public String propertyNameConvert(TableField field) {
-//                return null;
-//            }
-//        });
-
+        strategy.setTablePrefix(TABLE_PREFIX);
         mpg.setStrategy(strategy);
 
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
