@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itfenbao.gadmins.admin.mapper.AccoutMapper">
+
+    <select id="getListByPage" resultType="com.itfenbao.gadmins.admin.data.vo.AccoutVO">
+        select _accout.*, _role.id as role_id from sys_admin_accout as _accout left join `sys_admin_rl_user_role`
+        as _rl_user_role on _accout.id = _rl_user_role.user_id
+        left join `sys_admin_role` as _role on _rl_user_role.role_id = _role.id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+</mapper>

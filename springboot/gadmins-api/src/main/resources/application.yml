@@ -1,0 +1,26 @@
+server:
+  port: 9999
+spring:
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
+mybatis-plus:
+  mapper-locations:
+    - classpath*:/mapper/**/*Mapper.xml
+    - classpath*:com/itfenbao/gadmins/**/*Mapper.xml
+  configuration:
+    auto-mapping-behavior: FULL
+  global-config:
+    db-config:
+      logic-delete-field: enable
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+api-access:
+  admin:
+    open: false
+    secret: test
+  app:
+    open: false
+    secret: fff
