@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.core.web;
+package com.itfenbao.gadmins.app;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

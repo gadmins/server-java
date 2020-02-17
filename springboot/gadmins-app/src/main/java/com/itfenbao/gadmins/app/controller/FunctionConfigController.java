@@ -9,6 +9,7 @@ import com.itfenbao.gadmins.app.entity.FunctionConfig;
 import com.itfenbao.gadmins.app.service.IFunctionConfigService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_FUNCTION_CONFIG)
+@Api(tags = "FunctionConfig")
 public class FunctionConfigController {
 
     @Autowired

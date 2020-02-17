@@ -3,6 +3,7 @@ package com.itfenbao.gadmins.core.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,32 +21,38 @@ public class BaseEntity implements Serializable {
      * 主键ID
      */
     @TableId(value = "id", type = IdType.AUTO)
+    @ApiModelProperty("主键ID")
     protected Integer id;
 
     /**
      * 创建人
      */
+    @ApiModelProperty("创建人")
     protected Integer createdBy;
 
     /**
      * 更新人
      */
+    @ApiModelProperty("更新人")
     protected Integer updatedBy;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty("创建时间")
     protected LocalDateTime createdAt;
 
     /**
      * 更新时间
      */
+    @ApiModelProperty("更新时间")
     protected LocalDateTime updatedAt;
 
     /**
      * 是否启用/逻辑删除
      */
     @TableLogic
+    @ApiModelProperty("是否启用/逻辑删除")
     protected Boolean enable;
 
     public Integer getId() {

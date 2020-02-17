@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.app.data.dto.param.LoginParam;
 import com.itfenbao.gadmins.app.data.dto.query.AccoutQuery;
 import com.itfenbao.gadmins.app.data.vo.AccoutVO;
+import com.itfenbao.gadmins.app.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.app.entity.Accout;
 import com.itfenbao.gadmins.app.entity.User;
 import com.itfenbao.gadmins.app.service.IAccoutService;
@@ -12,7 +13,8 @@ import com.itfenbao.gadmins.app.service.IMenuService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.web.JsonResult;
-import com.itfenbao.gadmins.core.utils.PageList;
+import com.itfenbao.gadmins.core.web.PageData;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUT)
+@Api(tags = "Accout")
 public class AccoutController {
 
     @Autowired
@@ -39,13 +42,13 @@ public class AccoutController {
     IMenuService menuService;
 
     @GetMapping()
-    public JsonResult list(AccoutQuery query) {
+    public JsonResult<PageData<AccoutVO>> list(AccoutQuery query) {
         Page<AccoutVO> page = accoutService.getListByPage(query);
-        return JsonResult.success(PageList.get(page));
+        return JsonResult.success(PageData.get(page));
     }
 
     @GetMapping("/menu")
-    public JsonResult menu() {
+    public JsonResult<CoreMenuData> menu() {
         return JsonResult.success(menuService.getCoreMenuData());
     }
 

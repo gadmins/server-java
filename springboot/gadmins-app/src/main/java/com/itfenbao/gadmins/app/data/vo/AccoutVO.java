@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class AccoutVO extends Accout {
-    private String roleType;
+    private long roleId = -1;
 }

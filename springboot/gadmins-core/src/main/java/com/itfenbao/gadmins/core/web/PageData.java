@@ -1,16 +1,21 @@
-package com.itfenbao.gadmins.core.utils;
+package com.itfenbao.gadmins.core.web;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-public class PageList<T> {
+public class PageData<T> {
+    @ApiModelProperty("分页数据")
     private List<T> data;
+    @ApiModelProperty(value = "分页页码", example = "1")
     private long current = 1;
+    @ApiModelProperty(value = "分页大小", example = "10")
     private long pageSize = 10;
+    @ApiModelProperty("总数")
     private long total = 0;
 
-    private PageList() {
+    private PageData() {
     }
 
     public List<T> getData() {
@@ -45,8 +50,8 @@ public class PageList<T> {
         this.total = total;
     }
 
-    public final static <E> PageList<E> get(IPage<E> page) {
-        PageList<E> pageList = new PageList<E>();
+    public final static <E> PageData<E> get(IPage<E> page) {
+        PageData<E> pageList = new PageData<E>();
         pageList.setCurrent(page.getCurrent());
         pageList.setPageSize(page.getSize());
         pageList.setTotal(page.getTotal());

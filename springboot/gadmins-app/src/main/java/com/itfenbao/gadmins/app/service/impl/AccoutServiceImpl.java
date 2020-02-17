@@ -43,6 +43,8 @@ public class AccoutServiceImpl extends ServiceImpl<AccoutMapper, Accout> impleme
         if (query.getRoleId() > -1) {
             wrapper.eq("_role.id", query.getRoleId());
         }
+        // 只查询非管理员账号
+        wrapper.eq("_role.super_admin", 0);
         return this.baseMapper.getListByPage(page, wrapper);
     }
 }
