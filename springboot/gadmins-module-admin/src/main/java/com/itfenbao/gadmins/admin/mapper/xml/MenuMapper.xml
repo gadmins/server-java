@@ -5,7 +5,7 @@
     <select id="getAllMenu" resultType="com.itfenbao.gadmins.admin.data.vo.MenuVO">
         select _menu.*, _func.`front_url` from sys_admin_menu as _menu
         left join sys_admin_function as _func
-        on _menu.`fun_id` = _func.`id`
+        on _menu.`fun_id` = _func.`id` where _menu.enable = 1
     </select>
 
 </mapper>
