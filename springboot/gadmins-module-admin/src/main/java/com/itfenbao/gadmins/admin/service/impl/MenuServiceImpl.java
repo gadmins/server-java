@@ -12,6 +12,7 @@ import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.core.web.vo.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -63,6 +64,35 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             }
             return menuItem;
         }).collect(Collectors.toList());
-        return new CoreMenuData(new MenuTree(menuItems).builTree(), defMenuTxtMap);
+        List<MenuItem> menuTree = new MenuTree(menuItems).builTree();
+        menuTree.stream().forEach(item -> {
+            item.setPath(getPath(item));
+        });
+        return new CoreMenuData(menuTree, defMenuTxtMap);
+    }
+
+    private String getPath(MenuItem item) {
+        if (item.getChildren() == null || item.getChildren().size() == 0) {
+            return item.getPath();
+        } else {
+            return getPath(item.getChildren().get(0));
+        }
+    }
+
+
+    @Override
+    public List<Tree.TreeNode> menuTree() {
+        List<Tree.TreeNode> list = this.list().stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
+            Tree.TreeNode treeNode = new Tree.TreeNode();
+            treeNode.setId(menu.getId());
+            treeNode.setParentId(menu.getPId());
+            treeNode.setType(menu.getType());
+            treeNode.setTitle(menu.getTxt());
+            treeNode.setKey(menu.getMCode());
+            treeNode.setSortNumber(menu.getSortNumber());
+            treeNode.setFunId(menu.getFunId());
+            return treeNode;
+        }).collect(Collectors.toList());
+        return new Tree(list).builTree();
     }
 }
