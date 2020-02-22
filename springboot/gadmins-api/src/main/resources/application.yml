@@ -1,5 +1,9 @@
 server:
   port: 9999
+  undertow:
+    direct-buffers: true
+    io-threads: 4
+    worker-threads: 160
 spring:
   profiles:
     active: dev

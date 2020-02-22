@@ -5,6 +5,7 @@ import com.itfenbao.gadmins.core.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +33,8 @@ public class GadminsGlobalExceptionHandler {
             return JsonResult.noLogin();
         } else if (e instanceof BindException) {
             return JsonResult.paramsErrorMessage("参数绑定异常");
+        } else if (e instanceof HttpRequestMethodNotSupportedException) {
+            return JsonResult.http404Message( ((HttpRequestMethodNotSupportedException) e).getMethod());
         } else if (e instanceof MethodArgumentNotValidException) {
             String msg = ((MethodArgumentNotValidException) e)
                     .getBindingResult()

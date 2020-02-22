@@ -10,6 +10,7 @@ import com.itfenbao.gadmins.admin.entity.Accout;
 import com.itfenbao.gadmins.admin.service.IAccoutService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
@@ -31,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUT)
-@Api(tags = "Accout")
+@Api(tags = "系统账号")
 public class AccoutController {
 
     @Autowired
@@ -40,9 +41,10 @@ public class AccoutController {
     @Autowired
     IMenuService menuService;
 
+    @Function("sys.accout.list")
     @GetMapping()
-    public JsonResult<PageData<AccoutVO>> list(AccoutQuery query) {
-        Page<AccoutVO> page = accoutService.getListByPage(query);
+    public JsonResult<PageData<AccoutVO>> list(final AccoutQuery query) {
+        final Page<AccoutVO> page = accoutService.getListByPage(query);
         return JsonResult.success(PageData.get(page));
     }
 
@@ -53,7 +55,7 @@ public class AccoutController {
 
     @PostMapping("/login")
     @PassToken
-    public JsonResult login(@RequestBody @Validated LoginParam login) {
+    public JsonResult login(@RequestBody @Validated final LoginParam login) {
         if (LoginParam.LOGIN_TYPE_ACCOUNT.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getUserName())) {
                 return JsonResult.paramsErrorMessage("用户名不能为空");
@@ -61,7 +63,7 @@ public class AccoutController {
             if (StringUtils.isEmpty(login.getPassword())) {
                 return JsonResult.paramsErrorMessage("密码不能为空");
             }
-            Accout accout = this.accoutService.findByNameAndPassword(login.getUserName(), login.getPassword());
+            final Accout accout = this.accoutService.findByNameAndPassword(login.getUserName(), login.getPassword());
             return accout != null ? JsonResult.success("登录成功") : JsonResult.paramsErrorMessage("用户名和密码错误");
         } else if (LoginParam.LOGIN_TYPE_MOBILE.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getMobile())) {
@@ -77,7 +79,7 @@ public class AccoutController {
 
     @GetMapping("/login/captcha")
     @PassToken
-    public JsonResult captcha(@RequestParam("mobile") String mobile) {
+    public JsonResult captcha(@RequestParam("mobile") final String mobile) {
         if (StringUtils.isEmpty(mobile)) {
             return JsonResult.paramsErrorMessage("手机号不能为空");
         }
@@ -86,7 +88,7 @@ public class AccoutController {
 
     @GetMapping("/currentAccout")
     public JsonResult<Accout> currentUser() {
-        Accout user = new Accout();
+        final Accout user = new Accout();
         user.setName("admin");
         return JsonResult.success(user);
     }

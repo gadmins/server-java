@@ -16,7 +16,20 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Function {
-    public String value();
+    String value();
 
-    public String group() default "";
+    String group() default "admin";
+
+    String title() default "";
+
+    int sort() default 0;
+
+    String pCode() default "";
+
+    String btnGroup() default "";
+
+    interface BtnGroup {
+        String TOOLBAR = "TOOLBAR";
+        String OP = "OP";
+    }
 }

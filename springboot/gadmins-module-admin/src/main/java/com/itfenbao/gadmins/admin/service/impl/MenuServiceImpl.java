@@ -1,12 +1,13 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
 import cn.hutool.core.map.CamelCaseLinkedMap;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
+import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
-import com.itfenbao.gadmins.admin.data.vo.MenuItem;
-import com.itfenbao.gadmins.admin.data.vo.MenuTree;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
-import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
@@ -40,38 +41,39 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public CoreMenuData getCoreMenuData() {
         List<MenuVO> allMenu = this.baseMapper.getAllMenu();
         Map<String, String> defMenuTxtMap = new CamelCaseLinkedMap();
-        List<MenuItem> menuItems = allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
+        List<SysMenuTreeNode> sysMenuTreeNodes = allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
             defMenuTxtMap.put(menu.getMCode(), menu.getTxt());
-            MenuItem menuItem = new MenuItem();
-            menuItem.setId(menu.getId());
-            menuItem.setFuncId(menu.getFunId());
-            menuItem.setParentId(menu.getPId());
-            menuItem.setName(menu.getMCode());
-            menuItem.setIcon(menu.getIcon());
-            menuItem.setPath(menu.getFrontUrl());
-            if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFunId() != null) {
-                List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFunId()).list();
-                List<MenuItem> funcs = functions.stream().map(func -> {
-                    MenuItem authBtn = new MenuItem();
-                    authBtn.setFuncId(func.getId());
-                    authBtn.setName(func.getTitle());
-                    authBtn.setPath(func.getFrontUrl());
-                    return authBtn;
-                }).collect(Collectors.toList());
-                if (!CollectionUtils.isEmpty(funcs)) {
-                    menuItem.setFuncs(funcs);
-                }
-            }
-            return menuItem;
+            SysMenuTreeNode sysMenuTreeNode = new SysMenuTreeNode();
+            sysMenuTreeNode.setId(menu.getId());
+            sysMenuTreeNode.setFuncId(menu.getFuncId());
+            sysMenuTreeNode.setParentId(menu.getPId());
+            sysMenuTreeNode.setKey(menu.getMCode());
+            sysMenuTreeNode.setName(menu.getMCode());
+            sysMenuTreeNode.setIcon(menu.getIcon());
+            sysMenuTreeNode.setPath(menu.getFrontUrl());
+//            if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFunId() != null) {
+//                List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFunId()).list();
+//                List<MenuItem> funcs = functions.stream().map(func -> {
+//                    MenuItem authBtn = new MenuItem();
+//                    authBtn.setFuncId(func.getId());
+//                    authBtn.setName(func.getTitle());
+//                    authBtn.setPath(func.getFrontUrl());
+//                    return authBtn;
+//                }).collect(Collectors.toList());
+//                if (!CollectionUtils.isEmpty(funcs)) {
+//                    menuItem.setFuncs(funcs);
+//                }
+//            }
+            return sysMenuTreeNode;
         }).collect(Collectors.toList());
-        List<MenuItem> menuTree = new MenuTree(menuItems).builTree();
+        List<SysMenuTreeNode> menuTree = Tree.build(sysMenuTreeNodes);
         menuTree.stream().forEach(item -> {
             item.setPath(getPath(item));
         });
         return new CoreMenuData(menuTree, defMenuTxtMap);
     }
 
-    private String getPath(MenuItem item) {
+    private String getPath(SysMenuTreeNode item) {
         if (item.getChildren() == null || item.getChildren().size() == 0) {
             return item.getPath();
         } else {
@@ -81,18 +83,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
 
     @Override
-    public List<Tree.TreeNode> menuTree() {
-        List<Tree.TreeNode> list = this.list().stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
-            Tree.TreeNode treeNode = new Tree.TreeNode();
-            treeNode.setId(menu.getId());
-            treeNode.setParentId(menu.getPId());
-            treeNode.setType(menu.getType());
-            treeNode.setTitle(menu.getTxt());
-            treeNode.setKey(menu.getMCode());
-            treeNode.setSortNumber(menu.getSortNumber());
-            treeNode.setFunId(menu.getFunId());
-            return treeNode;
-        }).collect(Collectors.toList());
-        return new Tree(list).builTree();
+    public List<MenuTreeNode> menuTree() {
+        return Tree.build(this.baseMapper.getAllMenuTree());
+    }
+
+    @Override
+    public List<MenuTreeNode> notMenuTree(List<Integer> ids) {
+        return Tree.build(this.baseMapper.getAllParentMenuTree());
     }
 }

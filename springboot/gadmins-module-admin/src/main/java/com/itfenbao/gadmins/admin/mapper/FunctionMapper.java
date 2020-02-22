@@ -1,7 +1,10 @@
 package com.itfenbao.gadmins.admin.mapper;
 
+import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface FunctionMapper extends BaseMapper<Function> {
 
+    List<FunctionVO> getListByNullBtnGroup();
 }

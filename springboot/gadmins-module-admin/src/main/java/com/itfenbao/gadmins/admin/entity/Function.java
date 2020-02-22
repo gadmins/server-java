@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-02-17
+ * @since 2020-02-22
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -37,11 +37,20 @@ public class Function extends BaseEntity {
     @ApiModelProperty(value = "功能描述")
     private String funDesc;
 
+    @ApiModelProperty(value = "是否是外链")
+    private Boolean elink;
+
     @ApiModelProperty(value = "前端路由")
     private String frontUrl;
 
     @ApiModelProperty(value = "父级ID")
     private Integer pId;
+
+    @ApiModelProperty(value = "按钮组")
+    private String btnGroup;
+
+    @ApiModelProperty(value = "排序")
+    private Integer sortNumber;
 
 
 }

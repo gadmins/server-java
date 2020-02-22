@@ -1,9 +1,9 @@
 package com.itfenbao.gadmins.admin.service;
 
-import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
-import com.itfenbao.gadmins.admin.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.itfenbao.gadmins.core.web.vo.Tree;
+import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
+import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
+import com.itfenbao.gadmins.admin.entity.Menu;
 
 import java.util.List;
 
@@ -19,13 +19,23 @@ public interface IMenuService extends IService<Menu> {
 
     /**
      * 获取前端核心菜单
+     *
      * @return
      */
     CoreMenuData getCoreMenuData();
 
     /**
-     * 获取 通用Tree组件 所需菜单数据
+     * 获取 通用Tree组件 所有菜单数据
+     *
      * @return
      */
-    List<Tree.TreeNode> menuTree();
+    List<MenuTreeNode> menuTree();
+
+    /**
+     * 获取 通用Tree组件 非菜单数据
+     *
+     * @return
+     * @param ids
+     */
+    List<MenuTreeNode> notMenuTree(List<Integer> ids);
 }

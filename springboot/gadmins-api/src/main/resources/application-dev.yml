@@ -4,7 +4,7 @@ spring:
   profiles: dev
   datasource:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    url: jdbc:p6spy:mysql://localhost:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8
+    url: jdbc:p6spy:mysql://localhost:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: java
   devtools:

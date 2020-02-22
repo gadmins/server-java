@@ -103,6 +103,13 @@ public class JsonResult<T> {
         return ret;
     }
 
+    public static <T> JsonResult<T> http404Message(String msg) {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.NOT_FOUND.getCode());
+        ret.setMsg(msg);
+        return ret;
+    }
+
     public static <T> JsonResult<T> http404(T data) {
         JsonResult<T> ret = new JsonResult<T>();
         ret.setCode(JsonReturnCode.NOT_FOUND.getCode());
