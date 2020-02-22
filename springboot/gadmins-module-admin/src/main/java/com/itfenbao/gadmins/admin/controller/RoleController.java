@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ROLE)
-@Api(tags = "Role")
+@Api(tags = "系统角色")
 public class RoleController {
 
     @Autowired

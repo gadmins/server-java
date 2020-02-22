@@ -1,10 +1,19 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
+import com.itfenbao.gadmins.admin.entity.Function;
+import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.core.web.JsonResult;
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,6 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_FUNCTION)
+@Api(tags = "系统功能点")
 public class FunctionController {
+
+    @Autowired
+    IFunctionService functionService;
+
+    @GetMapping("/list")
+    public JsonResult<List<FunctionVO>> list() {
+        return JsonResult.success(functionService.getListByNullBtnGroup());
+    }
 
 }

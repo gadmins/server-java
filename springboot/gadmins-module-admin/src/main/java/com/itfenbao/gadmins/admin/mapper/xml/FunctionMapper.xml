@@ -2,4 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.itfenbao.gadmins.admin.mapper.FunctionMapper">
 
+    <select id="getListByNullBtnGroup" resultType="com.itfenbao.gadmins.admin.data.vo.FunctionVO">
+        select _func.id, _func.title, _func.fun_desc as `desc`, _func.fun_code as `key` from sys_admin_function as _func
+        where _func.enable = 1 and _func.btn_group is null
+    </select>
 </mapper>

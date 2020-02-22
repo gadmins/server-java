@@ -48,7 +48,7 @@ public class CodeGen {
 
         // 数据源配置
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
-        dataSourceConfig.setUrl("jdbc:mysql://localhost:3306/" + db + "?useUnicode=true&useSSL=false&characterEncoding=utf8");
+        dataSourceConfig.setUrl("jdbc:mysql://localhost:3306/" + db + "?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai");
         dataSourceConfig.setDriverName("com.mysql.cj.jdbc.Driver");
         dataSourceConfig.setUsername(username);
         dataSourceConfig.setPassword(password);

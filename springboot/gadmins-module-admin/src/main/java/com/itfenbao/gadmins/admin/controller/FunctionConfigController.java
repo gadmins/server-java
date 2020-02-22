@@ -30,7 +30,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_FUNCTION_CONFIG)
-@Api(tags = "FunctionConfig")
+@Api(tags = "系统功能点配置")
 public class FunctionConfigController {
 
     @Autowired
