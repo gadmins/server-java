@@ -14,4 +14,7 @@ public class UpdateMenuParam {
     Integer sortNumber;
     Integer parentId;
     String icon;
+    Integer funcId;
+    Boolean elink;
+    String url;
 }

@@ -7,6 +7,8 @@ public class SysMenuTreeNode extends TreeNode<SysMenuTreeNode> {
     private String path;
     private String name;
 
+    private String target;
+
     public Integer getFuncId() {
         return funcId;
     }
@@ -29,5 +31,13 @@ public class SysMenuTreeNode extends TreeNode<SysMenuTreeNode> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 }

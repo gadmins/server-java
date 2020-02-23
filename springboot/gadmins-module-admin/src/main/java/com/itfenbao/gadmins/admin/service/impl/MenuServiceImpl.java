@@ -1,8 +1,6 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
 import cn.hutool.core.map.CamelCaseLinkedMap;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
@@ -12,11 +10,9 @@ import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
-import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.web.vo.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -51,6 +47,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             sysMenuTreeNode.setName(menu.getMCode());
             sysMenuTreeNode.setIcon(menu.getIcon());
             sysMenuTreeNode.setPath(menu.getFrontUrl());
+            if (menu.getElink()) {
+                sysMenuTreeNode.setTarget("_blank");
+            }
 //            if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFunId() != null) {
 //                List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFunId()).list();
 //                List<MenuItem> funcs = functions.stream().map(func -> {

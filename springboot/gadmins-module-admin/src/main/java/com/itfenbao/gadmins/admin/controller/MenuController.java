@@ -6,6 +6,7 @@ import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.UpdateMenuParam;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.entity.Menu;
+import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
@@ -33,6 +34,9 @@ public class MenuController {
     @Autowired
     IMenuService menuService;
 
+    @Autowired
+    IFunctionService functionService;
+
     @GetMapping("/tree")
     @ApiOperation("获取菜单树")
     public JsonResult<List<MenuTreeNode>> menuTree() {
@@ -59,7 +63,16 @@ public class MenuController {
         menu.setMCode(param.getMcode());
         menu.setIcon(param.getIcon());
         menu.setSortNumber(param.getSortNumber());
+        if (param.getFuncId() != null) {
+            menu.setFuncId(param.getFuncId());
+            com.itfenbao.gadmins.admin.entity.Function function = new com.itfenbao.gadmins.admin.entity.Function();
+            function.setId(param.getFuncId());
+            function.setElink(param.getElink());
+            function.setFrontUrl(param.getUrl());
+            functionService.updateById(function);
+        }
         menuService.save(menu);
+
         return JsonResult.success();
     }
 
@@ -76,6 +89,14 @@ public class MenuController {
         menu.setMCode(param.getMcode());
         menu.setIcon(param.getIcon());
         menu.setSortNumber(param.getSortNumber());
+        if (param.getFuncId() != null) {
+            menu.setFuncId(param.getFuncId());
+            com.itfenbao.gadmins.admin.entity.Function function = new com.itfenbao.gadmins.admin.entity.Function();
+            function.setId(param.getFuncId());
+            function.setElink(param.getElink());
+            function.setFrontUrl(param.getUrl());
+            functionService.updateById(function);
+        }
         menuService.updateById(menu);
         return JsonResult.success();
     }
