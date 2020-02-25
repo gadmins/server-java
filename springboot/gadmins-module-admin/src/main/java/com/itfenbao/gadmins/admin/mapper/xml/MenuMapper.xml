@@ -3,20 +3,20 @@
 <mapper namespace="com.itfenbao.gadmins.admin.mapper.MenuMapper">
 
     <select id="getAllMenu" resultType="com.itfenbao.gadmins.admin.data.vo.MenuVO">
-        select _menu.*, _func.`front_url` from sys_admin_menu as _menu
+        select _menu.*, _func.`front_url`, _func.elink from sys_admin_menu as _menu
         left join sys_admin_function as _func
         on _menu.`func_id` = _func.`id` where _menu.enable = 1
     </select>
     <select id="getAllMenuTree" resultType="com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode">
         select _menu.id, _menu.p_id as parentId, _menu.type, _menu.icon, _menu.txt as `title`, _menu.sort_number,
         _menu.func_id,_menu.m_code as `key`,_func.elink, _func.front_url as `url` from sys_admin_menu as _menu left join
-        sys_admin_function as _func on _menu.func_id = _func.id where _menu.enable = 1
+        sys_admin_function as _func on _menu.func_id = _func.id where _menu.enable = 1 order by _menu.sort_number
     </select>
     <select id="getAllParentMenuTree" resultType="com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode">
         select _menu.id, _menu.p_id as parentId, _menu.type, _menu.icon, _menu.txt as `title`, _menu.sort_number,
         _menu.func_id,_menu.m_code as `key`,_func.elink, _func.front_url as `url` from sys_admin_menu as _menu left join
         sys_admin_function as _func on _menu.func_id = _func.id where _menu.enable = 1 and (_menu.type = 'SYS_MENU' or
-        _menu.type = 'NAV_MENU')
+        _menu.type = 'NAV_MENU') order by _menu.sort_number
     </select>
 
 </mapper>

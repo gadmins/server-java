@@ -1,9 +1,7 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
-import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;

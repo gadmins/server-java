@@ -3,6 +3,7 @@ package com.itfenbao.gadmins.admin.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.admin.data.dto.param.role.UpdateRoleParam;
 import com.itfenbao.gadmins.admin.entity.Role;
 import com.itfenbao.gadmins.admin.mapper.RoleMapper;
 import com.itfenbao.gadmins.admin.service.IRoleService;

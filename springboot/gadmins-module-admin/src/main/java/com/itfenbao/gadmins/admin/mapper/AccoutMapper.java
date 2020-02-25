@@ -6,7 +6,10 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.vo.AccoutVO;
 import com.itfenbao.gadmins.admin.entity.Accout;
+import com.itfenbao.gadmins.admin.entity.Role;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -18,4 +21,14 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface AccoutMapper extends BaseMapper<Accout> {
     Page<AccoutVO> getListByPage(Page<AccoutVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
+
+    List<Role> getRoles(Integer userId);
+
+    /**
+     * 真实删除
+     *
+     * @param wrapper
+     * @return
+     */
+    boolean realDelete(@Param(Constants.WRAPPER) Wrapper wrapper);
 }

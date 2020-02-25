@@ -19,14 +19,17 @@ public interface IRoleService extends IService<Role> {
 
     /**
      * 查询非超管所有角色
+     *
      * @return
      */
     List<Role> getAllRoleNotSuperAdmin();
 
     /**
      * 分页查询非超管角色
+     *
      * @param query
      * @return
      */
     Page<Role> getPageListNotSuperAdmin(PageQuery query);
+
 }
