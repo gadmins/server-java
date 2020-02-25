@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.admin.data.dto.param.menu;
+package com.itfenbao.gadmins.admin.data.dto.param.accout;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,8 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AddMenuParam extends UpdateMenuParam {
-    Integer id;
+public class AddAccoutParam extends UpdateAccoutParam {
     @NotNull
-    String type;
+    private String password;
 }

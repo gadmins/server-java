@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.admin.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.data.dto.param.accout.UpdateAccoutParam;
 import com.itfenbao.gadmins.admin.data.dto.query.AccoutQuery;
 import com.itfenbao.gadmins.admin.data.vo.AccoutVO;
 import com.itfenbao.gadmins.admin.entity.Accout;
@@ -32,4 +33,11 @@ public interface IAccoutService extends IService<Accout> {
      * @return
      */
     Page<AccoutVO> getListByPage(AccoutQuery query);
+
+    /**
+     * 更新用户
+     * @param param
+     * @return
+     */
+    void updateAccout(Integer id, UpdateAccoutParam param);
 }

@@ -1,14 +1,19 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.param.LoginParam;
+import com.itfenbao.gadmins.admin.data.dto.param.accout.AddAccoutParam;
+import com.itfenbao.gadmins.admin.data.dto.param.accout.UpdateAccoutParam;
 import com.itfenbao.gadmins.admin.data.dto.query.AccoutQuery;
 import com.itfenbao.gadmins.admin.data.vo.AccoutVO;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.entity.Accout;
+import com.itfenbao.gadmins.admin.entity.RlUserRole;
 import com.itfenbao.gadmins.admin.service.IAccoutService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
+import com.itfenbao.gadmins.admin.service.IRlUserRoleService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.PassToken;
@@ -20,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -39,6 +46,9 @@ public class AccoutController {
     IAccoutService accoutService;
 
     @Autowired
+    IRlUserRoleService userRoleService;
+
+    @Autowired
     IMenuService menuService;
 
     @Function("sys.accout.list")
@@ -46,6 +56,35 @@ public class AccoutController {
     public JsonResult<PageData<AccoutVO>> list(final AccoutQuery query) {
         final Page<AccoutVO> page = accoutService.getListByPage(query);
         return JsonResult.success(PageData.get(page));
+    }
+
+    @PostMapping()
+    public JsonResult create(@RequestBody AddAccoutParam param) {
+        Accout accout = new Accout();
+        accout.setName(param.getName());
+        accout.setPassword(param.getPassword());
+        accoutService.save(accout);
+        if (accout.getId() != null) {
+            param.getRoles().forEach(roleId -> {
+                RlUserRole userRole = new RlUserRole();
+                userRole.setUserId(accout.getId());
+                userRole.setRoleId(roleId);
+                userRoleService.save(userRole);
+            });
+        }
+        return JsonResult.success();
+    }
+
+    @PutMapping("/{id}")
+    public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateAccoutParam param) {
+        accoutService.updateAccout(id, param);
+        return JsonResult.success();
+    }
+
+    @DeleteMapping("/{ids}")
+    public JsonResult deletes(@PathVariable() List<Integer> ids) {
+        accoutService.removeByIds(ids);
+        return JsonResult.success();
     }
 
     @GetMapping("/menu")
