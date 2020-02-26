@@ -26,7 +26,7 @@ public class FunctionConfig extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "功能ID")
-    private Integer funId;
+    private Integer funcId;
 
     @ApiModelProperty(value = "功能接口api")
     private String apiUrl;

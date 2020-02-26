@@ -47,7 +47,7 @@ public class FunctionConfigController {
     @GetMapping("/func_id/{id}")
     public JsonResult getByFuncId(@PathVariable("id") Long id) {
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(FunctionConfig::getFunId, id);
+        queryWrapper.eq(FunctionConfig::getFuncId, id);
         Map rs = functionConfigService.getMap(queryWrapper);
         try {
             convertToMap(rs, "common_schema", "search_schema");

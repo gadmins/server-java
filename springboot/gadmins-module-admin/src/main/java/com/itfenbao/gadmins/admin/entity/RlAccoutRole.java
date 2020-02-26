@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 系统用户角色关联表
+ * 系统账号角色关联表
  * </p>
  *
  * @author itfenbao
@@ -19,9 +19,9 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("sys_admin_rl_user_role")
-@ApiModel(value="RlUserRole对象", description="系统用户角色关联表")
-public class RlUserRole extends BaseEntity {
+@TableName("sys_admin_rl_accout_role")
+@ApiModel(value="RlAccoutRole对象", description="系统账号角色关联表")
+public class RlAccoutRole extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

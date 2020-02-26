@@ -9,10 +9,10 @@ import com.itfenbao.gadmins.admin.data.dto.param.accout.UpdateAccoutParam;
 import com.itfenbao.gadmins.admin.data.dto.query.AccoutQuery;
 import com.itfenbao.gadmins.admin.data.vo.AccoutVO;
 import com.itfenbao.gadmins.admin.entity.Accout;
-import com.itfenbao.gadmins.admin.entity.RlUserRole;
+import com.itfenbao.gadmins.admin.entity.RlAccoutRole;
 import com.itfenbao.gadmins.admin.mapper.AccoutMapper;
 import com.itfenbao.gadmins.admin.service.IAccoutService;
-import com.itfenbao.gadmins.admin.service.IRlUserRoleService;
+import com.itfenbao.gadmins.admin.service.IRlAccoutRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * <p>
- * 系统用户表 服务实现类
+ * 系统账号表 服务实现类
  * </p>
  *
  * @author itfenbao
@@ -32,7 +32,7 @@ import java.util.List;
 public class AccoutServiceImpl extends ServiceImpl<AccoutMapper, Accout> implements IAccoutService {
 
     @Autowired
-    IRlUserRoleService userRoleService;
+    IRlAccoutRoleService accoutRoleService;
 
     @Override
     public Accout findByNameAndPassword(String userName, String password) {
@@ -66,15 +66,15 @@ public class AccoutServiceImpl extends ServiceImpl<AccoutMapper, Accout> impleme
         accout.setName(param.getName());
         this.updateById(accout);
 
-        // 更新用户角色
-        this.baseMapper.realDelete(Wrappers.<RlUserRole>lambdaQuery().eq(RlUserRole::getUserId, id));
-        List<RlUserRole> roles = new ArrayList<>();
+        // 更新账号角色
+        this.baseMapper.realDelete(Wrappers.<RlAccoutRole>lambdaQuery().eq(RlAccoutRole::getUserId, id));
+        List<RlAccoutRole> roles = new ArrayList<>();
         param.getRoles().forEach(roleId -> {
-            RlUserRole userRole = new RlUserRole();
+            RlAccoutRole userRole = new RlAccoutRole();
             userRole.setUserId(id);
             userRole.setRoleId(roleId);
             roles.add(userRole);
         });
-        userRoleService.saveBatch(roles);
+        accoutRoleService.saveBatch(roles);
     }
 }

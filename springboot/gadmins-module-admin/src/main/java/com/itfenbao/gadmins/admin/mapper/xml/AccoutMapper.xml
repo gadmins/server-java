@@ -7,24 +7,24 @@
         <collection property="roles" column="id" select="getRoles"/>
     </resultMap>
     <delete id="realDelete">
-        delete from sys_admin_rl_user_role
+        delete from sys_admin_rl_accout_role
         <if test="ew != null">
             ${ew.customSqlSegment}
         </if>
     </delete>
 
     <select id="getRoles" parameterType="integer" resultType="com.itfenbao.gadmins.admin.entity.Role">
-        select _role.id, _role.name from sys_admin_rl_user_role as _user_role left join sys_admin_role as _role on
+        select _role.id, _role.name from sys_admin_rl_accout_role as _accout_role left join sys_admin_role as _role on
         _role.id =
-        _user_role.role_id where _user_role.user_id = #{userId}
+        _accout_role.role_id where _accout_role.user_id = #{userId}
     </select>
 
     <select id="getListByPage" resultMap="accoutVO">
         select _accout.id, _accout.name, _accout.created_by, _accout.updated_by, _accout.created_at, _accout.updated_at,
         _accout.enable from sys_admin_accout as
-        _accout left join `sys_admin_rl_user_role`
-        as _rl_user_role on _accout.id = _rl_user_role.user_id
-        left join `sys_admin_role` as _role on _rl_user_role.role_id = _role.id
+        _accout left join `sys_admin_rl_accout_role`
+        as _rl_accout_role on _accout.id = _rl_accout_role.user_id
+        left join `sys_admin_role` as _role on _rl_accout_role.role_id = _role.id
         <if test="ew != null">
             ${ew.customSqlSegment}
         </if>

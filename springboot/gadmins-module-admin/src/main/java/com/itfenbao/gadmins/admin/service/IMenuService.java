@@ -32,10 +32,16 @@ public interface IMenuService extends IService<Menu> {
     List<MenuTreeNode> menuTree();
 
     /**
-     * 获取 通用Tree组件 非菜单数据
+     * 获取 通用Tree组件 所有菜单数据即按钮
+     * @return
+     */
+    List<MenuTreeNode> menuTreeAndFuncs();
+
+    /**
+     * 获取 通用Tree组件 非菜单数据（系统菜单+导航菜单）
      *
      * @return
-     * @param ids
+     * @param ids 需要过滤的ids
      */
     List<MenuTreeNode> notMenuTree(List<Integer> ids);
 }

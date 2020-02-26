@@ -4,6 +4,7 @@ import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     List<MenuTreeNode> getAllMenuTree();
 
-    List<MenuTreeNode> getAllParentMenuTree();
+    List<MenuTreeNode> getAllParentMenuTree(@Param("ids") List<Integer> ids);
 }

@@ -43,6 +43,12 @@ public class MenuController {
         return JsonResult.success(menuService.menuTree());
     }
 
+    @GetMapping("/tree/func")
+    @ApiOperation("获取菜单树及按钮")
+    public JsonResult<List<MenuTreeNode>> menuTreeAndFunc() {
+        return JsonResult.success(menuService.menuTreeAndFuncs());
+    }
+
     @GetMapping("/tree/parent")
     @ApiOperation("获取非菜单菜单树")
     public JsonResult<List<MenuTreeNode>> notMenuTree(@RequestParam(value = "filterIds", required = false) List<Integer> ids) {
