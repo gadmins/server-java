@@ -1,7 +1,6 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.param.LoginParam;
 import com.itfenbao.gadmins.admin.data.dto.param.accout.AddAccoutParam;
@@ -10,10 +9,10 @@ import com.itfenbao.gadmins.admin.data.dto.query.AccoutQuery;
 import com.itfenbao.gadmins.admin.data.vo.AccoutVO;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.entity.Accout;
-import com.itfenbao.gadmins.admin.entity.RlUserRole;
+import com.itfenbao.gadmins.admin.entity.RlAccoutRole;
 import com.itfenbao.gadmins.admin.service.IAccoutService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
-import com.itfenbao.gadmins.admin.service.IRlUserRoleService;
+import com.itfenbao.gadmins.admin.service.IRlAccoutRoleService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.PassToken;
@@ -30,7 +29,7 @@ import java.util.List;
 
 /**
  * <p>
- * 系统用户表 前端控制器
+ * 系统账号表 前端控制器
  * </p>
  *
  * @author itfenbao
@@ -46,7 +45,7 @@ public class AccoutController {
     IAccoutService accoutService;
 
     @Autowired
-    IRlUserRoleService userRoleService;
+    IRlAccoutRoleService userRoleService;
 
     @Autowired
     IMenuService menuService;
@@ -66,7 +65,7 @@ public class AccoutController {
         accoutService.save(accout);
         if (accout.getId() != null) {
             param.getRoles().forEach(roleId -> {
-                RlUserRole userRole = new RlUserRole();
+                RlAccoutRole userRole = new RlAccoutRole();
                 userRole.setUserId(accout.getId());
                 userRole.setRoleId(roleId);
                 userRoleService.save(userRole);

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * <p>
- * 系统用户表 Mapper 接口
+ * 系统账号表 Mapper 接口
  * </p>
  *
  * @author itfenbao

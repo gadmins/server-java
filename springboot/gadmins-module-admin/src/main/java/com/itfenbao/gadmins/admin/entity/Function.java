@@ -26,16 +26,22 @@ public class Function extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "功能组")
-    private String funGroup;
+    private String funcGroup;
 
     @ApiModelProperty(value = "功能编码")
-    private String funCode;
+    private String funcCode;
+
+    @ApiModelProperty(value = "功能描述")
+    private String funcDesc;
 
     @ApiModelProperty(value = "功能标题")
     private String title;
 
-    @ApiModelProperty(value = "功能描述")
-    private String funDesc;
+    @ApiModelProperty(value = "按钮icon")
+    private String btnIcon;
+
+    @ApiModelProperty(value = "按钮组")
+    private String btnGroup;
 
     @ApiModelProperty(value = "是否是外链")
     private Boolean elink;
@@ -45,9 +51,6 @@ public class Function extends BaseEntity {
 
     @ApiModelProperty(value = "父级ID")
     private Integer pId;
-
-    @ApiModelProperty(value = "按钮组")
-    private String btnGroup;
 
     @ApiModelProperty(value = "排序")
     private Integer sortNumber;

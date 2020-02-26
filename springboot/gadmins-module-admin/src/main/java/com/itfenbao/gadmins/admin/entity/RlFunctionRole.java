@@ -26,7 +26,7 @@ public class RlFunctionRole extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "功能ID")
-    private Integer funId;
+    private Integer funcId;
 
     @ApiModelProperty(value = "角色ID")
     private Integer roleId;

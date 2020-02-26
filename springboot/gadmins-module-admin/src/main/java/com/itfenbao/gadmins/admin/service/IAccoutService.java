@@ -9,7 +9,7 @@ import com.itfenbao.gadmins.admin.entity.Accout;
 
 /**
  * <p>
- * 系统用户表 服务类
+ * 系统账号表 服务类
  * </p>
  *
  * @author itfenbao

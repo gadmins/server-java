@@ -10,22 +10,30 @@ import java.lang.annotation.RetentionPolicy;
  * public String addUser(){
  * }
  * </pre>
- * 只有拥有此项功能的角色才能操作，否则，权限不足
  *
- * @author lijiazhi
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Function {
+
+    // 功能编码
     String value();
 
+    // 功能组
     String group() default "admin";
 
+    // 功能名称
     String title() default "";
 
+    // 功能icon
+    String icon() default "";
+
+    // 排序
     int sort() default 0;
 
-    String pCode() default "";
+    // 父级编码
+    String parentCode() default "";
 
+    // 按钮组
     String btnGroup() default "";
 
     interface BtnGroup {

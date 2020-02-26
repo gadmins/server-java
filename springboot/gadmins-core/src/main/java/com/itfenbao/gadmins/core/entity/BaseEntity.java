@@ -49,10 +49,9 @@ public class BaseEntity implements Serializable {
     protected LocalDateTime updatedAt;
 
     /**
-     * 是否启用/逻辑删除
+     * 是否启用
      */
-    @TableLogic
-    @ApiModelProperty("是否启用/逻辑删除")
+    @ApiModelProperty("是否启用")
     protected Boolean enable;
 
     public Integer getId() {
