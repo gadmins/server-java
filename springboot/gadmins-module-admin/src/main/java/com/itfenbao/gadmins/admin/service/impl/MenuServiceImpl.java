@@ -1,6 +1,8 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.CamelCaseLinkedMap;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
@@ -8,11 +10,12 @@ import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.entity.Menu;
+import com.itfenbao.gadmins.admin.entity.RlMenuRole;
 import com.itfenbao.gadmins.admin.mapper.MenuMapper;
-import com.itfenbao.gadmins.admin.service.IFunctionService;
-import com.itfenbao.gadmins.admin.service.IMenuService;
+import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.web.vo.Tree;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,15 +33,41 @@ import java.util.stream.Collectors;
  * @author itfenbao
  * @since 2020-02-13
  */
+@Slf4j
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
 
     @Autowired
     IFunctionService functionService;
 
+    @Autowired
+    IAccountService accountService;
+
+    @Autowired
+    IRlAccountRoleService accountRoleService;
+
+    @Autowired
+    IRlMenuRoleService menuRoleService;
+
     @Override
-    public CoreMenuData getCoreMenuData() {
+    public CoreMenuData getCoreMenuData(Integer accountId) {
+        boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
         List<MenuVO> allMenu = this.baseMapper.getAllMenu();
+        if (!isSuperAdmin) {
+            List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
+            List<Integer> funcPids = this.functionService.getPIdsByRoles(roleIds);
+
+            List<Integer> roleMenuIds = this.menuRoleService.list(
+                    Wrappers.<RlMenuRole>lambdaQuery().in(RlMenuRole::getRoleId, roleIds).groupBy(RlMenuRole::getMenuId))
+                    .stream().map(it -> it.getMenuId()).collect(Collectors.toList());
+            List<Integer> funcMenuIds = this.list(Wrappers.<Menu>lambdaQuery().in(Menu::getFuncId, funcPids))
+                    .stream().map((it -> it.getId())).collect(Collectors.toList());
+            // TODO: 合成用户菜单
+            // 1. 去重
+            // 2. 在所有菜单找到自己及父级菜单
+            List<Integer> menuIds = CollUtil.addAllIfNotContains(roleMenuIds, funcMenuIds);
+            log.info("menus:" + menuIds);
+        }
         Map<String, String> defMenuTxtMap = new CamelCaseLinkedMap();
         List<SysMenuTreeNode> sysMenuTreeNodes = allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
             defMenuTxtMap.put(menu.getMCode(), menu.getTxt());
@@ -62,6 +91,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return new CoreMenuData(menuTree, defMenuTxtMap);
     }
 
+    /**
+     * 设置父级菜单Path
+     *
+     * @param item
+     * @return
+     */
     private String getPath(SysMenuTreeNode item) {
         if (item.getChildren() == null || item.getChildren().size() == 0) {
             return item.getPath();

@@ -3,8 +3,16 @@
 <mapper namespace="com.itfenbao.gadmins.admin.mapper.FunctionMapper">
 
     <select id="getListByNullBtnGroup" resultType="com.itfenbao.gadmins.admin.data.vo.FunctionVO">
-        select _func.id, _func.title, _func.fun_desc as `desc`, _func.fun_code as `key`, _func.elink, _func.front_url as
+        select _func.id, _func.title, _func.func_desc as `desc`, _func.func_code as `key`, _func.elink, _func.front_url
+        as
         `url` from sys_admin_function as _func
         where _func.enable = 1 and _func.btn_group is null
+    </select>
+    <select id="queryPIds" resultType="java.lang.Integer">
+        select _function.p_id from sys_admin_rl_function_role as _function_role left join sys_admin_function as
+        _function on _function.id = _function_role.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
     </select>
 </mapper>

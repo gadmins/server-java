@@ -7,6 +7,11 @@ package com.itfenbao.gadmins.core;
  */
 public final class AppConfig {
 
+    public enum TokenType {
+        ADMIN,
+        APP
+    }
+
     /**
      * 访问标示
      */
@@ -20,15 +25,11 @@ public final class AppConfig {
      */
     public static final class AdminRoute {
         public static final String ADMIN = "/adminapi";
-        public static final String ADMIN_ACCOUT = ADMIN + "/accout";
+        public static final String ADMIN_ACCOUNT = ADMIN + "/account";
         public static final String ADMIN_FUNCTION = ADMIN + "/function";
         public static final String ADMIN_FUNCTION_CONFIG = ADMIN + "/functionconfig";
         public static final String ADMIN_LOG = ADMIN + "/log";
         public static final String ADMIN_MENU = ADMIN + "/menu";
-        public static final String ADMIN_RL_FUNCTION_ROLE = ADMIN + "/rlfunctionrole";
-        public static final String ADMIN_RL_MENU_ROLE = ADMIN + "/rlmenurole";
-        public static final String ADMIN_RL_USER_ROLE = ADMIN + "/rluserrole";
-        public static final String ADMIN_RL_ROLE = ADMIN + "/rlrole";
         public static final String ADMIN_ROLE = ADMIN + "/role";
     }
 

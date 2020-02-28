@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itfenbao.gadmins.admin.mapper.RlAccountRoleMapper">
+
+    <select id="getRoleIdsByAccountId" resultType="java.lang.Integer">
+        select _role.id from sys_admin_role as _role left join sys_admin_rl_account_role as _account_role on _role.id =
+        _account_role.role_id where _account_role.account_id = #{accountId}
+    </select>
+</mapper>

@@ -5,6 +5,7 @@ public enum JsonReturnCode {
     NOT_LOGIN(401, "未登录"),
     SUCCESS(200, "成功"),
     FAIL(500, "内部失败"),
+    FAIL_TOKEN(501, "Token过期"),
     ACCESS_ERROR(403, "禁止访问"),
     NOT_FOUND(404, "未发现");
     private Integer code;

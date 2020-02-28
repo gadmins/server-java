@@ -1,7 +1,10 @@
 package com.itfenbao.gadmins.core.interceptor;
 
+import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
+import com.itfenbao.gadmins.core.exception.TokenFailException;
+import com.itfenbao.gadmins.core.utils.TokenUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -10,12 +13,10 @@ import java.lang.reflect.Method;
 
 public class AuthTokenInterceptor implements HandlerInterceptor {
 
-    private final String key;
-    private final String secret;
+    private final AppConfig.TokenType tokenType;
 
-    public AuthTokenInterceptor(String key, String secret) {
-        this.key = key;
-        this.secret = secret;
+    public AuthTokenInterceptor(AppConfig.TokenType tokenType) {
+        this.tokenType = tokenType;
     }
 
     @Override
@@ -33,11 +34,16 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
-        // 从 http 请求头中取出 token
-        String token = request.getHeader(this.key);
+        String token = TokenUtils.getToken(tokenType, request);
         // 检查token
         if (StringUtils.isEmpty(token)) {
             throw new NotLoginException();
+        }
+        String uniqueId = TokenUtils.getUniqueIdFromToken(tokenType, token);
+        if (StringUtils.isEmpty(uniqueId)) {
+            // token失效
+            TokenUtils.removeToken(tokenType, token);
+            throw new TokenFailException();
         }
         return true;
     }
