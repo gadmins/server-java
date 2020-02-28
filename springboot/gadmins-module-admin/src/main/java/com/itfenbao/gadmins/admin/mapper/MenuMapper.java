@@ -1,9 +1,9 @@
 package com.itfenbao.gadmins.admin.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Menu;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,7 +19,16 @@ import java.util.List;
 public interface MenuMapper extends BaseMapper<Menu> {
     List<MenuVO> getAllMenu();
 
+    /**
+     * 获取用户菜单
+     *
+     * @param userId
+     * @return
+     */
+    List<MenuVO> getAllMenuByUserId(Integer userId);
+
     List<MenuTreeNode> getAllMenuTree();
 
     List<MenuTreeNode> getAllParentMenuTree(@Param("ids") List<Integer> ids);
+
 }

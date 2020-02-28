@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins;
 
 import com.itfenbao.gadmins.core.exception.NotLoginException;
+import com.itfenbao.gadmins.core.exception.TokenFailException;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
@@ -31,6 +32,8 @@ public class GadminsGlobalExceptionHandler {
         log.error("Gadmins Exception", e);
         if (e instanceof NotLoginException) {
             return JsonResult.noLogin();
+        } else if (e instanceof TokenFailException) {
+            return JsonResult.failToken();
         } else if (e instanceof BindException) {
             return JsonResult.paramsErrorMessage("参数绑定异常");
         } else if (e instanceof HttpRequestMethodNotSupportedException) {

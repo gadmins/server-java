@@ -19,10 +19,10 @@ public interface IMenuService extends IService<Menu> {
 
     /**
      * 获取前端核心菜单
-     *
+     * @param accountId
      * @return
      */
-    CoreMenuData getCoreMenuData();
+    CoreMenuData getCoreMenuData(Integer accountId);
 
     /**
      * 获取 通用Tree组件 所有菜单数据
@@ -32,7 +32,7 @@ public interface IMenuService extends IService<Menu> {
     List<MenuTreeNode> menuTree();
 
     /**
-     * 获取 通用Tree组件 所有菜单数据即按钮
+     * 获取 通用Tree组件 所有菜单数据即按钮，用于角色授权
      * @return
      */
     List<MenuTreeNode> menuTreeAndFuncs();

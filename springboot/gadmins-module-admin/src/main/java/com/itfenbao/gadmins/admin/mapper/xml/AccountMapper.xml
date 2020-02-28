@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itfenbao.gadmins.admin.mapper.AccountMapper">
+
+    <resultMap id="accountVO" type="com.itfenbao.gadmins.admin.data.vo.AccountVO">
+        <result property="id" column="id"/>
+        <collection property="roles" column="id" select="getRoles"/>
+    </resultMap>
+    <delete id="realDelete">
+        delete from sys_admin_rl_account_role
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </delete>
+
+    <select id="getRoles" parameterType="integer" resultType="com.itfenbao.gadmins.admin.entity.Role">
+        select _role.id, _role.name from sys_admin_rl_account_role as _account_role left join sys_admin_role as _role on
+        _role.id =
+        _account_role.role_id where _account_role.account_id = #{userId}
+    </select>
+
+    <select id="getListByPage" resultMap="accountVO">
+        select _account.id, _account.name, _account.created_by, _account.updated_by, _account.created_at,
+        _account.updated_at,
+        _account.enable from sys_admin_account as
+        _account left join `sys_admin_rl_account_role`
+        as _rl_account_role on _account.id = _rl_account_role.account_id
+        left join `sys_admin_role` as _role on _rl_account_role.role_id = _role.id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+    <select id="countSuperAdmin" resultType="java.lang.Integer">
+        select count(*) from sys_admin_account as _accout
+        left join sys_admin_rl_account_role as _account_role on _account_role.account_id = _accout.id
+        left join sys_admin_role as _role on _role.id = _account_role.role_id
+        where _accout.id = #{userId} and _role.super_admin = 1
+    </select>
+</mapper>

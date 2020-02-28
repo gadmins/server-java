@@ -1,8 +1,11 @@
 package com.itfenbao.gadmins.admin.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,4 +20,6 @@ import java.util.List;
 public interface FunctionMapper extends BaseMapper<Function> {
 
     List<FunctionVO> getListByNullBtnGroup();
+
+    List<Integer> queryPIds(@Param(Constants.WRAPPER) Wrapper wrapper);
 }

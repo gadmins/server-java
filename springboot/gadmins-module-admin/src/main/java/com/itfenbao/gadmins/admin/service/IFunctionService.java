@@ -1,8 +1,11 @@
 package com.itfenbao.gadmins.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
-import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,5 +20,7 @@ import java.util.List;
 public interface IFunctionService extends IService<Function> {
 
     List<FunctionVO> getListByNullBtnGroup();
+
+    List<Integer> getPIdsByRoles(List<Integer> roleIds);
 
 }

@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 )
 public class AuthAccessProperties {
 
-    private AuthProperties admin = new AuthProperties(AppConfig.Access.ADMIN_TOKEN);
-    private AuthProperties app = new AuthProperties(AppConfig.Access.APP_TOKEN);
+    private AuthProperties admin = new AuthProperties(AppConfig.Access.ADMIN_TOKEN, AuthFrom.COOKIE);
+    private AuthProperties app = new AuthProperties(AppConfig.Access.APP_TOKEN, AuthFrom.HEADER);
 
     public AuthAccessProperties() {
     }

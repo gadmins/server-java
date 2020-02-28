@@ -42,6 +42,13 @@ public class JsonResult<T> {
         return ret;
     }
 
+    public static <T> JsonResult<T> failToken() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.FAIL_TOKEN.getCode());
+        ret.setMsg(JsonReturnCode.FAIL_TOKEN.getDesc());
+        return ret;
+    }
+
     public static <T> JsonResult<T> fail(T data) {
         JsonResult<T> ret = JsonResult.fail();
         ret.setData(data);

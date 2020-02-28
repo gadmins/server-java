@@ -11,11 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableConfigurationProperties({AuthAccessProperties.class})
-public class InterceptorConfig implements WebMvcConfigurer {
+public class AuthInterceptorConfig implements WebMvcConfigurer {
 
     private final AuthAccessProperties properties;
 
-    public InterceptorConfig(AuthAccessProperties properties) {
+    public AuthInterceptorConfig(AuthAccessProperties properties) {
         this.properties = properties;
     }
 
@@ -24,10 +24,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
         AuthProperties admin = this.properties.getAdmin();
         AuthProperties app = this.properties.getApp();
         if (admin.isOpen()) {
-            registry.addInterceptor(new AuthTokenInterceptor(admin.getKey(), admin.getSecret())).addPathPatterns(AppConfig.AdminRoute.ADMIN + "/**");
+            registry.addInterceptor(new AuthTokenInterceptor(AppConfig.TokenType.ADMIN)).addPathPatterns(AppConfig.AdminRoute.ADMIN + "/**");
         }
         if (app.isOpen()) {
-            registry.addInterceptor(new AuthTokenInterceptor(app.getKey(), app.getSecret())).addPathPatterns(AppConfig.AppRoute.APP + "/**");
+            registry.addInterceptor(new AuthTokenInterceptor(AppConfig.TokenType.APP)).addPathPatterns(AppConfig.AppRoute.APP + "/**");
         }
     }
 

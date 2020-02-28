@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.itfenbao.gadmins.admin.data.vo.AccoutVO;
-import com.itfenbao.gadmins.admin.entity.Accout;
+import com.itfenbao.gadmins.admin.data.vo.AccountVO;
+import com.itfenbao.gadmins.admin.entity.Account;
 import com.itfenbao.gadmins.admin.entity.Role;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,8 +19,8 @@ import java.util.List;
  * @author itfenbao
  * @since 2020-02-16
  */
-public interface AccoutMapper extends BaseMapper<Accout> {
-    Page<AccoutVO> getListByPage(Page<AccoutVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
+public interface AccountMapper extends BaseMapper<Account> {
+    Page<AccountVO> getListByPage(Page<AccountVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
 
     List<Role> getRoles(Integer userId);
 
@@ -31,4 +31,6 @@ public interface AccoutMapper extends BaseMapper<Accout> {
      * @return
      */
     boolean realDelete(@Param(Constants.WRAPPER) Wrapper wrapper);
+
+    int countSuperAdmin(Integer userId);
 }

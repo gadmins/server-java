@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AccoutQuery extends PageQuery {
+public class AccountQuery extends PageQuery {
 
     private String name;
     private long roleId = -1;

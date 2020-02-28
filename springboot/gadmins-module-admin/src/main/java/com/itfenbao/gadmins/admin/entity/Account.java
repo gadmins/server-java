@@ -19,9 +19,9 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("sys_admin_accout")
-@ApiModel(value="Accout对象", description="系统账号表")
-public class Accout extends BaseEntity {
+@TableName("sys_admin_account")
+@ApiModel(value="Account对象", description="系统账号表")
+public class Account extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

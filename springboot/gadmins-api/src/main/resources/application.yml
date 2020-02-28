@@ -23,7 +23,7 @@ mybatis-plus:
       logic-not-delete-value: 0
 api-access:
   admin:
-    open: false
+    open: true
     secret: test
   app:
     open: false
