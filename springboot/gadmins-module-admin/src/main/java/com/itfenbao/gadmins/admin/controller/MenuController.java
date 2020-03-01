@@ -55,8 +55,9 @@ public class MenuController {
         return JsonResult.success(menuService.notMenuTree(ids));
     }
 
-    @Function(value = "sys.menu.add", title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR)
     @PostMapping
+    @Function(value = "sys.menu.add", title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR)
+    @ApiOperation("添加菜单")
     public JsonResult add(@RequestBody AddMenuParam param) {
         int count = menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()));
         if (count > 0) {
@@ -83,6 +84,7 @@ public class MenuController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation("修改菜单")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateMenuParam param) {
         int count = menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()).ne(Menu::getId, id));
         if (count > 0) {
@@ -108,6 +110,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{ids}")
+    @ApiOperation("删除菜单")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {
         menuService.removeByIds(ids);
         return JsonResult.success();

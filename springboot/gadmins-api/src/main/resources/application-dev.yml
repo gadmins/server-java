@@ -18,7 +18,9 @@ swagger:
   docket:
     adminapi:
       enable: true
-      title: 通用管理系统-核心模块接口
+      title: 通用管理系统-系统模块接口
+      description: gadmins 接口文档
+      version: 1.0.0
       license: Apache License, Version 2.0
       licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
       base-package:

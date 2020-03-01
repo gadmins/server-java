@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -62,11 +63,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
                     .stream().map(it -> it.getMenuId()).collect(Collectors.toList());
             List<Integer> funcMenuIds = this.list(Wrappers.<Menu>lambdaQuery().in(Menu::getFuncId, funcPids))
                     .stream().map((it -> it.getId())).collect(Collectors.toList());
-            // TODO: 合成用户菜单
+            // TODO: 合成用户菜单，待优化
             // 1. 去重
-            // 2. 在所有菜单找到自己及父级菜单
             List<Integer> menuIds = CollUtil.addAllIfNotContains(roleMenuIds, funcMenuIds);
-            log.info("menus:" + menuIds);
+            // 2. 在所有菜单找到自己及父级菜单
+            List<Integer> pids = CollUtil.newArrayList(menuIds);
+            do {
+                List<Integer> finalPids = pids;
+                pids = allMenu.stream().filter(m -> finalPids.indexOf(m.getId()) > -1 && m.getPId() != null)
+                        .map(m -> m.getPId()).collect(Collectors.toList());
+                if (pids.size() > 0) {
+                    CollUtil.addAllIfNotContains(menuIds, pids);
+                }
+            } while (pids.size() > 0);
+            allMenu = allMenu.stream().filter(m -> menuIds.indexOf(m.getId()) > -1).collect(Collectors.toList());
         }
         Map<String, String> defMenuTxtMap = new CamelCaseLinkedMap();
         List<SysMenuTreeNode> sysMenuTreeNodes = allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {

@@ -1,7 +1,6 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.data.dto.param.role.AddRoleParam;
 import com.itfenbao.gadmins.admin.data.dto.param.role.UpdateRoleParam;
@@ -124,25 +123,24 @@ public class RoleController {
         roleMenuVO.setMenuIds(menuIds);
         roleMenuVO.setFuncIds(funcIds);
         List<String> keys = new ArrayList<>();
-        if(!CollectionUtils.isEmpty(menuIds)) {
+        if (!CollectionUtils.isEmpty(menuIds)) {
             keys.addAll(menuService.list(Wrappers.<Menu>lambdaQuery().in(Menu::getId, menuIds)).stream().map(it -> it.getMCode()).collect(Collectors.toList()));
         }
-        if(!CollectionUtils.isEmpty(funcIds)) {
+        if (!CollectionUtils.isEmpty(funcIds)) {
             keys.addAll(functionService.list(Wrappers.<com.itfenbao.gadmins.admin.entity.Function>lambdaQuery().in(Function::getId, funcIds)).stream().map(it -> it.getFuncCode()).collect(Collectors.toList()));
         }
         roleMenuVO.setKeys(keys);
         return JsonResult.success(roleMenuVO);
     }
 
-
-    @ApiOperation(value = "获取所有非超管角色")
     @GetMapping("/all")
+    @ApiOperation(value = "获取所有非超管角色")
     public JsonResult<List<Role>> allList() {
         return JsonResult.success(roleService.getAllRoleNotSuperAdmin());
     }
 
-    @ApiOperation(value = "分页查询非超管角色")
     @GetMapping()
+    @ApiOperation(value = "分页查询非超管角色")
     public JsonResult<PageData<Role>> list(PageQuery query) {
         PageData<Role> page = PageData.get(roleService.getPageListNotSuperAdmin(query));
         return JsonResult.success(page);
