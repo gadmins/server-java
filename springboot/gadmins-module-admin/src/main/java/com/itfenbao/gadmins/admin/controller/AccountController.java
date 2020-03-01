@@ -13,7 +13,7 @@ import com.itfenbao.gadmins.admin.entity.RlAccountRole;
 import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.utils.TokenUtils;

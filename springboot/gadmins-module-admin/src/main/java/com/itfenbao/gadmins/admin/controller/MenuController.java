@@ -8,7 +8,7 @@ import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import io.swagger.annotations.Api;

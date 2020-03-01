@@ -8,7 +8,7 @@ import com.itfenbao.gadmins.admin.data.dto.param.dict.UpdateDictParam;
 import com.itfenbao.gadmins.admin.data.dto.query.DictQuery;
 import com.itfenbao.gadmins.admin.entity.Dict;
 import com.itfenbao.gadmins.admin.service.IDictService;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
 import io.swagger.annotations.Api;

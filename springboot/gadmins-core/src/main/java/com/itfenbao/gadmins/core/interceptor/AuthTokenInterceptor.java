@@ -1,6 +1,6 @@
 package com.itfenbao.gadmins.core.interceptor;
 
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;

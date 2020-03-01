@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.core;
+package com.itfenbao.gadmins.config;
 
 /**
  * 应用的常量配置

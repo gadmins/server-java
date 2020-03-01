@@ -3,7 +3,7 @@ package com.itfenbao.gadmins.admin.controller;
 
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
