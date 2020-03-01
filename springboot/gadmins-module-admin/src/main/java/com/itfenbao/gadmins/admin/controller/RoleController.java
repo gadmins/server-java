@@ -7,7 +7,7 @@ import com.itfenbao.gadmins.admin.data.dto.param.role.UpdateRoleParam;
 import com.itfenbao.gadmins.admin.data.vo.RoleMenuVO;
 import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
 import com.itfenbao.gadmins.core.web.query.PageQuery;

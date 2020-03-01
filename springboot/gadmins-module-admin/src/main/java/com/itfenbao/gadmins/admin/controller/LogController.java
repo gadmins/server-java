@@ -1,7 +1,7 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;

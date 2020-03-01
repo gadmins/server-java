@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.admin.entity.FunctionConfig;
 import com.itfenbao.gadmins.admin.service.IFunctionConfigService;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,16 +41,16 @@ public class FunctionConfigController {
     ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public JsonResult getById(@PathVariable("id") Long id) {
+    public JsonResult<FunctionConfig> getById(@PathVariable("id") Long id) {
         return JsonResult.success(functionConfigService.getById(id));
     }
 
     @GetMapping("/func_id/{id}")
     @ApiOperation("获取功能点配置")
-    public JsonResult getByFuncId(@PathVariable("id") Long id) {
+    public JsonResult<CamelCaseMap> getByFuncId(@PathVariable("id") Long id) {
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FunctionConfig::getFuncId, id);
-        Map rs = functionConfigService.getMap(queryWrapper);
+        Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
         try {
             convertToMap(rs, "common_schema", "search_schema");
         } catch (JsonProcessingException e) {

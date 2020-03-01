@@ -1,7 +1,7 @@
 package com.itfenbao.gadmins.core.auth;
 
 
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(

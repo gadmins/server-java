@@ -13,14 +13,13 @@ import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.admin.entity.RlMenuRole;
 import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.*;
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.vo.Tree;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

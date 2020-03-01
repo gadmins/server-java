@@ -1,6 +1,6 @@
 package com.itfenbao.gadmins.core.utils;
 
-import com.itfenbao.gadmins.core.AppConfig;
+import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.auth.AuthAccessProperties;
 import com.itfenbao.gadmins.core.auth.AuthFrom;
 import com.itfenbao.gadmins.core.auth.AuthProperties;

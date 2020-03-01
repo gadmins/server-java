@@ -68,5 +68,6 @@
         <module>gadmins-module-app</module>
         <module>spring-boot-starter-swagger</module>
         <module>tools</module>
+        <module>gadmins-core-config</module>
     </modules>
 </project>
