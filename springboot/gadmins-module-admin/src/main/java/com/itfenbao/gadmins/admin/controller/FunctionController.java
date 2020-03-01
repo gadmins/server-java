@@ -6,6 +6,7 @@ import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class FunctionController {
     IFunctionService functionService;
 
     @GetMapping("/list")
+    @ApiOperation("功能点列表")
     public JsonResult<List<FunctionVO>> list() {
         return JsonResult.success(functionService.getListByNullBtnGroup());
     }

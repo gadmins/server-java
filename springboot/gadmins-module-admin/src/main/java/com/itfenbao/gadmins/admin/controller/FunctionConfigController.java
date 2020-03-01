@@ -10,6 +10,7 @@ import com.itfenbao.gadmins.admin.service.IFunctionConfigService;
 import com.itfenbao.gadmins.core.AppConfig;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,7 @@ public class FunctionConfigController {
     }
 
     @GetMapping("/func_id/{id}")
+    @ApiOperation("获取功能点配置")
     public JsonResult getByFuncId(@PathVariable("id") Long id) {
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FunctionConfig::getFuncId, id);

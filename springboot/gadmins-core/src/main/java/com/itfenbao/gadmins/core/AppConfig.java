@@ -31,6 +31,7 @@ public final class AppConfig {
         public static final String ADMIN_LOG = ADMIN + "/log";
         public static final String ADMIN_MENU = ADMIN + "/menu";
         public static final String ADMIN_ROLE = ADMIN + "/role";
+        public static final String ADMIN_DICT = ADMIN + "/dict";
     }
 
     /**

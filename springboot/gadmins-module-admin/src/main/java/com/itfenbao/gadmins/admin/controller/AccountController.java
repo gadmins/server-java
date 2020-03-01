@@ -85,7 +85,7 @@ public class AccountController {
     }
 
     @DeleteMapping("/{ids}")
-    public JsonResult deletes(@PathVariable() List<Integer> ids) {
+    public JsonResult deletes(@PathVariable List<Integer> ids) {
         accountService.removeByIds(ids);
         return JsonResult.success();
     }
