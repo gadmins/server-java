@@ -24,6 +24,9 @@ public @interface Function {
     // 功能名称
     String title() default "";
 
+    // 功能描述
+    String desc() default "";
+
     // 功能icon
     String icon() default "";
 

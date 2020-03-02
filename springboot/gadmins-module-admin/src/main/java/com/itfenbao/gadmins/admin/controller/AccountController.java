@@ -54,7 +54,7 @@ public class AccountController {
     @Autowired
     IMenuService menuService;
 
-    @Function("sys.account.list")
+    @Function(value = "sys.accout.list", title = "账号查询")
     @GetMapping()
     public JsonResult<PageData<AccountVO>> list(final AccountQuery query) {
         final Page<AccountVO> page = accountService.getListByPage(query);

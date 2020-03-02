@@ -75,8 +75,10 @@ public class DictController {
 
     @GetMapping("/list/{pid}")
     @ApiOperation("查询字典数据")
-    public JsonResult<List<Dict>> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid) {
-        return JsonResult.success(dictService.list(Wrappers.<Dict>lambdaQuery().eq(Dict::getPId, pid)));
+    public JsonResult<PageData<Dict>> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid, final DictQuery query) {
+        Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
+        dictService.page(page, Wrappers.<Dict>lambdaQuery().eq(Dict::getPId, pid).orderByAsc(Dict::getIndexValue));
+        return JsonResult.success(PageData.get(page));
     }
 
 }

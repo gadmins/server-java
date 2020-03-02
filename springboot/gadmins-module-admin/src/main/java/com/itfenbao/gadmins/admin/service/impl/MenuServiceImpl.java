@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -126,6 +127,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             if (AppConfig.MenuType.MENU.equals(menu.getType())) {
                 if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFuncId() != null) {
                     List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFuncId()).list();
+                    Function queryFunc = functionService.getById(menu.getFuncId());
+                    if (StringUtils.isEmpty(queryFunc.getTitle())) {
+                        queryFunc.setTitle("查询");
+                    }
+                    functions.add(0, queryFunc);
                     List<MenuTreeNode> funcs = functions.stream().map(func -> {
                         MenuTreeNode authBtn = new MenuTreeNode();
                         authBtn.setType("FUNC");
