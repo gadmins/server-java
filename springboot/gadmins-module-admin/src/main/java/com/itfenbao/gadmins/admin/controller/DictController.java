@@ -9,12 +9,16 @@ import com.itfenbao.gadmins.admin.data.dto.query.DictQuery;
 import com.itfenbao.gadmins.admin.entity.Dict;
 import com.itfenbao.gadmins.admin.service.IDictService;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.core.annotation.Function;
+import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.event.RefreshDictEvent;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,11 +34,25 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_DICT)
 @Api(tags = "系统字典")
+@Menu(value = "sys.dict", title = "字典管理", desc = "系统字典管理", url = "/system/dict")
 public class DictController {
 
     @Autowired
     IDictService dictService;
 
+    @Autowired
+    ApplicationContext applicationContext;
+
+    @Function(value = "sys:dict:list", sort = 0, title = "字典查询", menu = true)
+    @GetMapping()
+    @ApiOperation("分页查询")
+    public JsonResult<PageData<Dict>> list(final DictQuery query) {
+        Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
+        dictService.page(page, Wrappers.<Dict>lambdaQuery().isNull(Dict::getPId));
+        return JsonResult.success(PageData.get(page));
+    }
+
+    @Function(value = "sys:dict:add", sort = 1, title = "新建", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR)
     @PostMapping()
     public JsonResult create(@RequestBody AddDictParam param) {
         Dict dict = new Dict();
@@ -44,9 +62,11 @@ public class DictController {
         dict.setIndexValue(param.getIndexValue());
         dict.setDValue(param.getDvalue());
         dictService.save(dict);
+        applicationContext.publishEvent(new RefreshDictEvent(this));
         return JsonResult.success();
     }
 
+    @Function(value = "sys:dict:edit", sort = 2, title = "编辑", desc = "编辑字典")
     @PutMapping("/{id}")
     public JsonResult update(@PathVariable Integer id, @RequestBody UpdateDictParam param) {
         Dict dict = new Dict();
@@ -56,29 +76,45 @@ public class DictController {
         dict.setIndexValue(param.getIndexValue());
         dict.setDValue(param.getDvalue());
         dictService.updateById(dict);
+        applicationContext.publishEvent(new RefreshDictEvent(this));
         return JsonResult.success();
     }
 
+    @Function(value = "sys:dict:copy", sort = 3, title = "复制", desc = "复制字典")
+    public void copy() {
+    }
+
+    @Function(value = "sys:dict:del", sort = 4, title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
     @DeleteMapping("/{ids}")
     public JsonResult deletes(@PathVariable List<Integer> ids) {
         dictService.removeByIds(ids);
+        applicationContext.publishEvent(new RefreshDictEvent(this));
         return JsonResult.success();
     }
 
-    @GetMapping()
-    @ApiOperation("分页查询")
-    public JsonResult<PageData<Dict>> list(final DictQuery query) {
-        Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
-        dictService.page(page, Wrappers.<Dict>lambdaQuery().isNull(Dict::getPId));
-        return JsonResult.success(PageData.get(page));
-    }
-
+    @Function(value = "sys:dict:datalist", sort = 5, title = "字典数据查询", url = "/system/dict/list")
     @GetMapping("/list/{pid}")
     @ApiOperation("查询字典数据")
     public JsonResult<PageData<Dict>> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid, final DictQuery query) {
         Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
         dictService.page(page, Wrappers.<Dict>lambdaQuery().eq(Dict::getPId, pid).orderByAsc(Dict::getIndexValue));
         return JsonResult.success(PageData.get(page));
+    }
+
+    @Function(value = "sys:dict:datalist:add", sort = 6, parentCode = "sys:dict:datalist", title = "新建", btnGroup = Function.BtnGroup.TOOLBAR)
+    public void addData() {
+    }
+
+    @Function(value = "sys:dict:datalist:del", sort = 7, parentCode = "sys:dict:datalist", title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
+    public void delData() {
+    }
+
+    @Function(value = "sys:dict:datalist:edit", sort = 8, parentCode = "sys:dict:datalist", title = "编辑")
+    public void editData() {
+    }
+
+    @Function(value = "sys:dict:datalist:copy", sort = 9, parentCode = "sys:dict:datalist", title = "复制")
+    public void copyData() {
     }
 
 }

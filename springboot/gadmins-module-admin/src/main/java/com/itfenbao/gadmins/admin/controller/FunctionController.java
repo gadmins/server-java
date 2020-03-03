@@ -4,6 +4,7 @@ package com.itfenbao.gadmins.admin.controller;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_FUNCTION)
 @Api(tags = "系统功能点")
+@Menu(value = "sys.function", title = "菜单功能配置", desc = "系统菜单功能配置管理", url = "/system/function")
 public class FunctionController {
 
     @Autowired

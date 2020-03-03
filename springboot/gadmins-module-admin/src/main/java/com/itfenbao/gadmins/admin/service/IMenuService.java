@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
 
+    boolean saveOrUpdateByCode(String code, Menu menu);
+
     /**
      * 获取前端核心菜单
      * @param accountId

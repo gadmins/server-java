@@ -28,7 +28,11 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                 Arrays.stream(methods).filter(m -> AnnotationUtils.findAnnotation(m, Function.class) != null).forEach(m -> {
                     Function function = AnnotationUtils.findAnnotation(m, Function.class);
                     RequestMapping requestMapping = AnnotationUtils.findAnnotation(m, RequestMapping.class);
-                    System.out.println("method:" + m.getName() + ",fun:" + function + ",mapping:" + requestMapping.method()[0].name());
+                    if (requestMapping != null) {
+                        System.out.println("method:" + m.getName() + ",fun:" + function + ",mapping:" + requestMapping.method()[0].name());
+                    } else {
+                        System.out.println("method:" + m.getName() + ",fun:" + function);
+                    }
                 });
             });
         }

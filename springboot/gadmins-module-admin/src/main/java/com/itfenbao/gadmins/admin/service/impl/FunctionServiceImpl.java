@@ -23,6 +23,11 @@ import java.util.List;
 public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> implements IFunctionService {
 
     @Override
+    public boolean saveOrUpdateByCode(String code, Function function) {
+        return false;
+    }
+
+    @Override
     public List<FunctionVO> getListByNullBtnGroup() {
         return this.baseMapper.getListByNullBtnGroup();
     }
