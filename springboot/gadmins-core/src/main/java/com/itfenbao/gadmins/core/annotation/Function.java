@@ -33,16 +33,23 @@ public @interface Function {
     String icon() default "";
 
     // 排序
-    int sort() default 0;
+    int sort();
 
-    // 父级编码
+    // 是否是菜单功能
+    boolean menu() default false;
+
+    String url() default "";
+
     String parentCode() default "";
 
     // 按钮组
-    String btnGroup() default "";
+    String btnGroup() default BtnGroup.OP;
 
+    // 按钮组类型
     interface BtnGroup {
+        // 工具栏按钮
         String TOOLBAR = "TOOLBAR";
+        // 操作栏按钮
         String OP = "OP";
     }
 }

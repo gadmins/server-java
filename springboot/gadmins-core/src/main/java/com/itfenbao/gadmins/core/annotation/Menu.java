@@ -19,4 +19,6 @@ public @interface Menu {
     // 菜单icon
     String icon() default "home";
 
+    String url();
+
 }

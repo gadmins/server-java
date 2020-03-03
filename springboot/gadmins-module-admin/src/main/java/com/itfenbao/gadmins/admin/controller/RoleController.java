@@ -8,16 +8,13 @@ import com.itfenbao.gadmins.admin.data.vo.RoleMenuVO;
 import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
-import com.itfenbao.gadmins.core.event.RefreshDictEvent;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
-import com.itfenbao.gadmins.core.web.vo.DictVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +34,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ROLE)
 @Api(tags = "系统角色")
-@com.itfenbao.gadmins.core.annotation.Menu(value = "sys.role", title = "角色管理", desc = "系统角色管理")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "sys.role", title = "角色管理", desc = "系统角色管理", url = "/system/role")
 public class RoleController {
-
-    @com.itfenbao.gadmins.core.annotation.Dict("MEMBER_STATUS")
-    List<DictVO> statusList;
 
     @Autowired
     IRoleService roleService;
@@ -58,21 +52,19 @@ public class RoleController {
     @Autowired
     IFunctionService functionService;
 
-    @Autowired
-    ApplicationContext applicationContext;
-
-    @com.itfenbao.gadmins.core.annotation.Function(value = "sys:role:list", title = "角色查询")
+    @com.itfenbao.gadmins.core.annotation.Function(
+            value = "sys:role:list", sort = 0,
+            title = "角色查询", menu = true
+    )
     @GetMapping()
     @ApiOperation(value = "分页查询非超管角色")
     public JsonResult<PageData<Role>> list(PageQuery query) {
-        applicationContext.publishEvent(new RefreshDictEvent(this));
         PageData<Role> page = PageData.get(roleService.getPageListNotSuperAdmin(query));
         return JsonResult.success(page);
     }
 
     @com.itfenbao.gadmins.core.annotation.Function(
-            value = "sys:role:add",
-            parentCode = "sys:role:list",
+            value = "sys:role:add", sort = 1,
             title = "新增", desc = "新增角色", icon = "plus",
             btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.TOOLBAR
     )
@@ -104,10 +96,8 @@ public class RoleController {
     }
 
     @com.itfenbao.gadmins.core.annotation.Function(
-            value = "sys:role:edit",
-            parentCode = "sys:role:list",
-            title = "编辑", desc = "编辑角色",
-            btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.OP
+            value = "sys:role:edit", sort = 2,
+            title = "编辑", desc = "编辑角色"
     )
     @PutMapping("/{id}")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateRoleParam param) {
@@ -141,10 +131,16 @@ public class RoleController {
     }
 
     @com.itfenbao.gadmins.core.annotation.Function(
-            value = "sys:role:del",
-            parentCode = "sys:role:list",
+            value = "sys:role:copy", sort = 3,
+            title = "复制", desc = "复制角色", icon = "plus"
+    )
+    public void copy() {
+    }
+
+    @com.itfenbao.gadmins.core.annotation.Function(
+            value = "sys:role:del", sort = 4,
             title = "批量删除", desc = "删除账户",
-            btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.OP
+            btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.TOOLBAR
     )
     @DeleteMapping("/{ids}")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {

@@ -44,7 +44,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUNT)
 @Api(tags = "系统账号")
-@Menu(value = "sys.account", title = "账户管理", desc = "系统账户管理")
+@Menu(value = "sys.account", title = "账户管理", desc = "系统账户管理", url = "/system/account")
 public class AccountController {
 
     @Autowired
@@ -56,7 +56,7 @@ public class AccountController {
     @Autowired
     IMenuService menuService;
 
-    @Function(value = "sys:account:list", title = "账号查询")
+    @Function(value = "sys:account:list", sort = 0, title = "账号查询", menu = true)
     @GetMapping()
     public JsonResult<PageData<AccountVO>> list(final AccountQuery query) {
         final Page<AccountVO> page = accountService.getListByPage(query);
@@ -64,8 +64,7 @@ public class AccountController {
     }
 
     @Function(
-            value = "sys:account:add",
-            parentCode = "sys:account:list",
+            value = "sys:account:add", sort = 1,
             title = "新增", desc = "新增账户", icon = "plus",
             btnGroup = Function.BtnGroup.TOOLBAR
     )
@@ -87,10 +86,8 @@ public class AccountController {
     }
 
     @Function(
-            value = "sys:account:edit",
-            parentCode = "sys:account:list",
-            title = "编辑", desc = "编辑账户",
-            btnGroup = Function.BtnGroup.OP
+            value = "sys:account:edit", sort = 2,
+            title = "编辑", desc = "编辑账户"
     )
     @PutMapping("/{id}")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateAccountParam param) {
@@ -99,10 +96,16 @@ public class AccountController {
     }
 
     @Function(
-            value = "sys:account:del",
-            parentCode = "sys:account:list",
+            value = "sys:account:copy", sort = 3,
+            title = "复制", desc = "复制账户", icon = "plus"
+    )
+    public void copy() {
+    }
+
+    @Function(
+            value = "sys:account:del", sort = 4,
             title = "批量删除", desc = "删除账户",
-            btnGroup = Function.BtnGroup.OP
+            btnGroup = Function.BtnGroup.TOOLBAR
     )
     @DeleteMapping("/{ids}")
     public JsonResult deletes(@PathVariable List<Integer> ids) {

@@ -19,6 +19,8 @@ import java.util.List;
  */
 public interface IFunctionService extends IService<Function> {
 
+    boolean saveOrUpdateByCode(String code, Function function);
+
     List<FunctionVO> getListByNullBtnGroup();
 
     List<Integer> getPIdsByRoles(List<Integer> roleIds);

@@ -29,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_MENU)
 @Api(tags = "系统菜单")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "sys.menu", title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
 public class MenuController {
 
     @Autowired
@@ -37,6 +38,7 @@ public class MenuController {
     @Autowired
     IFunctionService functionService;
 
+    @Function(value = "sys.menu.list", sort = 0, title = "查询", menu = true)
     @GetMapping("/tree")
     @ApiOperation("获取菜单树")
     public JsonResult<List<MenuTreeNode>> menuTree() {
@@ -56,7 +58,7 @@ public class MenuController {
     }
 
     @PostMapping
-    @Function(value = "sys.menu.add", title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR)
+    @Function(value = "sys.menu.add", sort = 1, title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR)
     @ApiOperation("添加菜单")
     public JsonResult add(@RequestBody AddMenuParam param) {
         int count = menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()));
@@ -83,6 +85,7 @@ public class MenuController {
         return JsonResult.success();
     }
 
+    @Function(value = "sys.menu.edit", sort = 2, title = "编辑", btnGroup = Function.BtnGroup.TOOLBAR)
     @PutMapping("/{id}")
     @ApiOperation("修改菜单")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateMenuParam param) {
@@ -109,10 +112,15 @@ public class MenuController {
         return JsonResult.success();
     }
 
+    @Function(value = "sys.menu.del", sort = 3, title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
     @DeleteMapping("/{ids}")
     @ApiOperation("删除菜单")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {
         menuService.removeByIds(ids);
         return JsonResult.success();
+    }
+
+    @Function(value = "sys.menu.copy", sort = 4, title = "复制菜单", btnGroup = Function.BtnGroup.TOOLBAR)
+    public void copy() {
     }
 }

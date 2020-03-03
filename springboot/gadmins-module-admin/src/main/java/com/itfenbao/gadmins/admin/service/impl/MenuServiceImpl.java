@@ -51,6 +51,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     IRlMenuRoleService menuRoleService;
 
     @Override
+    public boolean saveOrUpdateByCode(String code, Menu menu) {
+        return false;
+    }
+
+    @Override
     public CoreMenuData getCoreMenuData(Integer accountId) {
         boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
         List<MenuVO> allMenu = this.baseMapper.getAllMenu();
@@ -108,7 +113,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
      * @return
      */
     private String getPath(SysMenuTreeNode item) {
-        if (item.getChildren() == null || item.getChildren().size() == 0) {
+        if (CollectionUtils.isEmpty(item.getChildren())) {
             return item.getPath();
         } else {
             return getPath(item.getChildren().get(0));
