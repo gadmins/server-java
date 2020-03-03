@@ -15,6 +15,7 @@ import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
+import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import com.itfenbao.gadmins.core.web.JsonResult;
@@ -43,6 +44,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUNT)
 @Api(tags = "系统账号")
+@Menu(value = "sys.account", title = "账户管理", desc = "系统账户管理")
 public class AccountController {
 
     @Autowired
@@ -54,13 +56,19 @@ public class AccountController {
     @Autowired
     IMenuService menuService;
 
-    @Function(value = "sys.accout.list", title = "账号查询")
+    @Function(value = "sys:account:list", title = "账号查询")
     @GetMapping()
     public JsonResult<PageData<AccountVO>> list(final AccountQuery query) {
         final Page<AccountVO> page = accountService.getListByPage(query);
         return JsonResult.success(PageData.get(page));
     }
 
+    @Function(
+            value = "sys:account:add",
+            parentCode = "sys:account:list",
+            title = "新增", desc = "新增账户", icon = "plus",
+            btnGroup = Function.BtnGroup.TOOLBAR
+    )
     @PostMapping()
     public JsonResult create(@RequestBody AddAccountParam param) {
         Account account = new Account();
@@ -78,12 +86,24 @@ public class AccountController {
         return JsonResult.success();
     }
 
+    @Function(
+            value = "sys:account:edit",
+            parentCode = "sys:account:list",
+            title = "编辑", desc = "编辑账户",
+            btnGroup = Function.BtnGroup.OP
+    )
     @PutMapping("/{id}")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateAccountParam param) {
         accountService.updateAccount(id, param);
         return JsonResult.success();
     }
 
+    @Function(
+            value = "sys:account:del",
+            parentCode = "sys:account:list",
+            title = "批量删除", desc = "删除账户",
+            btnGroup = Function.BtnGroup.OP
+    )
     @DeleteMapping("/{ids}")
     public JsonResult deletes(@PathVariable List<Integer> ids) {
         accountService.removeByIds(ids);
@@ -92,6 +112,7 @@ public class AccountController {
 
     /**
      * 获取当前用户的菜单
+     *
      * @param request
      * @return
      */
