@@ -19,7 +19,7 @@ public class RbacAnnotationConfig {
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(function)")
     public Object restFunctionAccessCheck(final ProceedingJoinPoint pjp, Function function) throws Throwable {
-        System.out.println("Function Rest Access Check");
+        System.out.println("Function Rest Access Check:" + function);
 //        return JsonResult.http403();
         return pjp.proceed();
     }
