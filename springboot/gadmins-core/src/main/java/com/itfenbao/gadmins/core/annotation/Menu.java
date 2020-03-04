@@ -10,6 +10,9 @@ public @interface Menu {
     // 菜单编码
     String value();
 
+    // 父级菜单编码
+    String parentCode();
+
     // 功能标题
     String title() default "";
 
@@ -19,6 +22,10 @@ public @interface Menu {
     // 菜单icon
     String icon() default "home";
 
+    // 菜单url
     String url();
+
+    // 排序
+    int sort() default 0;
 
 }

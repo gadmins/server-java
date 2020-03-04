@@ -15,6 +15,7 @@ import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
+import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
@@ -22,6 +23,7 @@ import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
 import com.itfenbao.gadmins.core.web.vo.TokenVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -44,7 +46,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUNT)
 @Api(tags = "系统账号")
-@Menu(value = "sys.account", title = "账户管理", desc = "系统账户管理", url = "/system/account")
+@Menu(value = "account", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 2, title = "账户管理", desc = "系统账户管理", url = "/system/account")
 public class AccountController {
 
     @Autowired
@@ -58,16 +60,17 @@ public class AccountController {
 
     @Function(value = "sys:account:list", sort = 0, title = "账号查询", menu = true)
     @GetMapping()
+    @ApiOperation(value = "账号查询")
     public JsonResult<PageData<AccountVO>> list(final AccountQuery query) {
         final Page<AccountVO> page = accountService.getListByPage(query);
         return JsonResult.success(PageData.get(page));
     }
 
-    @Function(
-            value = "sys:account:add", sort = 1,
-            title = "新增", desc = "新增账户", icon = "plus",
-            btnGroup = Function.BtnGroup.TOOLBAR
-    )
+
+    @Functions({
+            @Function(value = "sys:account:add", sort = 1, title = "新增", desc = "新增账户", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:account:copy", sort = 3, title = "复制", desc = "复制账户", icon = "plus")
+    })
     @PostMapping()
     public JsonResult create(@RequestBody AddAccountParam param) {
         Account account = new Account();
@@ -93,13 +96,6 @@ public class AccountController {
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateAccountParam param) {
         accountService.updateAccount(id, param);
         return JsonResult.success();
-    }
-
-    @Function(
-            value = "sys:account:copy", sort = 3,
-            title = "复制", desc = "复制账户", icon = "plus"
-    )
-    public void copy() {
     }
 
     @Function(

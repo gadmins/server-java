@@ -6,12 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 用来标注功能编码
- * <pre>
- * &#064;Function("user.add")
- * public String addUser(){
- * }
- * </pre>
+ * 用来标注菜单功能点
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface FunctionMapper extends BaseMapper<Function> {
 
-    List<FunctionVO> getListByNullBtnGroup();
+    List<FunctionVO> getListPidIsNull();
 
     List<Integer> queryPIds(@Param(Constants.WRAPPER) Wrapper wrapper);
 }

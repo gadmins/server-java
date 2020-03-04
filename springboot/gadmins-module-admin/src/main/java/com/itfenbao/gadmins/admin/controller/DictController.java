@@ -10,6 +10,7 @@ import com.itfenbao.gadmins.admin.entity.Dict;
 import com.itfenbao.gadmins.admin.service.IDictService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
+import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.event.RefreshDictEvent;
 import com.itfenbao.gadmins.core.web.JsonResult;
@@ -34,7 +35,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_DICT)
 @Api(tags = "系统字典")
-@Menu(value = "sys.dict", title = "字典管理", desc = "系统字典管理", url = "/system/dict")
+@Menu(value = "dict", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 4, title = "字典管理", desc = "系统字典管理", url = "/system/dict")
 public class DictController {
 
     @Autowired
@@ -52,8 +53,14 @@ public class DictController {
         return JsonResult.success(PageData.get(page));
     }
 
-    @Function(value = "sys:dict:add", sort = 1, title = "新建", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR)
+    @Functions({
+            @Function(value = "sys:dict:add", sort = 1, title = "新建", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:dict:copy", sort = 3, title = "复制", desc = "复制字典"),
+            @Function(value = "sys:dict:data:list:add", sort = 6, parentCode = "sys:dict:data:list", title = "新建", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:dict:data:list:copy", sort = 9, parentCode = "sys:dict:data:list", title = "复制")
+    })
     @PostMapping()
+    @ApiOperation("添加字典")
     public JsonResult create(@RequestBody AddDictParam param) {
         Dict dict = new Dict();
         dict.setPId(param.getPId());
@@ -66,8 +73,12 @@ public class DictController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys:dict:edit", sort = 2, title = "编辑", desc = "编辑字典")
+    @Functions({
+            @Function(value = "sys:dict:edit", sort = 2, title = "编辑", desc = "编辑字典"),
+            @Function(value = "sys:dict:data:list:edit", sort = 8, parentCode = "sys:dict:data:list", title = "编辑")
+    })
     @PutMapping("/{id}")
+    @ApiOperation("更新字典")
     public JsonResult update(@PathVariable Integer id, @RequestBody UpdateDictParam param) {
         Dict dict = new Dict();
         dict.setId(id);
@@ -80,41 +91,26 @@ public class DictController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys:dict:copy", sort = 3, title = "复制", desc = "复制字典")
-    public void copy() {
-    }
+    @Functions({
+            @Function(value = "sys:dict:del", sort = 4, title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:dict:data:list:del", sort = 7, parentCode = "sys:dict:data:list", title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
 
-    @Function(value = "sys:dict:del", sort = 4, title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
+    })
     @DeleteMapping("/{ids}")
+    @ApiOperation("批量删除字典")
     public JsonResult deletes(@PathVariable List<Integer> ids) {
         dictService.removeByIds(ids);
         applicationContext.publishEvent(new RefreshDictEvent(this));
         return JsonResult.success();
     }
 
-    @Function(value = "sys:dict:datalist", sort = 5, title = "字典数据查询", url = "/system/dict/list")
+    @Function(value = "sys:dict:data:list", sort = 5, title = "数据列表", url = "/system/dict/list")
     @GetMapping("/list/{pid}")
     @ApiOperation("查询字典数据")
     public JsonResult<PageData<Dict>> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid, final DictQuery query) {
         Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
         dictService.page(page, Wrappers.<Dict>lambdaQuery().eq(Dict::getPId, pid).orderByAsc(Dict::getIndexValue));
         return JsonResult.success(PageData.get(page));
-    }
-
-    @Function(value = "sys:dict:datalist:add", sort = 6, parentCode = "sys:dict:datalist", title = "新建", btnGroup = Function.BtnGroup.TOOLBAR)
-    public void addData() {
-    }
-
-    @Function(value = "sys:dict:datalist:del", sort = 7, parentCode = "sys:dict:datalist", title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
-    public void delData() {
-    }
-
-    @Function(value = "sys:dict:datalist:edit", sort = 8, parentCode = "sys:dict:datalist", title = "编辑")
-    public void editData() {
-    }
-
-    @Function(value = "sys:dict:datalist:copy", sort = 9, parentCode = "sys:dict:datalist", title = "复制")
-    public void copyData() {
     }
 
 }

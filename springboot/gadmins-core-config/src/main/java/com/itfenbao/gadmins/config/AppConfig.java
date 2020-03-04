@@ -27,8 +27,6 @@ public final class AppConfig {
         public static final String ADMIN = "/adminapi";
         public static final String ADMIN_ACCOUNT = ADMIN + "/account";
         public static final String ADMIN_FUNCTION = ADMIN + "/function";
-        public static final String ADMIN_FUNCTION_CONFIG = ADMIN + "/functionconfig";
-        public static final String ADMIN_LOG = ADMIN + "/log";
         public static final String ADMIN_MENU = ADMIN + "/menu";
         public static final String ADMIN_ROLE = ADMIN + "/role";
         public static final String ADMIN_DICT = ADMIN + "/dict";
@@ -45,6 +43,13 @@ public final class AppConfig {
         public static final String SYS_MENU = "SYS_MENU";
         public static final String NAV_MENU = "NAV_MENU";
         public static final String MENU = "MENU";
+    }
+
+    /**
+     * 系统内置导航菜单，便于菜单挂载
+     */
+    public static final class SysNavMenu {
+        public static final String BASE_MGR = "basemgr";
     }
 
 }

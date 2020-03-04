@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
+import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,9 +20,9 @@ import java.util.List;
  */
 public interface IFunctionService extends IService<Function> {
 
-    boolean saveOrUpdateByCode(String code, Function function);
+    boolean saveOrUpdate(FunctionPoint functionPoint);
 
-    List<FunctionVO> getListByNullBtnGroup();
+    List<FunctionVO> getListPidIsNull();
 
     List<Integer> getPIdsByRoles(List<Integer> roleIds);
 
