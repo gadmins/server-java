@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.CamelCaseLinkedMap;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
@@ -15,6 +16,7 @@ import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.vo.Tree;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,8 +53,34 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     IRlMenuRoleService menuRoleService;
 
     @Override
-    public boolean saveOrUpdateByCode(String code, Menu menu) {
+    public boolean saveOrUpdate(MenuConfig menuConfig) {
+        Menu one = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getCode()));
+        if (one == null) {
+            Menu menu = createMenu(menuConfig);
+            if (this.save(menu)) {
+                return true;
+            }
+        } else {
+            return true;
+        }
         return false;
+    }
+
+    private Menu createMenu(MenuConfig menuConfig) {
+        Menu menu = new Menu();
+        menu.setSortNumber(menuConfig.getSort());
+        menu.setFuncId(menuConfig.getFuncId());
+        menu.setMCode(menuConfig.getCode());
+        menu.setTxt(menuConfig.getTitle());
+        menu.setIcon(menuConfig.getIcon());
+        if (!StringUtils.isEmpty(menuConfig.getParentCode())) {
+            Menu getMenu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getParentCode()));
+            if (getMenu != null) {
+                menu.setPId(getMenu.getId());
+            }
+        }
+        menuConfig.getParentCode();
+        return menu;
     }
 
     @Override
@@ -62,12 +90,22 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (!isSuperAdmin) {
             List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
             List<Integer> funcPids = this.functionService.getPIdsByRoles(roleIds);
-
-            List<Integer> roleMenuIds = this.menuRoleService.list(
-                    Wrappers.<RlMenuRole>lambdaQuery().in(RlMenuRole::getRoleId, roleIds).groupBy(RlMenuRole::getMenuId))
+            // 查询角色菜单ids
+            LambdaQueryWrapper<RlMenuRole> wrapper = Wrappers.<RlMenuRole>lambdaQuery();
+            if (!CollectionUtils.isEmpty(roleIds)) {
+                wrapper.in(RlMenuRole::getRoleId, roleIds);
+            }
+            wrapper.groupBy(RlMenuRole::getMenuId);
+            List<Integer> roleMenuIds = this.menuRoleService.list(wrapper)
                     .stream().map(it -> it.getMenuId()).collect(Collectors.toList());
-            List<Integer> funcMenuIds = this.list(Wrappers.<Menu>lambdaQuery().in(Menu::getFuncId, funcPids))
+            // 查询功能菜单ids
+            LambdaQueryWrapper<Menu> menuWrapper = Wrappers.<Menu>lambdaQuery();
+            if (!CollectionUtils.isEmpty(funcPids)) {
+                menuWrapper.in(Menu::getFuncId, funcPids);
+            }
+            List<Integer> funcMenuIds = this.list(menuWrapper)
                     .stream().map((it -> it.getId())).collect(Collectors.toList());
+
             // TODO: 合成用户菜单，待优化
             // 1. 去重
             List<Integer> menuIds = CollUtil.addAllIfNotContains(roleMenuIds, funcMenuIds);

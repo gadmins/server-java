@@ -8,6 +8,7 @@ import com.itfenbao.gadmins.admin.data.vo.RoleMenuVO;
 import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ROLE)
 @Api(tags = "系统角色")
-@com.itfenbao.gadmins.core.annotation.Menu(value = "sys.role", title = "角色管理", desc = "系统角色管理", url = "/system/role")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "role", sort = 3, parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "角色管理", desc = "系统角色管理", url = "/system/role")
 public class RoleController {
 
     @Autowired
@@ -63,12 +64,14 @@ public class RoleController {
         return JsonResult.success(page);
     }
 
-    @com.itfenbao.gadmins.core.annotation.Function(
-            value = "sys:role:add", sort = 1,
-            title = "新增", desc = "新增角色", icon = "plus",
-            btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.TOOLBAR
-    )
+    @Functions({
+            @com.itfenbao.gadmins.core.annotation.Function(
+                    value = "sys:role:add", sort = 1, title = "新增", desc = "新增角色", icon = "plus", btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.TOOLBAR),
+            @com.itfenbao.gadmins.core.annotation.Function(
+                    value = "sys:role:copy", sort = 3, title = "复制", desc = "复制角色", icon = "plus")
+    })
     @PostMapping()
+    @ApiOperation(value = "添加角色")
     public JsonResult create(@RequestBody AddRoleParam param) {
         Role role = new Role();
         role.setName(param.getName());
@@ -100,6 +103,7 @@ public class RoleController {
             title = "编辑", desc = "编辑角色"
     )
     @PutMapping("/{id}")
+    @ApiOperation(value = "更新角色")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateRoleParam param) {
         Role role = new Role();
         role.setId(id);
@@ -131,24 +135,19 @@ public class RoleController {
     }
 
     @com.itfenbao.gadmins.core.annotation.Function(
-            value = "sys:role:copy", sort = 3,
-            title = "复制", desc = "复制角色", icon = "plus"
-    )
-    public void copy() {
-    }
-
-    @com.itfenbao.gadmins.core.annotation.Function(
             value = "sys:role:del", sort = 4,
             title = "批量删除", desc = "删除账户",
             btnGroup = com.itfenbao.gadmins.core.annotation.Function.BtnGroup.TOOLBAR
     )
     @DeleteMapping("/{ids}")
+    @ApiOperation(value = "删除角色")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {
         roleService.removeByIds(ids);
         return JsonResult.success();
     }
 
     @GetMapping("/{id}/menucodes")
+    @ApiOperation(value = "获取角色已授权信息")
     public JsonResult<RoleMenuVO> menucodes(@PathVariable("id") Integer id) {
         List<RlMenuRole> menus = menuRoleService.list(Wrappers.<RlMenuRole>lambdaQuery().eq(RlMenuRole::getRoleId, id));
         List<RlFunctionRole> functions = functionRoleService.list(Wrappers.<RlFunctionRole>lambdaQuery().eq(RlFunctionRole::getRoleId, id));

@@ -1,9 +1,10 @@
 package com.itfenbao.gadmins.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
+import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.entity.Menu;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 
 import java.util.List;
 
@@ -17,10 +18,17 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
 
-    boolean saveOrUpdateByCode(String code, Menu menu);
+    /**
+     * 保存或更新菜单
+     *
+     * @param menuConfig
+     * @return
+     */
+    boolean saveOrUpdate(MenuConfig menuConfig);
 
     /**
      * 获取前端核心菜单
+     *
      * @param accountId
      * @return
      */
@@ -35,6 +43,7 @@ public interface IMenuService extends IService<Menu> {
 
     /**
      * 获取 通用Tree组件 所有菜单数据即按钮，用于角色授权
+     *
      * @return
      */
     List<MenuTreeNode> menuTreeAndFuncs();
@@ -42,8 +51,8 @@ public interface IMenuService extends IService<Menu> {
     /**
      * 获取 通用Tree组件 非菜单数据（系统菜单+导航菜单）
      *
-     * @return
      * @param ids 需要过滤的ids
+     * @return
      */
     List<MenuTreeNode> notMenuTree(List<Integer> ids);
 }

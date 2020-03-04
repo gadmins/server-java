@@ -6,17 +6,24 @@ import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.UpdateMenuParam;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.entity.Menu;
+import com.itfenbao.gadmins.admin.service.IFunctionConfigService;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.core.AppListener;
 import com.itfenbao.gadmins.core.annotation.Function;
+import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.web.JsonResult;
+import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * <p>
@@ -29,7 +36,7 @@ import java.util.List;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_MENU)
 @Api(tags = "系统菜单")
-@com.itfenbao.gadmins.core.annotation.Menu(value = "sys.menu", title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "menu", parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
 public class MenuController {
 
     @Autowired
@@ -37,6 +44,12 @@ public class MenuController {
 
     @Autowired
     IFunctionService functionService;
+
+    @Autowired
+    IFunctionConfigService functionConfigService;
+
+    @Autowired
+    AppListener appListener;
 
     @Function(value = "sys.menu.list", sort = 0, title = "查询", menu = true)
     @GetMapping("/tree")
@@ -57,8 +70,11 @@ public class MenuController {
         return JsonResult.success(menuService.notMenuTree(ids));
     }
 
+    @Functions({
+            @Function(value = "sys.menu.add", sort = 1, title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys.menu.copy", sort = 4, title = "复制菜单", btnGroup = Function.BtnGroup.TOOLBAR)
+    })
     @PostMapping
-    @Function(value = "sys.menu.add", sort = 1, title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR)
     @ApiOperation("添加菜单")
     public JsonResult add(@RequestBody AddMenuParam param) {
         int count = menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()));
@@ -120,7 +136,38 @@ public class MenuController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys.menu.copy", sort = 4, title = "复制菜单", btnGroup = Function.BtnGroup.TOOLBAR)
-    public void copy() {
+    @GetMapping("/refresh")
+    @ApiOperation("刷新菜单")
+    public JsonResult refresh() {
+        List<MenuConfig> menuConfigs = appListener.getMenuConfigs();
+        menuConfigs.forEach(mc -> {
+            AtomicReference<Integer> funcId = new AtomicReference<>();
+            // 先处理 parentCode 为空
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isEmpty(f.getParentCode())).forEach(fp -> {
+                saveFunctionPointAndConfig(funcId, fp);
+            });
+            mc.getFunctionPoints().stream().filter(f -> !StringUtils.isEmpty(f.getParentCode())).forEach(fp -> {
+                saveFunctionPointAndConfig(funcId, fp);
+            });
+            if (funcId.get() != null) {
+                mc.setFuncId(funcId.get());
+            }
+            menuService.saveOrUpdate(mc);
+        });
+        return JsonResult.success();
     }
+
+    private void saveFunctionPointAndConfig(AtomicReference<Integer> funcId, FunctionPoint fp) {
+        if (funcId.get() != null) {
+            fp.setParentFuncId(funcId.get());
+        }
+        if (functionService.saveOrUpdate(fp)) {
+            if (fp.isMenu()) {
+                funcId.set(fp.getFuncId());
+            }
+            fp.getPointConfig().setFuncId(fp.getFuncId());
+            functionConfigService.saveOrUpdate(fp.getPointConfig());
+        }
+    }
+
 }
