@@ -44,7 +44,7 @@ public class DictController {
     @Autowired
     ApplicationContext applicationContext;
 
-    @Function(value = "sys:dict:list", sort = 0, title = "字典查询", menu = true)
+    @Function(value = "sys:dict:list", sort = 0, title = "查询", menu = true)
     @GetMapping()
     @ApiOperation("分页查询")
     public JsonResult<PageData<Dict>> list(final DictQuery query) {

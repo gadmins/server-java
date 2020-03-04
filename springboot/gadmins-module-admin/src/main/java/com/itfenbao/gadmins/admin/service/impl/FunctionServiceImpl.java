@@ -65,12 +65,12 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
         function.setFrontUrl(functionPoint.getUrl());
         function.setBtnGroup(functionPoint.getBtnGroup());
         function.setSortNumber(functionPoint.getSort());
-        if (functionPoint.getParentFuncId() != null) {
-            function.setPId(functionPoint.getParentFuncId());
-        } else if (!StringUtils.isEmpty(functionPoint.getParentCode())) {
+        if (!StringUtils.isEmpty(functionPoint.getParentCode())) {
             Function one = this.getOne(Wrappers.<Function>lambdaQuery().eq(Function::getFuncCode, functionPoint.getParentCode()));
             if (one != null)
                 function.setPId(one.getId());
+        } else if (functionPoint.getParentFuncId() != null) {
+            function.setPId(functionPoint.getParentFuncId());
         }
         return function;
     }

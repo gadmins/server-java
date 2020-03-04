@@ -55,7 +55,7 @@ public class RoleController {
 
     @com.itfenbao.gadmins.core.annotation.Function(
             value = "sys:role:list", sort = 0,
-            title = "角色查询", menu = true
+            title = "查询", menu = true
     )
     @GetMapping()
     @ApiOperation(value = "分页查询非超管角色")

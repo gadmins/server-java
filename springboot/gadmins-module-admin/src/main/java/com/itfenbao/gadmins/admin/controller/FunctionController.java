@@ -58,7 +58,7 @@ public class FunctionController {
 
 
     @GetMapping("/menu")
-    @Function(value = "sys:function:list", sort = 0, title = "菜单功能查询", menu = true)
+    @Function(value = "sys:function:list", sort = 0, title = "查询", menu = true)
     public JsonResult<PageData<com.itfenbao.gadmins.admin.entity.Menu>> menuList(MenuQuery query) {
         Page<com.itfenbao.gadmins.admin.entity.Menu> page = new Page<>(query.getCurrent(), query.getPageSize());
 //        Wrappers.<com.itfenbao.gadmins.admin.entity.Menu>lambdaQuery();

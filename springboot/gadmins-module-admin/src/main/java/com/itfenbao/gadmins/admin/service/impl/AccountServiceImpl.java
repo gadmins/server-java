@@ -67,11 +67,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         this.updateById(account);
 
         // 更新账号角色
-        this.baseMapper.realDelete(Wrappers.<RlAccountRole>lambdaQuery().eq(RlAccountRole::getUserId, id));
+        this.baseMapper.realDelete(Wrappers.<RlAccountRole>lambdaQuery().eq(RlAccountRole::getAccountId, id));
         List<RlAccountRole> roles = new ArrayList<>();
         param.getRoles().forEach(roleId -> {
             RlAccountRole userRole = new RlAccountRole();
-            userRole.setUserId(id);
+            userRole.setAccountId(id);
             userRole.setRoleId(roleId);
             roles.add(userRole);
         });

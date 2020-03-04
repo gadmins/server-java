@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-02-22
+ * @since 2020-03-04
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -26,7 +26,7 @@ public class RlAccountRole extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "用户ID")
-    private Integer userId;
+    private Integer accountId;
 
     @ApiModelProperty(value = "角色ID")
     private Integer roleId;

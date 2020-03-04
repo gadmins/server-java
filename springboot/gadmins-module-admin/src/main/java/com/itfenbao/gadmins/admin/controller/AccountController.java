@@ -80,7 +80,7 @@ public class AccountController {
         if (account.getId() != null) {
             param.getRoles().forEach(roleId -> {
                 RlAccountRole userRole = new RlAccountRole();
-                userRole.setUserId(account.getId());
+                userRole.setAccountId(account.getId());
                 userRole.setRoleId(roleId);
                 userRoleService.save(userRole);
             });

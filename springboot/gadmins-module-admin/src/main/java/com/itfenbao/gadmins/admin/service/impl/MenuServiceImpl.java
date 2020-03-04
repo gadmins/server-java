@@ -169,26 +169,42 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return Tree.build(this.baseMapper.getAllMenuTree(), menu -> {
             if (AppConfig.MenuType.MENU.equals(menu.getType())) {
                 if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFuncId() != null) {
-                    List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFuncId()).list();
+                    List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFuncId()).orderByAsc(Function::getSortNumber).list();
                     Function queryFunc = functionService.getById(menu.getFuncId());
-                    if (StringUtils.isEmpty(queryFunc.getTitle())) {
-                        queryFunc.setTitle("查询");
-                    }
-                    functions.add(0, queryFunc);
-                    List<MenuTreeNode> funcs = functions.stream().map(func -> {
-                        MenuTreeNode authBtn = new MenuTreeNode();
-                        authBtn.setType("FUNC");
-                        authBtn.setId(func.getId());
-                        authBtn.setKey(func.getFuncCode());
-                        authBtn.setTitle(func.getTitle());
-                        return authBtn;
-                    }).collect(Collectors.toList());
+                    List<MenuTreeNode> funcs = getMenuTreeNodes(functions, queryFunc, true);
                     if (!CollectionUtils.isEmpty(funcs)) {
                         menu.setChildren(funcs);
                     }
                 }
             }
         });
+    }
+
+    private List<MenuTreeNode> getMenuTreeNodes(List<Function> functions, Function queryFunc, boolean loop) {
+        if (functions.isEmpty()) {
+            if (StringUtils.isEmpty(queryFunc.getTitle())) {
+                queryFunc.setTitle("查询");
+            }
+            functions.add(0, queryFunc);
+        }
+        return functions.stream().map(func -> {
+            MenuTreeNode authBtn = new MenuTreeNode();
+            authBtn.setType("FUNC");
+            authBtn.setId(func.getId());
+            authBtn.setKey(func.getFuncCode());
+            authBtn.setTitle(func.getTitle());
+            if (func.getPId() != null && loop) {
+                List<Function> childFuncs = functionService.lambdaQuery().eq(Function::getPId, func.getId()).orderByAsc(Function::getSortNumber).list();
+                if (!CollectionUtils.isEmpty(childFuncs)) {
+                    // TODO: loop 可能存在性能问题
+                    List<MenuTreeNode> childNodes = getMenuTreeNodes(childFuncs, func, true);
+                    if (!CollectionUtils.isEmpty(childFuncs)) {
+                        authBtn.setChildren(childNodes);
+                    }
+                }
+            }
+            return authBtn;
+        }).collect(Collectors.toList());
     }
 
     @Override
