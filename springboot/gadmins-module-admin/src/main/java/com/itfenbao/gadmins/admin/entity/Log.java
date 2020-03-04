@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-02-22
+ * @since 2020-03-04
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -24,6 +24,9 @@ import lombok.experimental.Accessors;
 public class Log extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "ip地址")
+    private String ip;
 
     @ApiModelProperty(value = "日志内容")
     private String log;
