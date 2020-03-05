@@ -72,6 +72,9 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
         } else if (functionPoint.getParentFuncId() != null) {
             function.setPId(functionPoint.getParentFuncId());
         }
+        if(function.getPId() == null) {
+            function.setBtnGroup(null);
+        }
         return function;
     }
 }

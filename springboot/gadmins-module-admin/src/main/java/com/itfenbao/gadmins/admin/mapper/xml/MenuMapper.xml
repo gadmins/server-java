@@ -31,5 +31,15 @@
         _menu.enable = 1 and (_menu.type = 'SYS_MENU' or
         _menu.type = 'NAV_MENU') order by _menu.sort_number
     </select>
+    <select id="getListByPage" resultType="com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO">
+        select _function.id, _function.func_group, _function.func_desc, _menu.m_code as code, _menu.txt as title,
+        _function.elink, _function.front_url, _function.sort_number, _function.created_at, _function.updated_at,
+        _function.enable
+        from sys_admin_menu as _menu
+        left join sys_admin_function as _function on _function.id = _menu.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
 
 </mapper>

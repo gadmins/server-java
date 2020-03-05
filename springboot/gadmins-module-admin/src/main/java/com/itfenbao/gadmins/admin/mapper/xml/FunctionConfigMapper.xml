@@ -2,4 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.itfenbao.gadmins.admin.mapper.FunctionConfigMapper">
 
+    <select id="getListByPage" resultType="com.itfenbao.gadmins.admin.data.vo.FunctionPointVO">
+        select _func_config.id, _function.title as txt, _function.func_desc as `desc`, _func_config.api_url,
+        _func_config.api_method, _func_config.common_schema as `schema` from sys_admin_function as _function
+        left join sys_admin_function_config as _func_config on _function.id = _func_config.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
 </mapper>

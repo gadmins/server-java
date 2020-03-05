@@ -1,7 +1,11 @@
 package com.itfenbao.gadmins.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.data.vo.FunctionPointVO;
 import com.itfenbao.gadmins.admin.entity.FunctionConfig;
+import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPointConfig;
 
 /**
@@ -14,4 +18,6 @@ import com.itfenbao.gadmins.core.web.vo.menu.FunctionPointConfig;
  */
 public interface IFunctionConfigService extends IService<FunctionConfig> {
     boolean saveOrUpdate(FunctionPointConfig pointConfig);
+
+    Page<FunctionPointVO> getListByPage(PageQuery query, Integer funcPid);
 }

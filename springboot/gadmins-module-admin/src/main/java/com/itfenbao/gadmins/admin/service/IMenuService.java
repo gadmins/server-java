@@ -1,8 +1,12 @@
 package com.itfenbao.gadmins.admin.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
+import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 
@@ -55,4 +59,6 @@ public interface IMenuService extends IService<Menu> {
      * @return
      */
     List<MenuTreeNode> notMenuTree(List<Integer> ids);
+
+    Page<FunctionMenuVO> getListByPage(MenuQuery query, Wrapper wrapper);
 }

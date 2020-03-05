@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 用来标注菜单功能点
+ * @author itfenbao
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -22,7 +23,7 @@ public @interface Function {
     String title() default "";
 
     // 功能描述
-    String desc() default "";
+    String desc();
 
     // 功能icon
     String icon() default "";
@@ -40,7 +41,9 @@ public @interface Function {
     // 按钮组
     String btnGroup() default BtnGroup.OP;
 
-    // 按钮组类型
+    /**
+     * 按钮组类型
+     */
     interface BtnGroup {
         // 工具栏按钮
         String TOOLBAR = "TOOLBAR";

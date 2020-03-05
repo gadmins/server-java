@@ -44,7 +44,7 @@ public class DictController {
     @Autowired
     ApplicationContext applicationContext;
 
-    @Function(value = "sys:dict:list", sort = 0, title = "查询", menu = true)
+    @Function(value = "sys:dict:list", sort = 0, title = "查询", desc = "查询字典", menu = true)
     @GetMapping()
     @ApiOperation("分页查询")
     public JsonResult<PageData<Dict>> list(final DictQuery query) {
@@ -54,10 +54,10 @@ public class DictController {
     }
 
     @Functions({
-            @Function(value = "sys:dict:add", sort = 1, title = "新建", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:dict:add", sort = 1, title = "新建", desc = "新建字典", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR),
             @Function(value = "sys:dict:copy", sort = 3, title = "复制", desc = "复制字典"),
-            @Function(value = "sys:dict:data:list:add", sort = 6, parentCode = "sys:dict:data:list", title = "新建", btnGroup = Function.BtnGroup.TOOLBAR),
-            @Function(value = "sys:dict:data:list:copy", sort = 9, parentCode = "sys:dict:data:list", title = "复制")
+            @Function(value = "sys:dict:data:list:add", sort = 6, parentCode = "sys:dict:data:list", title = "新建", desc = "新建字典数据", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:dict:data:list:copy", sort = 9, parentCode = "sys:dict:data:list", title = "复制", desc = "复制字典数据")
     })
     @PostMapping()
     @ApiOperation("添加字典")
@@ -75,7 +75,7 @@ public class DictController {
 
     @Functions({
             @Function(value = "sys:dict:edit", sort = 2, title = "编辑", desc = "编辑字典"),
-            @Function(value = "sys:dict:data:list:edit", sort = 8, parentCode = "sys:dict:data:list", title = "编辑")
+            @Function(value = "sys:dict:data:list:edit", sort = 8, parentCode = "sys:dict:data:list", title = "编辑", desc = "编辑字典数据")
     })
     @PutMapping("/{id}")
     @ApiOperation("更新字典")
@@ -92,8 +92,8 @@ public class DictController {
     }
 
     @Functions({
-            @Function(value = "sys:dict:del", sort = 4, title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR),
-            @Function(value = "sys:dict:data:list:del", sort = 7, parentCode = "sys:dict:data:list", title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
+            @Function(value = "sys:dict:del", sort = 4, title = "批量删除", desc = "批量删除字典", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys:dict:data:list:del", sort = 7, parentCode = "sys:dict:data:list", title = "批量删除", desc = "批量删除字典数据", btnGroup = Function.BtnGroup.TOOLBAR)
 
     })
     @DeleteMapping("/{ids}")
@@ -104,7 +104,7 @@ public class DictController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys:dict:data:list", sort = 5, title = "数据列表", url = "/system/dict/list")
+    @Function(value = "sys:dict:data:list", sort = 5, title = "查看字典数据", desc = "查看字典数据", url = "/system/dict/list")
     @GetMapping("/list/{pid}")
     @ApiOperation("查询字典数据")
     public JsonResult<PageData<Dict>> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid, final DictQuery query) {
