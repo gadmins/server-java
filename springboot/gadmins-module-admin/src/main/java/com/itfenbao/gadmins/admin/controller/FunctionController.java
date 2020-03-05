@@ -1,14 +1,14 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
-import cn.hutool.core.map.CamelCaseMap;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
+import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
+import com.itfenbao.gadmins.admin.data.vo.FunctionPointVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
-import com.itfenbao.gadmins.admin.entity.FunctionConfig;
 import com.itfenbao.gadmins.admin.service.IFunctionConfigService;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
@@ -17,17 +17,14 @@ import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.web.JsonResult;
 import com.itfenbao.gadmins.core.web.PageData;
+import com.itfenbao.gadmins.core.web.query.PageQuery;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -41,7 +38,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_FUNCTION)
 @Api(tags = "系统功能点")
-@Menu(value = "function", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 1, title = "菜单功能点管理", desc = "系统菜单功能配置管理", url = "/system/function")
+@Menu(value = "function", parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "功能组管理", desc = "系统菜单功能配置管理", url = "/system/function")
 public class FunctionController {
 
     @Autowired
@@ -56,45 +53,57 @@ public class FunctionController {
     @Autowired
     ObjectMapper objectMapper;
 
-
-    @GetMapping("/menu")
-    @Function(value = "sys:function:list", sort = 0, title = "查询", menu = true)
-    public JsonResult<PageData<com.itfenbao.gadmins.admin.entity.Menu>> menuList(MenuQuery query) {
-        Page<com.itfenbao.gadmins.admin.entity.Menu> page = new Page<>(query.getCurrent(), query.getPageSize());
-//        Wrappers.<com.itfenbao.gadmins.admin.entity.Menu>lambdaQuery();
-        menuService.page(page);
-        return JsonResult.success(PageData.get(page));
-    }
-
-
     @GetMapping("/list")
-    @ApiOperation("功能点列表")
+    @ApiOperation("功能组列表")
     public JsonResult<List<FunctionVO>> list() {
         return JsonResult.success(functionService.getListPidIsNull());
     }
 
-    @GetMapping("/func_id/{id}")
-    @ApiOperation("获取功能点配置")
-    public JsonResult<CamelCaseMap> getByFuncId(@PathVariable("id") Long id) {
-        LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(FunctionConfig::getFuncId, id);
-        Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
-        try {
-            convertToMap(rs, "common_schema", "search_schema");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return JsonResult.success(new CamelCaseMap(rs));
+    @GetMapping("/menu")
+    @Function(value = "sys:function:list", sort = 0, title = "查询", desc = "功能组查询", menu = true)
+    @ApiOperation("功能组分页查询")
+    public JsonResult<PageData<FunctionMenuVO>> menuList(MenuQuery query) {
+        Wrapper wrapper = Wrappers.query().eq("_menu.type", AppConfig.MenuType.MENU);
+        Page<FunctionMenuVO> page = menuService.getListByPage(query, wrapper);
+        return JsonResult.success(PageData.get(page));
     }
 
-    private void convertToMap(Map map, String... keys) throws JsonProcessingException {
-        for (int i = 0; i < keys.length; i++) {
-            String key = keys[i];
-            if (map.containsKey(key)) {
-                Map schema = objectMapper.readValue(map.get(key).toString(), Map.class);
-                map.put(key, schema);
-            }
-        }
+    @GetMapping("/menu/points/{id}")
+    @Function(value = "sys:function:group:list", sort = 1, title = "查看功能点", desc = "查看功能点")
+    @ApiOperation("功能点分页查询")
+    public JsonResult<PageData<FunctionPointVO>> functionPointList(@PathVariable Integer id, PageQuery query) {
+        Page<FunctionPointVO> page = functionConfigService.getListByPage(query, id);
+        return JsonResult.success(PageData.get(page));
     }
+
+    @Function(value = "sys:function:group:list:edit", parentCode="sys:function:group:list", sort = 1, title = "配置", desc = "配置功能点")
+    @PutMapping("/menu/point/{id}")
+    @ApiOperation("功能点编辑")
+    public JsonResult editPoint() {
+        return JsonResult.success();
+    }
+//    @GetMapping("/func_id/{id}")
+//    @ApiOperation("获取功能点配置")
+//    public JsonResult<CamelCaseMap> getByFuncId(@PathVariable("id") Long id) {
+//        LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(FunctionConfig::getFuncId, id);
+//        Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
+//        try {
+//            convertToMap(rs, "common_schema", "search_schema");
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        return JsonResult.success(new CamelCaseMap(rs));
+//    }
+//
+//    private void convertToMap(Map map, String... keys) throws JsonProcessingException {
+//        for (int i = 0; i < keys.length; i++) {
+//            String key = keys[i];
+//            if (map.containsKey(key)) {
+//                Map schema = objectMapper.readValue(map.get(key).toString(), Map.class);
+//                map.put(key, schema);
+//            }
+//        }
+//    }
 
 }

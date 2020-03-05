@@ -2,12 +2,16 @@ package com.itfenbao.gadmins.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.CamelCaseLinkedMap;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
+import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.entity.Menu;
@@ -210,5 +214,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public List<MenuTreeNode> notMenuTree(List<Integer> ids) {
         return Tree.build(this.baseMapper.getAllParentMenuTree(ids));
+    }
+
+    @Override
+    public Page<FunctionMenuVO> getListByPage(MenuQuery query, Wrapper wrapper) {
+        Page<FunctionMenuVO> page = new Page<>(query.getCurrent(), query.getPageSize());
+        return this.baseMapper.getListByPage(page, wrapper);
     }
 }

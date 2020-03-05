@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_MENU)
 @Api(tags = "系统菜单")
-@com.itfenbao.gadmins.core.annotation.Menu(value = "menu", parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "menu", sort = 1, parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
 public class MenuController {
 
     @Autowired
@@ -51,7 +51,7 @@ public class MenuController {
     @Autowired
     AppListener appListener;
 
-    @Function(value = "sys.menu.list", sort = 0, title = "查询", menu = true)
+    @Function(value = "sys.menu.list", sort = 0, title = "查询", desc = "查询菜单", menu = true)
     @GetMapping("/tree")
     @ApiOperation("获取菜单树")
     public JsonResult<List<MenuTreeNode>> menuTree() {
@@ -71,8 +71,8 @@ public class MenuController {
     }
 
     @Functions({
-            @Function(value = "sys.menu.add", sort = 1, title = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR),
-            @Function(value = "sys.menu.copy", sort = 4, title = "复制菜单", btnGroup = Function.BtnGroup.TOOLBAR)
+            @Function(value = "sys.menu.add", sort = 1, title = "添加", desc = "添加菜单", btnGroup = Function.BtnGroup.TOOLBAR),
+            @Function(value = "sys.menu.copy", sort = 4, title = "复制菜单", desc = "复制菜单", btnGroup = Function.BtnGroup.TOOLBAR)
     })
     @PostMapping
     @ApiOperation("添加菜单")
@@ -101,7 +101,7 @@ public class MenuController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys.menu.edit", sort = 2, title = "编辑", btnGroup = Function.BtnGroup.TOOLBAR)
+    @Function(value = "sys.menu.edit", sort = 2, title = "编辑", desc = "编辑菜单", btnGroup = Function.BtnGroup.TOOLBAR)
     @PutMapping("/{id}")
     @ApiOperation("修改菜单")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateMenuParam param) {
@@ -128,7 +128,7 @@ public class MenuController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys.menu.del", sort = 3, title = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
+    @Function(value = "sys.menu.del", sort = 3, title = "批量删除", desc = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
     @DeleteMapping("/{ids}")
     @ApiOperation("删除菜单")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {

@@ -58,7 +58,7 @@ public class AccountController {
     @Autowired
     IMenuService menuService;
 
-    @Function(value = "sys:account:list", sort = 0, title = "账号查询", menu = true)
+    @Function(value = "sys:account:list", sort = 0, title = "查询", desc = "查询账号", menu = true)
     @GetMapping()
     @ApiOperation(value = "账号查询")
     public JsonResult<PageData<AccountVO>> list(final AccountQuery query) {
@@ -71,7 +71,7 @@ public class AccountController {
             @Function(value = "sys:account:add", sort = 1, title = "新增", desc = "新增账户", icon = "plus", btnGroup = Function.BtnGroup.TOOLBAR),
             @Function(value = "sys:account:copy", sort = 3, title = "复制", desc = "复制账户", icon = "plus")
     })
-    @PostMapping()
+    @PostMapping
     public JsonResult create(@RequestBody AddAccountParam param) {
         Account account = new Account();
         account.setName(param.getName());

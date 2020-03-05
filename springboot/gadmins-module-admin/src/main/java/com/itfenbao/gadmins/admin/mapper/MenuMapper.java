@@ -1,8 +1,13 @@
 package com.itfenbao.gadmins.admin.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
+import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
+import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,5 +35,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
     List<MenuTreeNode> getAllMenuTree();
 
     List<MenuTreeNode> getAllParentMenuTree(@Param("ids") List<Integer> ids);
+
+    Page<FunctionMenuVO> getListByPage(Page<FunctionMenuVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
 
 }

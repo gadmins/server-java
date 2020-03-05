@@ -16,7 +16,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -45,14 +45,14 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                         .filter(m -> AnnotationUtils.findAnnotation(m, Function.class) != null
                                 || AnnotationUtils.findAnnotation(m, Functions.class) != null)
                         .forEach(m -> {
-                            RequestMapping methodMapping = AnnotationUtils.findAnnotation(m, RequestMapping.class);
+                            RequestInfo requestInfo = getRequestInfo(m);
                             Function function = AnnotationUtils.findAnnotation(m, Function.class);
                             Functions functions = AnnotationUtils.findAnnotation(m, Functions.class);
                             if (function != null) {
-                                points.add(createFunctionPoint(baseRoutePath, function, methodMapping, menuConfig.getUrl()));
+                                points.add(createFunctionPoint(baseRoutePath, function, requestInfo, menuConfig.getUrl()));
                             } else if (functions != null) {
                                 Arrays.stream(functions.value()).forEach(function1 -> {
-                                    points.add(createFunctionPoint(baseRoutePath, function1, methodMapping, menuConfig.getUrl()));
+                                    points.add(createFunctionPoint(baseRoutePath, function1, requestInfo, menuConfig.getUrl()));
                                 });
                             }
                         });
@@ -92,10 +92,10 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
      *
      * @param baseRoutePath
      * @param function
-     * @param requestMapping
+     * @param requestInfo
      * @return
      */
-    private FunctionPoint createFunctionPoint(String baseRoutePath, Function function, RequestMapping requestMapping, String url) {
+    private FunctionPoint createFunctionPoint(String baseRoutePath, Function function, RequestInfo requestInfo, String url) {
         FunctionPoint functionPoint = new FunctionPoint();
         functionPoint.setGroup(function.group());
         functionPoint.setCode(function.value());
@@ -113,17 +113,52 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
         functionPoint.setBtnGroup(function.btnGroup());
 
         FunctionPointConfig pointConfig = new FunctionPointConfig();
-        if (requestMapping != null) {
-            pointConfig.setUrl(baseRoutePath + (requestMapping.value().length > 0 ? requestMapping.value()[0] : ""));
-            pointConfig.setMethod(requestMapping.method()[0].name());
-        } else {
-            pointConfig.setUrl(baseRoutePath);
-        }
+        pointConfig.setUrl(baseRoutePath + requestInfo.url);
+        pointConfig.setMethod(requestInfo.method);
         functionPoint.setPointConfig(pointConfig);
         return functionPoint;
     }
 
+    private RequestInfo getRequestInfo(Method method) {
+        RequestInfo info = new RequestInfo();
+        GetMapping get = AnnotationUtils.findAnnotation(method, GetMapping.class);
+        PostMapping post = AnnotationUtils.findAnnotation(method, PostMapping.class);
+        PutMapping put = AnnotationUtils.findAnnotation(method, PutMapping.class);
+        DeleteMapping delete = AnnotationUtils.findAnnotation(method, DeleteMapping.class);
+        if (get == null && post == null && put == null && delete == null) {
+            RequestMapping requestMapping = AnnotationUtils.findAnnotation(method, RequestMapping.class);
+            if (requestMapping != null) {
+                info.url = getPath(requestMapping.path());
+                info.method = requestMapping.method().length > 0 ? requestMapping.method()[0].name() : "GET";
+            }
+        } else {
+            if (get != null) {
+                info.url = getPath(get.path());
+                info.method = "GET";
+            } else if (post != null) {
+                info.url = getPath(post.path());
+                info.method = "POST";
+            } else if (put != null) {
+                info.url = getPath(put.path());
+                info.method = "PUT";
+            } else if (delete != null) {
+                info.url = getPath(delete.path());
+                info.method = "DELETE";
+            }
+        }
+        return info;
+    }
+
+    private String getPath(String[] path) {
+        return path.length > 0 ? path[0] : "";
+    }
+
     public List<MenuConfig> getMenuConfigs() {
         return menuConfigs;
+    }
+
+    private static class RequestInfo {
+        public String url;
+        public String method;
     }
 }
