@@ -69,7 +69,7 @@ public class FunctionController {
     }
 
     @GetMapping("/menu/points/{id}")
-    @Function(value = "sys:function:group:list", sort = 1, title = "查看功能点", desc = "查看功能点")
+    @Function(value = "sys:function:group:list", sort = 1, title = "查看功能点", desc = "查看功能点", url = "/system/function/list")
     @ApiOperation("功能点分页查询")
     public JsonResult<PageData<FunctionPointVO>> functionPointList(@PathVariable Integer id, PageQuery query) {
         Page<FunctionPointVO> page = functionConfigService.getListByPage(query, id);

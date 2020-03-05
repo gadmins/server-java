@@ -67,12 +67,30 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
         function.setSortNumber(functionPoint.getSort());
         if (!StringUtils.isEmpty(functionPoint.getParentCode())) {
             Function one = this.getOne(Wrappers.<Function>lambdaQuery().eq(Function::getFuncCode, functionPoint.getParentCode()));
-            if (one != null)
+            if (one != null) {
                 function.setPId(one.getId());
+                if (one.getVirtualMenu() == false) {
+                    // 标记为VirtualMenu
+                    Function functionParentCode = new Function();
+                    functionParentCode.setId(one.getId());
+                    functionParentCode.setVirtualMenu(true);
+                    this.updateById(functionParentCode);
+                    // FIXME: 复制: 仅用于角色分配查询
+                    Function copyFunc = new Function();
+                    copyFunc.setFuncGroup(one.getFuncGroup());
+                    copyFunc.setFuncDesc(one.getFuncDesc());
+                    copyFunc.setTitle("查询");
+                    copyFunc.setFuncCode(one.getFuncCode() + "-vm");
+                    copyFunc.setBtnGroup(one.getBtnGroup());
+                    copyFunc.setBtnIcon(one.getBtnIcon());
+                    copyFunc.setPId(one.getId());
+                    this.save(copyFunc);
+                }
+            }
         } else if (functionPoint.getParentFuncId() != null) {
             function.setPId(functionPoint.getParentFuncId());
         }
-        if(function.getPId() == null) {
+        if (function.getPId() == null) {
             function.setBtnGroup(null);
         }
         return function;

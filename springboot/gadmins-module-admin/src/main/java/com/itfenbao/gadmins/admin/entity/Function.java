@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-03-04
+ * @since 2020-03-05
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -51,6 +51,9 @@ public class Function extends BaseEntity {
 
     @ApiModelProperty(value = "父级ID")
     private Integer pId;
+
+    @ApiModelProperty(value = "虚拟菜单")
+    private Boolean virtualMenu;
 
     @ApiModelProperty(value = "排序")
     private Integer sortNumber;
