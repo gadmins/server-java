@@ -92,7 +92,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public CoreMenuData getCoreMenuData(Integer accountId) {
         boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
         // 获取全部菜单
-        List<MenuVO> allMenu = this.baseMapper.getAllMenu();
+        List<MenuVO> allMenu = this.getAllMenu();
         // 获取全部功能
         List<AuthFunciontVO> funciontVOS = this.functionService.list().stream().map(i -> {
             AuthFunciontVO funciontVO = new AuthFunciontVO();
@@ -248,6 +248,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public List<MenuTreeNode> notMenuTree(List<Integer> ids) {
         return Tree.build(this.baseMapper.getAllParentMenuTree(ids));
+    }
+
+    @Override
+    public List<MenuVO> getAllMenu() {
+        return this.baseMapper.getAllMenu();
     }
 
     @Override

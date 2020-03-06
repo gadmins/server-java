@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -80,7 +82,8 @@ public class TokenUtils implements ApplicationContextAware {
         tokenManager.removeToken(token);
     }
 
-    public static String getToken(AppConfig.TokenType tokenType, HttpServletRequest request) {
+    public static String getToken(AppConfig.TokenType tokenType) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         AuthProperties authProperties = getAuthProperties(tokenType);
         String key = authProperties.getKey();
         String token = null;
@@ -107,11 +110,9 @@ public class TokenUtils implements ApplicationContextAware {
         return tokenManager.getUniqueIdFromToken(token, authProperties.getSecret());
     }
 
-    public static String getUniqueIdFromToken(AppConfig.TokenType tokenType, HttpServletRequest request) {
-        TokenManager tokenManager = getTokenManager(tokenType);
-        AuthProperties authProperties = getAuthProperties(tokenType);
-        String token = getToken(tokenType, request);
-        return tokenManager.getUniqueIdFromToken(token, authProperties.getSecret());
+    public static String getUniqueIdFromToken(AppConfig.TokenType tokenType) {
+        String token = getToken(tokenType);
+        return getUniqueIdFromToken(tokenType, token);
     }
 
 }
