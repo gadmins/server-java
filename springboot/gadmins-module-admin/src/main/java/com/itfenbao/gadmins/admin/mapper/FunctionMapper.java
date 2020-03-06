@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.admin.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -22,4 +23,6 @@ public interface FunctionMapper extends BaseMapper<Function> {
     List<FunctionVO> getListPidIsNull();
 
     List<Integer> queryPIds(@Param(Constants.WRAPPER) Wrapper wrapper);
+
+    List<AuthFunciontVO> queryAuthFunctions(@Param(Constants.WRAPPER) Wrapper wrapper);
 }

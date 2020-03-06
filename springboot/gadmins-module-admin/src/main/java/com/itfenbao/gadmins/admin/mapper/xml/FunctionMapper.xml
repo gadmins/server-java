@@ -10,7 +10,15 @@
         where _func.enable = 1 and _func.p_id is null
     </select>
     <select id="queryPIds" resultType="java.lang.Integer">
-        select _function.p_id from sys_admin_rl_function_role as _function_role left join sys_admin_function as
+        select _function.menu_func_id from sys_admin_rl_function_role as _function_role left join sys_admin_function as
+        _function on _function.id = _function_role.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+    <select id="queryAuthFunctions" resultType="com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO">
+        select _function.id, _function.func_code as `code` from sys_admin_rl_function_role as _function_role left join
+        sys_admin_function as
         _function on _function.id = _function_role.func_id
         <if test="ew != null">
             ${ew.customSqlSegment}

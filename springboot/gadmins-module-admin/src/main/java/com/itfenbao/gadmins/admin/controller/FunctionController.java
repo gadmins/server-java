@@ -63,8 +63,7 @@ public class FunctionController {
     @Function(value = "sys:function:list", sort = 0, title = "查询", desc = "功能组查询", menu = true)
     @ApiOperation("功能组分页查询")
     public JsonResult<PageData<FunctionMenuVO>> menuList(MenuQuery query) {
-        Wrapper wrapper = Wrappers.query().eq("_menu.type", AppConfig.MenuType.MENU);
-        Page<FunctionMenuVO> page = menuService.getListByPage(query, wrapper);
+        Page<FunctionMenuVO> page = menuService.getListByPage(query);
         return JsonResult.success(PageData.get(page));
     }
 

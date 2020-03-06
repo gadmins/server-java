@@ -2,6 +2,10 @@ package com.itfenbao.gadmins.core.annotation;
 
 import java.lang.annotation.*;
 
+/**
+ * 菜单注解
+ * @author itfenbao
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited

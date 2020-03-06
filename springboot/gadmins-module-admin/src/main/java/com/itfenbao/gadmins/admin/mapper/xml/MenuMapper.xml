@@ -7,10 +7,10 @@
         left join sys_admin_function as _func
         on _menu.`func_id` = _func.`id` where _menu.enable = 1
     </select>
-    <select id="getAllMenuByUserId" resultType="com.itfenbao.gadmins.admin.data.vo.MenuVO">
-        select * from sys_admin_menu where id in (select menu_id from sys_admin_rl_menu_role where role_id in (select
-        role_id from sys_admin_rl_account_role where account_id = 2) group by menu_id)
-    </select>
+<!--    <select id="getAllMenuByUserId" resultType="com.itfenbao.gadmins.admin.data.vo.MenuVO">-->
+<!--        select * from sys_admin_menu where id in (select menu_id from sys_admin_rl_menu_role where role_id in (select-->
+<!--        role_id from sys_admin_rl_account_role where account_id = 2) group by menu_id)-->
+<!--    </select>-->
     <select id="getAllMenuTree" resultType="com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode">
         select _menu.id, _menu.p_id as parentId, _menu.type, _menu.icon, _menu.txt as `title`, _menu.sort_number,
         _menu.func_id,_menu.m_code as `key`,_func.elink, _func.front_url as `url` from sys_admin_menu as _menu left join
@@ -33,7 +33,7 @@
     </select>
     <select id="getListByPage" resultType="com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO">
         select _function.id, _function.func_group, _function.func_desc, _menu.m_code as code, _menu.txt as title,
-        _function.elink, _function.front_url, _function.sort_number, _function.created_at, _function.updated_at,
+        _function.elink, _function.front_url, _menu.sort_number, _function.created_at, _function.updated_at,
         _function.enable
         from sys_admin_menu as _menu
         left join sys_admin_function as _function on _function.id = _menu.func_id
