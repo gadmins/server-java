@@ -77,6 +77,7 @@ CREATE TABLE `sys_admin_function` (
   `elink` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否是外链',
   `front_url` varchar(255) DEFAULT NULL COMMENT '前端路由',
   `p_id` int(11) DEFAULT NULL COMMENT '父级ID',
+  `menu_func_id` int(11) NOT NULL DEFAULT '0' COMMENT '关联菜单功能ID，可能就是自己',
   `virtual_menu` tinyint(1) NOT NULL DEFAULT '0' COMMENT '虚拟菜单',
   `sort_number` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
@@ -247,9 +248,9 @@ CREATE TABLE `sys_admin_role` (
 
 
 
-INSERT INTO `sys_admin_function` (`id`, `func_group`, `func_code`, `func_desc`, `title`, `btn_group`, `btn_icon`, `elink`, `front_url`, `p_id`, `sort_number`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
+INSERT INTO `sys_admin_function` (`id`, `func_group`, `func_code`, `func_desc`, `title`, `btn_group`, `btn_icon`, `elink`, `front_url`, `menu_func_id`, `p_id`, `sort_number`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
 VALUES
-	(1, 'admin', 'sys:welcome', '欢迎页', '欢迎页', NULL, NULL, 0, '/home/welcome', NULL, 0, NULL, NULL, '2020-02-28 07:16:14', '2020-02-28 07:22:52', 1);
+	(1, 'admin', 'sys:welcome', '欢迎页', '欢迎页', NULL, NULL, 0, '/home/welcome', 1, NULL, 0, NULL, NULL, '2020-02-28 07:16:14', '2020-02-28 07:22:52', 1);
 
 
 INSERT INTO `sys_admin_menu` (`id`,`m_code`, `txt`, `icon`, `type`, `func_id`, `sort_number`, `p_id`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)

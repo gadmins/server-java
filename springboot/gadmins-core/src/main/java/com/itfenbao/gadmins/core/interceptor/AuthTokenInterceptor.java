@@ -34,7 +34,7 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
-        String token = TokenUtils.getToken(tokenType, request);
+        String token = TokenUtils.getToken(tokenType);
         // 检查token
         if (StringUtils.isEmpty(token)) {
             throw new NotLoginException();

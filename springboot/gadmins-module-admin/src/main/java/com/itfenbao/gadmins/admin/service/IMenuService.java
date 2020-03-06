@@ -7,6 +7,7 @@ import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
+import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 
@@ -59,6 +60,8 @@ public interface IMenuService extends IService<Menu> {
      * @return
      */
     List<MenuTreeNode> notMenuTree(List<Integer> ids);
+
+    List<MenuVO> getAllMenu();
 
     Page<FunctionMenuVO> getListByPage(MenuQuery query);
 }

@@ -117,7 +117,7 @@ public class AccountController {
      */
     @GetMapping("/menu")
     public JsonResult<CoreMenuData> menu(HttpServletRequest request) {
-        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN, request);
+        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
         return JsonResult.success(menuService.getCoreMenuData(Integer.parseInt(id)));
     }
 
@@ -169,8 +169,8 @@ public class AccountController {
     }
 
     @GetMapping("/currentAccount")
-    public JsonResult<Account> currentAccount(HttpServletRequest request) {
-        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN, request);
+    public JsonResult<Account> currentAccount() {
+        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
         Account account = accountService.getById(id);
         if (account == null) {
             return JsonResult.failMessage("用户不存在不存在");
@@ -182,8 +182,8 @@ public class AccountController {
 
     @PostMapping("/logout")
     @PassToken
-    public JsonResult logout(HttpServletRequest request) {
-        String token = TokenUtils.getToken(AppConfig.TokenType.ADMIN, request);
+    public JsonResult logout() {
+        String token = TokenUtils.getToken(AppConfig.TokenType.ADMIN);
         TokenUtils.removeToken(AppConfig.TokenType.ADMIN, token);
         return JsonResult.success("登出成功");
     }
