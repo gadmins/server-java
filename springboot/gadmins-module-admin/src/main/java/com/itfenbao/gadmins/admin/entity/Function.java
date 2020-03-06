@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-03-05
+ * @since 2020-03-06
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -48,6 +48,9 @@ public class Function extends BaseEntity {
 
     @ApiModelProperty(value = "前端路由")
     private String frontUrl;
+
+    @ApiModelProperty(value = "关联菜单功能ID，可能就是自己")
+    private Integer menuFuncId;
 
     @ApiModelProperty(value = "父级ID")
     private Integer pId;

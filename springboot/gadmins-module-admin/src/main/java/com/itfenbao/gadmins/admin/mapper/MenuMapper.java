@@ -24,13 +24,13 @@ import java.util.List;
 public interface MenuMapper extends BaseMapper<Menu> {
     List<MenuVO> getAllMenu();
 
-    /**
-     * 获取用户菜单
-     *
-     * @param userId
-     * @return
-     */
-    List<MenuVO> getAllMenuByUserId(Integer userId);
+//    /**
+//     * 获取用户菜单
+//     *
+//     * @param userId
+//     * @return
+//     */
+//    List<MenuVO> getAllMenuByUserId(Integer userId);
 
     List<MenuTreeNode> getAllMenuTree();
 

@@ -60,5 +60,5 @@ public interface IMenuService extends IService<Menu> {
      */
     List<MenuTreeNode> notMenuTree(List<Integer> ids);
 
-    Page<FunctionMenuVO> getListByPage(MenuQuery query, Wrapper wrapper);
+    Page<FunctionMenuVO> getListByPage(MenuQuery query);
 }

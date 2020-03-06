@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
@@ -90,10 +91,37 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public CoreMenuData getCoreMenuData(Integer accountId) {
         boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
+        // 获取全部菜单
         List<MenuVO> allMenu = this.baseMapper.getAllMenu();
+        // 获取全部功能
+        List<AuthFunciontVO> funciontVOS = this.functionService.list().stream().map(i -> {
+            AuthFunciontVO funciontVO = new AuthFunciontVO();
+            funciontVO.setId(i.getId());
+            funciontVO.setCode(i.getFuncCode());
+            return funciontVO;
+        }).collect(Collectors.toList());
+
         if (!isSuperAdmin) {
             List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
             List<Integer> funcPids = this.functionService.getPIdsByRoles(roleIds);
+
+            // 查询角色功能
+            funciontVOS = this.functionService.getFunctionsByRoles(roleIds);
+
+            // 获取-vm的实际功能（即-vm的pid）
+            List<Integer> vmIds = funciontVOS.stream().filter(i -> i.getCode().endsWith("-vm")).map(i -> i.getId()).collect(Collectors.toList());
+            List<Integer> realIds = this.functionService.list(Wrappers.<Function>lambdaQuery().in(Function::getId, vmIds))
+                    .stream().map(i -> i.getPId()).collect(Collectors.toList());
+            List<AuthFunciontVO> realAuths = this.functionService.list(Wrappers.<Function>lambdaQuery().in(Function::getId, realIds))
+                    .stream().map(i -> {
+                        AuthFunciontVO funciontVO = new AuthFunciontVO();
+                        funciontVO.setId(i.getId());
+                        funciontVO.setCode(i.getFuncCode());
+                        return funciontVO;
+                    }).collect(Collectors.toList());
+            // 去重添加
+            funciontVOS = CollUtil.addAllIfNotContains(funciontVOS, realAuths);
+
             // 查询角色菜单ids
             LambdaQueryWrapper<RlMenuRole> wrapper = Wrappers.<RlMenuRole>lambdaQuery();
             if (!CollectionUtils.isEmpty(roleIds)) {
@@ -145,7 +173,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         menuTree.stream().forEach(item -> {
             item.setPath(getPath(item));
         });
-        return new CoreMenuData(menuTree, defMenuTxtMap);
+        funciontVOS = funciontVOS.stream().filter(i -> !i.getCode().endsWith("-vm")).collect(Collectors.toList());
+        return new CoreMenuData(menuTree, funciontVOS, defMenuTxtMap);
     }
 
     /**
@@ -175,7 +204,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
                 if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFuncId() != null) {
                     List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFuncId()).orderByAsc(Function::getSortNumber).list();
                     Function queryFunc = functionService.getById(menu.getFuncId());
-                    List<MenuTreeNode> funcs = getMenuTreeNodes(functions, queryFunc, true, true);
+                    List<MenuTreeNode> funcs = getMenuTreeNodes(functions, queryFunc);
                     if (!CollectionUtils.isEmpty(funcs)) {
                         menu.setChildren(funcs);
                     }
@@ -187,12 +216,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     /**
      * @param functions
      * @param queryFunc
-     * @param loop
-     * @param append
      * @return
      */
-    private List<MenuTreeNode> getMenuTreeNodes(List<Function> functions, Function queryFunc, boolean loop, boolean append) {
-        if (append && queryFunc != null) {
+    private List<MenuTreeNode> getMenuTreeNodes(List<Function> functions, Function queryFunc) {
+        if (queryFunc != null) {
             if (StringUtils.isEmpty(queryFunc.getTitle())) {
                 queryFunc.setTitle("查询");
             }
@@ -204,11 +231,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             authBtn.setId(func.getId());
             authBtn.setKey(func.getFuncCode());
             authBtn.setTitle(func.getTitle());
-            if (func.getVirtualMenu() && loop) {
+            if (func.getVirtualMenu()) {
                 List<Function> childFuncs = functionService.lambdaQuery().eq(Function::getPId, func.getId()).orderByAsc(Function::getSortNumber).list();
                 if (!CollectionUtils.isEmpty(childFuncs)) {
-                    // TODO: loop 可能存在性能问题
-                    List<MenuTreeNode> childNodes = getMenuTreeNodes(childFuncs, null, true, true);
+                    // FIXME: 可能存在性能问题
+                    List<MenuTreeNode> childNodes = getMenuTreeNodes(childFuncs, null);
                     if (!CollectionUtils.isEmpty(childFuncs)) {
                         authBtn.setChildren(childNodes);
                     }
@@ -224,8 +251,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     }
 
     @Override
-    public Page<FunctionMenuVO> getListByPage(MenuQuery query, Wrapper wrapper) {
+    public Page<FunctionMenuVO> getListByPage(MenuQuery query) {
         Page<FunctionMenuVO> page = new Page<>(query.getCurrent(), query.getPageSize());
+        Wrapper wrapper = Wrappers.query().eq("_menu.type", AppConfig.MenuType.MENU).orderByAsc("_menu.sort_number");
         return this.baseMapper.getListByPage(page, wrapper);
     }
 }

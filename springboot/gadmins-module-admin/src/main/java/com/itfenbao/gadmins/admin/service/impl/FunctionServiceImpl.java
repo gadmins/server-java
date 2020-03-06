@@ -1,8 +1,10 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
+import cn.hutool.core.lang.func.Func;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.mapper.FunctionMapper;
@@ -31,6 +33,13 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
         if (one == null) {
             Function function = createFunction(functionPoint);
             if (this.save(function)) {
+                if (function.getPId() == null) {
+                    // 设置MenuFuncId
+                    Function _u = new Function();
+                    _u.setId(function.getId());
+                    _u.setMenuFuncId(function.getId());
+                    this.updateById(_u);
+                }
                 functionPoint.setFuncId(function.getId());
                 return true;
             }
@@ -48,12 +57,23 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
 
     @Override
     public List<Integer> getPIdsByRoles(List<Integer> roleIds) {
-        QueryWrapper wrapper = Wrappers.query().isNotNull("_function.p_id");
+        QueryWrapper wrapper = Wrappers.query();
+        //.isNotNull("_function.p_id");
         if (!CollectionUtils.isEmpty(roleIds)) {
             wrapper.in("_function_role.role_id", roleIds);
         }
-        wrapper.groupBy("_function.p_id");
+        wrapper.groupBy("_function.menu_func_id");
         return this.baseMapper.queryPIds(wrapper);
+    }
+
+    @Override
+    public List<AuthFunciontVO> getFunctionsByRoles(List<Integer> roleIds) {
+        QueryWrapper wrapper = Wrappers.query();
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            wrapper.in("_function_role.role_id", roleIds);
+        }
+        wrapper.groupBy("_function.id");
+        return this.baseMapper.queryAuthFunctions(wrapper);
     }
 
     private Function createFunction(FunctionPoint functionPoint) {
@@ -69,6 +89,7 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
             Function one = this.getOne(Wrappers.<Function>lambdaQuery().eq(Function::getFuncCode, functionPoint.getParentCode()));
             if (one != null) {
                 function.setPId(one.getId());
+                function.setMenuFuncId(one.getMenuFuncId());
                 if (one.getVirtualMenu() == false) {
                     // 标记为VirtualMenu
                     Function functionParentCode = new Function();
@@ -84,11 +105,13 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
                     copyFunc.setBtnGroup(one.getBtnGroup());
                     copyFunc.setBtnIcon(one.getBtnIcon());
                     copyFunc.setPId(one.getId());
+                    copyFunc.setMenuFuncId(one.getMenuFuncId());
                     this.save(copyFunc);
                 }
             }
         } else if (functionPoint.getParentFuncId() != null) {
             function.setPId(functionPoint.getParentFuncId());
+            function.setMenuFuncId(functionPoint.getParentFuncId());
         }
         if (function.getPId() == null) {
             function.setBtnGroup(null);
