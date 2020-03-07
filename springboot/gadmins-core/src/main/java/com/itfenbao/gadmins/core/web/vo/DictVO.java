@@ -1,5 +1,8 @@
 package com.itfenbao.gadmins.core.web.vo;
 
+/**
+ * @author itfenbao
+ */
 public class DictVO {
     private Integer indexVal;
     private String stringVal;

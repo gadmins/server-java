@@ -45,7 +45,14 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
             }
         } else {
             functionPoint.setFuncId(one.getId());
-            return true;
+            Function _update = new Function();
+            _update.setId(one.getId());
+            _update.setFrontUrl(functionPoint.getUrl());
+            _update.setBtnGroup(functionPoint.getBtnGroup());
+            _update.setSortNumber(functionPoint.getSort());
+            if (this.updateById(_update)) {
+                return true;
+            }
         }
         return false;
     }

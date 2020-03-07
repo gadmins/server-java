@@ -1,5 +1,10 @@
-package com.itfenbao.gadmins.core.web;
+package com.itfenbao.gadmins.core.web.result;
 
+/**
+ * json 结果
+ * @author itfenbao
+ * @param <T>
+ */
 public class JsonResult<T> {
     private Integer code;
     private String msg;

@@ -14,13 +14,10 @@ import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import com.itfenbao.gadmins.config.AppConfig;
-import com.itfenbao.gadmins.core.annotation.Function;
-import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.annotation.Menu;
-import com.itfenbao.gadmins.core.annotation.PassToken;
+import com.itfenbao.gadmins.core.annotation.*;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
-import com.itfenbao.gadmins.core.web.JsonResult;
-import com.itfenbao.gadmins.core.web.PageData;
+import com.itfenbao.gadmins.core.web.result.JsonPageResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.vo.TokenVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,9 +58,10 @@ public class AccountController {
     @Function(value = "sys:account:list", sort = 0, title = "查询", desc = "查询账号", menu = true)
     @GetMapping()
     @ApiOperation(value = "账号查询")
-    public JsonResult<PageData<AccountVO>> list(final AccountQuery query) {
+    @Schema(AccountVO.class)
+    public JsonPageResult<AccountVO> list(final AccountQuery query) {
         final Page<AccountVO> page = accountService.getListByPage(query);
-        return JsonResult.success(PageData.get(page));
+        return JsonPageResult.success(page);
     }
 
 
@@ -72,6 +70,7 @@ public class AccountController {
             @Function(value = "sys:account:copy", sort = 3, title = "复制", desc = "复制账户", icon = "plus")
     })
     @PostMapping
+    @ApiOperation("添加账号")
     public JsonResult create(@RequestBody AddAccountParam param) {
         Account account = new Account();
         account.setName(param.getName());
@@ -93,6 +92,7 @@ public class AccountController {
             title = "编辑", desc = "编辑账户"
     )
     @PutMapping("/{id}")
+    @ApiOperation("修改账号")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateAccountParam param) {
         accountService.updateAccount(id, param);
         return JsonResult.success();
@@ -104,6 +104,7 @@ public class AccountController {
             btnGroup = Function.BtnGroup.TOOLBAR
     )
     @DeleteMapping("/{ids}")
+    @ApiOperation("删除账号")
     public JsonResult deletes(@PathVariable List<Integer> ids) {
         accountService.removeByIds(ids);
         return JsonResult.success();
@@ -116,6 +117,7 @@ public class AccountController {
      * @return
      */
     @GetMapping("/menu")
+    @ApiOperation("获取当前用户菜单")
     public JsonResult<CoreMenuData> menu(HttpServletRequest request) {
         String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
         return JsonResult.success(menuService.getCoreMenuData(Integer.parseInt(id)));
@@ -123,6 +125,7 @@ public class AccountController {
 
     @PostMapping("/login")
     @PassToken
+    @ApiOperation("登录")
     public JsonResult login(@RequestBody @Validated final LoginParam login, HttpServletResponse response) {
         if (LoginParam.LOGIN_TYPE_ACCOUNT.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getUserName())) {
@@ -164,11 +167,13 @@ public class AccountController {
      */
     @GetMapping("/login/captcha")
     @PassToken
+    @ApiOperation("获取登陆验证码")
     public JsonResult captcha(@RequestParam("mobile") final String mobile) {
         return JsonResult.failMessage("暂不支持");
     }
 
     @GetMapping("/currentAccount")
+    @ApiOperation("获取当前用户信息")
     public JsonResult<Account> currentAccount() {
         String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
         Account account = accountService.getById(id);
@@ -182,6 +187,7 @@ public class AccountController {
 
     @PostMapping("/logout")
     @PassToken
+    @ApiOperation("账号退出")
     public JsonResult logout() {
         String token = TokenUtils.getToken(AppConfig.TokenType.ADMIN);
         TokenUtils.removeToken(AppConfig.TokenType.ADMIN, token);

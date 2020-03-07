@@ -13,7 +13,7 @@ import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.AppListener;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.web.JsonResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import io.swagger.annotations.Api;

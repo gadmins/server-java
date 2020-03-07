@@ -62,11 +62,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         Menu one = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getCode()));
         if (one == null) {
             Menu menu = createMenu(menuConfig);
-            if (this.save(menu)) {
+            if(this.save(menu)) {
                 return true;
             }
         } else {
-            return true;
+            Menu _update = new Menu();
+            _update.setId(one.getId());
+            _update.setSortNumber(menuConfig.getSort());
+            _update.setIcon(menuConfig.getIcon());
+            _update.setTxt(menuConfig.getTitle());
+            if (this.updateById(_update)) {
+                return true;
+            }
         }
         return false;
     }

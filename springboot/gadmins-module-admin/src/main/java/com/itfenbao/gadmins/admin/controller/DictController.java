@@ -12,9 +12,10 @@ import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.Schema;
 import com.itfenbao.gadmins.core.event.RefreshDictEvent;
-import com.itfenbao.gadmins.core.web.JsonResult;
-import com.itfenbao.gadmins.core.web.PageData;
+import com.itfenbao.gadmins.core.web.result.JsonPageResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -47,10 +48,11 @@ public class DictController {
     @Function(value = "sys:dict:list", sort = 0, title = "查询", desc = "查询字典", menu = true)
     @GetMapping()
     @ApiOperation("分页查询")
-    public JsonResult<PageData<Dict>> list(final DictQuery query) {
+    @Schema(Dict.class)
+    public JsonPageResult<Dict> list(final DictQuery query) {
         Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
         dictService.page(page, Wrappers.<Dict>lambdaQuery().isNull(Dict::getPId));
-        return JsonResult.success(PageData.get(page));
+        return JsonPageResult.success(page);
     }
 
     @Functions({
@@ -107,10 +109,11 @@ public class DictController {
     @Function(value = "sys:dict:data:list", sort = 5, title = "查看字典数据", desc = "查看字典数据", url = "/system/dict/list")
     @GetMapping("/list/{pid}")
     @ApiOperation("查询字典数据")
-    public JsonResult<PageData<Dict>> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid, final DictQuery query) {
+    @Schema(Dict.class)
+    public JsonPageResult<Dict> allValDict(@ApiParam(value = "字典父ID", required = true) @PathVariable Integer pid, final DictQuery query) {
         Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
         dictService.page(page, Wrappers.<Dict>lambdaQuery().eq(Dict::getPId, pid).orderByAsc(Dict::getIndexValue));
-        return JsonResult.success(PageData.get(page));
+        return JsonPageResult.success(page);
     }
 
 }

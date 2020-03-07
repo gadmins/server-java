@@ -2,7 +2,7 @@ package com.itfenbao.gadmins.core.config;
 
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.web.JsonResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.service.IUserAuthService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;

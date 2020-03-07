@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class FunctionPointVO {
     private Integer id;
+    private String code;
     private String desc;
     private String txt;
     private String apiUrl;

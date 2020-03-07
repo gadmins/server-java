@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.Schema;
+import com.itfenbao.gadmins.core.web.vo.FormSchemaVO;
+import com.itfenbao.gadmins.core.web.vo.ListSchemaVO;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPointConfig;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
@@ -15,6 +18,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +49,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                         .filter(m -> AnnotationUtils.findAnnotation(m, Function.class) != null
                                 || AnnotationUtils.findAnnotation(m, Functions.class) != null)
                         .forEach(m -> {
-                            RequestInfo requestInfo = getRequestInfo(m);
+                            RequestInfo requestInfo = getRequestInfo(m, bean);
                             Function function = AnnotationUtils.findAnnotation(m, Function.class);
                             Functions functions = AnnotationUtils.findAnnotation(m, Functions.class);
                             if (function != null) {
@@ -61,7 +65,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                 menuConfigs.add(menuConfig);
             });
             try {
-                log.info("MenuList:" + objectMapper.writeValueAsString(menuConfigs));
+                log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(menuConfigs));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -114,12 +118,13 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
 
         FunctionPointConfig pointConfig = new FunctionPointConfig();
         pointConfig.setUrl(baseRoutePath + requestInfo.url);
-        pointConfig.setMethod(requestInfo.method);
+        pointConfig.setMethod(requestInfo.method.name());
+        pointConfig.setSchema(requestInfo.schema);
         functionPoint.setPointConfig(pointConfig);
         return functionPoint;
     }
 
-    private RequestInfo getRequestInfo(Method method) {
+    private RequestInfo getRequestInfo(Method method, Object bean) {
         RequestInfo info = new RequestInfo();
         GetMapping get = AnnotationUtils.findAnnotation(method, GetMapping.class);
         PostMapping post = AnnotationUtils.findAnnotation(method, PostMapping.class);
@@ -129,23 +134,53 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
             RequestMapping requestMapping = AnnotationUtils.findAnnotation(method, RequestMapping.class);
             if (requestMapping != null) {
                 info.url = getPath(requestMapping.path());
-                info.method = requestMapping.method().length > 0 ? requestMapping.method()[0].name() : "GET";
+                info.method = requestMapping.method().length > 0 ? requestMapping.method()[0] : RequestMethod.GET;
             }
         } else {
             if (get != null) {
                 info.url = getPath(get.path());
-                info.method = "GET";
+                info.method = RequestMethod.GET;
             } else if (post != null) {
                 info.url = getPath(post.path());
-                info.method = "POST";
+                info.method = RequestMethod.POST;
             } else if (put != null) {
                 info.url = getPath(put.path());
-                info.method = "PUT";
+                info.method = RequestMethod.PUT;
             } else if (delete != null) {
                 info.url = getPath(delete.path());
-                info.method = "DELETE";
+                info.method = RequestMethod.DELETE;
             }
         }
+
+        if (info.method == RequestMethod.GET) {
+            Schema schema = AnnotationUtils.findAnnotation(method, Schema.class);
+            if (schema != null) {
+                ListSchemaVO schemaVO = new ListSchemaVO();
+                ReflectionUtils.doWithFields(schema.value(), field -> {
+                    schemaVO.addColumn(field);
+                });
+                try {
+                    info.schema = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(schemaVO);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                log.error("no schema in " + method);
+            }
+        } else if (info.method == RequestMethod.POST || info.method == RequestMethod.PUT) {
+            Class[] classes = method.getParameterTypes();
+            Class schemaType = info.method == RequestMethod.POST ? classes[0] : classes[1];
+            FormSchemaVO formSchemaVO = new FormSchemaVO();
+            ReflectionUtils.doWithFields(schemaType, field -> {
+                formSchemaVO.addFormItem(field);
+            });
+            try {
+                info.schema = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(formSchemaVO);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+
         return info;
     }
 
@@ -159,6 +194,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private static class RequestInfo {
         public String url;
-        public String method;
+        public RequestMethod method;
+        public String schema;
     }
 }
