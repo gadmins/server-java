@@ -35,10 +35,6 @@ public class FunctionConfig extends BaseEntity {
     private String apiMethod;
 
     @ApiModelProperty(value = "通用schema")
-    private String commonSchema;
-
-    @ApiModelProperty(value = "查询schema")
-    private String searchSchema;
-
+    private String dataSchema;
 
 }

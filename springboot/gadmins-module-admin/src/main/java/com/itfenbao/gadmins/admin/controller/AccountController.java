@@ -14,10 +14,7 @@ import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import com.itfenbao.gadmins.config.AppConfig;
-import com.itfenbao.gadmins.core.annotation.Function;
-import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.annotation.Menu;
-import com.itfenbao.gadmins.core.annotation.PassToken;
+import com.itfenbao.gadmins.core.annotation.*;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -60,7 +57,8 @@ public class AccountController {
 
     @Function(value = "sys:account:list", sort = 0, title = "查询", desc = "查询账号", menu = true)
     @GetMapping()
-    @ApiOperation(value = "账号查询", response = AccountVO.class)
+    @ApiOperation(value = "账号查询")
+    @Schema(AccountVO.class)
     public JsonPageResult<AccountVO> list(final AccountQuery query) {
         final Page<AccountVO> page = accountService.getListByPage(query);
         return JsonPageResult.success(page);

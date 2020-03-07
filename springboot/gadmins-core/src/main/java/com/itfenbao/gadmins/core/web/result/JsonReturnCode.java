@@ -1,5 +1,10 @@
 package com.itfenbao.gadmins.core.web.result;
 
+/**
+ * json 返回码
+ *
+ * @author itfenbao
+ */
 public enum JsonReturnCode {
     PARAMETER_ERROR(400, "参数错误"),
     NOT_LOGIN(401, "未登录"),

@@ -1,9 +1,15 @@
 package com.itfenbao.gadmins.core.web.vo;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 列表结构
+ *
  * @author itfenbao
  */
 public class ListSchemaVO {
@@ -46,7 +52,7 @@ public class ListSchemaVO {
         }
     }
 
-    private List<Column> columns;
+    private List<Column> columns = new ArrayList<>();
 
     public List<Column> getColumns() {
         return columns;
@@ -55,4 +61,16 @@ public class ListSchemaVO {
     public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
+
+    public void addColumn(Field field) {
+        ApiModelProperty property = field.getAnnotation(ApiModelProperty.class);
+        if (property != null) {
+            Column c = new Column();
+            c.title = property.value();
+            c.dataIndex = field.getName();
+            c.valueType = "string";
+            this.columns.add(c);
+        }
+    }
+
 }

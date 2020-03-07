@@ -1,8 +1,10 @@
 package com.itfenbao.gadmins.core.web.result;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.itfenbao.gadmins.core.web.PageData;
-
+/**
+ * json 结果
+ * @author itfenbao
+ * @param <T>
+ */
 public class JsonResult<T> {
     private Integer code;
     private String msg;

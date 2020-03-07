@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.Schema;
+import com.itfenbao.gadmins.core.web.vo.FormSchemaVO;
+import com.itfenbao.gadmins.core.web.vo.ListSchemaVO;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPointConfig;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,8 +23,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
@@ -153,9 +153,32 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
         }
 
         if (info.method == RequestMethod.GET) {
-            Class typeClass = method.getReturnType();
+            Schema schema = AnnotationUtils.findAnnotation(method, Schema.class);
+            if (schema != null) {
+                ListSchemaVO schemaVO = new ListSchemaVO();
+                ReflectionUtils.doWithFields(schema.value(), field -> {
+                    schemaVO.addColumn(field);
+                });
+                try {
+                    info.schema = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(schemaVO);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                log.error("no schema in " + method);
+            }
         } else if (info.method == RequestMethod.POST || info.method == RequestMethod.PUT) {
-
+            Class[] classes = method.getParameterTypes();
+            Class schemaType = info.method == RequestMethod.POST ? classes[0] : classes[1];
+            FormSchemaVO formSchemaVO = new FormSchemaVO();
+            ReflectionUtils.doWithFields(schemaType, field -> {
+                formSchemaVO.addFormItem(field);
+            });
+            try {
+                info.schema = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(formSchemaVO);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
 
         return info;

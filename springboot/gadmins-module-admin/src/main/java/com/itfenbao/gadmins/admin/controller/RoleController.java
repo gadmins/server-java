@@ -10,6 +10,7 @@ import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Functions;
+import com.itfenbao.gadmins.core.annotation.Schema;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -60,6 +61,7 @@ public class RoleController {
     )
     @GetMapping()
     @ApiOperation(value = "分页查询非超管角色")
+    @Schema(Role.class)
     public JsonPageResult<Role> list(PageQuery query) {
         Page<Role> page = roleService.getPageListNotSuperAdmin(query);
         return JsonPageResult.success(page);

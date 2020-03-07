@@ -19,6 +19,7 @@ import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.Schema;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -68,6 +69,7 @@ public class FunctionController {
     @GetMapping("/menu")
     @Function(value = "sys:function:list", sort = 0, title = "查询", desc = "查询功能组", menu = true)
     @ApiOperation("功能组分页查询")
+    @Schema(FunctionMenuVO.class)
     public JsonPageResult<FunctionMenuVO> menuList(MenuQuery query) {
         Page<FunctionMenuVO> page = menuService.getListByPage(query);
         return JsonPageResult.success(page);
@@ -76,6 +78,7 @@ public class FunctionController {
     @GetMapping("/menu/points/{id}")
     @Function(value = "sys:function:group:list", sort = 1, title = "查看功能点", desc = "查看功能点", url = "/system/function/list")
     @ApiOperation("功能点分页查询")
+    @Schema(FunctionMenuVO.class)
     public JsonPageResult<FunctionPointVO> functionPointList(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id, PageQuery query) {
         Page<FunctionPointVO> page = functionConfigService.getListByPage(query, id);
         return JsonPageResult.success(page);
@@ -87,7 +90,7 @@ public class FunctionController {
     public JsonResult editPoint(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id, @RequestBody UpdateFunctionPointParam param) {
         functionConfigService.update(
                 Wrappers.<FunctionConfig>lambdaUpdate()
-                        .set(FunctionConfig::getCommonSchema, param.getSchema())
+                        .set(FunctionConfig::getDataSchema, param.getSchema())
                         .eq(FunctionConfig::getFuncId, id)
         );
         return JsonResult.success();
@@ -99,11 +102,11 @@ public class FunctionController {
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FunctionConfig::getFuncId, id);
         Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
-//        try {
-//            convertToMap(rs, "common_schema", "search_schema");
-//        } catch (JsonProcessingException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            convertToMap(rs, "data_schema");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return JsonResult.success(new CamelCaseMap(rs));
     }
 

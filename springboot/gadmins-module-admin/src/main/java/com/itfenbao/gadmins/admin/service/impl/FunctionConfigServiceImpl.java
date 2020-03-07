@@ -41,7 +41,7 @@ public class FunctionConfigServiceImpl extends ServiceImpl<FunctionConfigMapper,
             functionConfig.setFuncId(pointConfig.getFuncId());
             functionConfig.setApiUrl(pointConfig.getUrl());
             functionConfig.setApiMethod(pointConfig.getMethod());
-            functionConfig.setCommonSchema(pointConfig.getSchema());
+            functionConfig.setDataSchema(pointConfig.getSchema());
             if (this.save(functionConfig)) {
                 return true;
             }
