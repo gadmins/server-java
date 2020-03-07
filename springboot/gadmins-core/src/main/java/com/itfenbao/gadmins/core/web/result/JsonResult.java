@@ -1,4 +1,7 @@
-package com.itfenbao.gadmins.core.web;
+package com.itfenbao.gadmins.core.web.result;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.itfenbao.gadmins.core.web.PageData;
 
 public class JsonResult<T> {
     private Integer code;

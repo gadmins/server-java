@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.admin.controller;
 
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.param.role.AddRoleParam;
 import com.itfenbao.gadmins.admin.data.dto.param.role.UpdateRoleParam;
 import com.itfenbao.gadmins.admin.data.vo.RoleMenuVO;
@@ -9,9 +10,9 @@ import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.web.JsonResult;
-import com.itfenbao.gadmins.core.web.PageData;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
+import com.itfenbao.gadmins.core.web.result.JsonPageResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -55,13 +56,13 @@ public class RoleController {
 
     @com.itfenbao.gadmins.core.annotation.Function(
             value = "sys:role:list", sort = 0,
-            title = "查询", desc = "角色查询", menu = true
+            title = "查询", desc = "查询角色", menu = true
     )
     @GetMapping()
     @ApiOperation(value = "分页查询非超管角色")
-    public JsonResult<PageData<Role>> list(PageQuery query) {
-        PageData<Role> page = PageData.get(roleService.getPageListNotSuperAdmin(query));
-        return JsonResult.success(page);
+    public JsonPageResult<Role> list(PageQuery query) {
+        Page<Role> page = roleService.getPageListNotSuperAdmin(query);
+        return JsonPageResult.success(page);
     }
 
     @Functions({

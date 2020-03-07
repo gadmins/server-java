@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.core.web;
+package com.itfenbao.gadmins.core.web.result;
 
 public enum JsonReturnCode {
     PARAMETER_ERROR(400, "参数错误"),

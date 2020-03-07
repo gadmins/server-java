@@ -31,7 +31,9 @@ public class DictAnnotationBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         ReflectionUtils.doWithFields(bean.getClass(), (f) -> {
             Dict dict = f.getAnnotation(Dict.class);
-            if (dict == null) return;
+            if (dict == null) {
+                return;
+            }
             if (f.getType() == java.util.List.class) {
                 Type genericType = f.getGenericType();
                 if (isDictVO(genericType)) {

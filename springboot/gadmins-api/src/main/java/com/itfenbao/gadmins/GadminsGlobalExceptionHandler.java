@@ -2,7 +2,7 @@ package com.itfenbao.gadmins;
 
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
-import com.itfenbao.gadmins.core.web.JsonResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;

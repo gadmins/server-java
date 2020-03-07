@@ -46,7 +46,13 @@ public class FunctionConfigServiceImpl extends ServiceImpl<FunctionConfigMapper,
                 return true;
             }
         } else {
-            return true;
+            FunctionConfig _update = new FunctionConfig();
+            _update.setId(one.getId());
+            _update.setApiMethod(pointConfig.getMethod());
+            _update.setApiUrl(pointConfig.getUrl());
+            if (this.updateById(_update)) {
+                return true;
+            }
         }
         return false;
     }
