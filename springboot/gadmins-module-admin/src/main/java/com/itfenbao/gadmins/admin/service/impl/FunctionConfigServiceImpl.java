@@ -14,8 +14,10 @@ import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPointConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,15 +63,31 @@ public class FunctionConfigServiceImpl extends ServiceImpl<FunctionConfigMapper,
     public Page<FunctionPointVO> getListByPage(PageQuery query, Integer funcPid) {
         Page<FunctionPointVO> page = new Page<>(query.getCurrent(), query.getPageSize());
         List<Integer> ids = getFuncIdsByPid(funcPid);
+        if (CollectionUtils.isEmpty(ids)) {
+            loadSelf(query, funcPid, page);
+            return page;
+        }
         Wrapper wrapper = Wrappers.query().in("_function.id", ids).orderByAsc("_function.sort_number");
         this.baseMapper.getListByPage(page, wrapper);
-        if (query.getCurrent() == 1 && page.getRecords().size() > 0) {
+        loadSelf(query, funcPid, page);
+        return page;
+    }
+
+    private void loadSelf(PageQuery query, Integer funcPid, Page<FunctionPointVO> page) {
+        if (query.getCurrent() == 1) {
             Page<FunctionPointVO> selfPage = new Page<>(0, 1);
             Wrapper selfWrapper = Wrappers.query().eq("_function.id", funcPid);
             this.baseMapper.getListByPage(selfPage, selfWrapper);
-            page.getRecords().add(0, selfPage.getRecords().get(0));
+            if (selfPage.getRecords().size() > 0) {
+                if (page.getRecords() == null || Collections.emptyList().equals(page.getRecords())) {
+                    List<FunctionPointVO> newList = new ArrayList<>();
+                    newList.add(selfPage.getRecords().get(0));
+                    page.setRecords(newList);
+                } else {
+                    page.getRecords().add(0, selfPage.getRecords().get(0));
+                }
+            }
         }
-        return page;
     }
 
     private List<Integer> getFuncIdsByPid(Integer pid) {

@@ -20,4 +20,5 @@ public interface IFunctionConfigService extends IService<FunctionConfig> {
     boolean saveOrUpdate(FunctionPointConfig pointConfig);
 
     Page<FunctionPointVO> getListByPage(PageQuery query, Integer funcPid);
+
 }

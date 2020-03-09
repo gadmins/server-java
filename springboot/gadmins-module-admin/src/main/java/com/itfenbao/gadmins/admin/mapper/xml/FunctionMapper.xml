@@ -24,4 +24,32 @@
             ${ew.customSqlSegment}
         </if>
     </select>
+    <select id="queryAllFunctionPoints" resultType="com.itfenbao.gadmins.admin.data.vo.AuthFunctionPointVO">
+        select _function.id, _function.func_code as `code`, _function.btn_group, _function.title, _function.front_url,
+        _function_config.api_url, _function_config.api_method from sys_admin_function as
+        _function
+        left join sys_admin_function_config as _function_config on _function.id = _function_config.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+    <select id="quertByRoles" resultType="com.itfenbao.gadmins.admin.data.vo.AuthFunctionPointVO">
+        select _function.id, _function.func_code as `code`, _function.btn_group, _function.title, _function.front_url,
+        _function_config.api_url, _function_config.api_method from sys_admin_rl_function_role as
+        _function_role
+        left join sys_admin_function as _function on _function.id = _function_role.func_id
+        left join sys_admin_function_config as _function_config on _function.id = _function_config.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+    <select id="queryIdsByRoles" resultType="java.lang.Integer">
+        select _function.id from sys_admin_rl_function_role as
+        _function_role
+        left join sys_admin_function as _function on _function.id = _function_role.func_id
+        left join sys_admin_function_config as _function_config on _function.id = _function_config.func_id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
 </mapper>

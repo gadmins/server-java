@@ -258,7 +258,7 @@ VALUES
 	(2, 'welcome', '欢迎', 'home', 'MENU', 1, 0, 1, NULL, NULL, '2020-02-28 07:15:25', '2020-02-28 07:20:20', 1),
 	(3, 'system', '系统管理', 'home', 'SYS_MENU', NULL, 1, NULL, NULL, NULL, '2020-02-13 17:36:56', '2020-02-28 06:58:39', 1),
 	(4, 'basemgr', '基础管理', 'profile', 'NAV_MENU', NULL, 0, 3, NULL, NULL, '2020-02-14 14:16:53', '2020-02-26 02:34:08', 1),
-	(5, 'mysetting', '我的设置', 'profile', 'NAV_MENU', NULL, 1, 3, NULL, NULL, '2020-02-14 14:17:40', '2020-02-16 13:16:39', 1);
+	(5, 'settings', '基本设置', 'profile', 'NAV_MENU', NULL, 1, 3, NULL, NULL, '2020-02-14 14:17:40', '2020-02-16 13:16:39', 1);
 
 INSERT INTO `sys_admin_role` (`id`, `r_code`, `name`, `r_desc`, `super_admin`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
 VALUES
