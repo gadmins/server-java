@@ -1,14 +1,16 @@
 package com.itfenbao.gadmins.admin.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunctionPointVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -25,4 +27,10 @@ public interface FunctionMapper extends BaseMapper<Function> {
     List<Integer> queryPIds(@Param(Constants.WRAPPER) Wrapper wrapper);
 
     List<AuthFunciontVO> queryAuthFunctions(@Param(Constants.WRAPPER) Wrapper wrapper);
+
+    List<AuthFunctionPointVO> queryAllFunctionPoints(@Param(Constants.WRAPPER) Wrapper wrapper);
+
+    List<AuthFunctionPointVO> quertByRoles(@Param(Constants.WRAPPER) Wrapper wrapper);
+
+    List<Integer> queryIdsByRoles(@Param(Constants.WRAPPER) Wrapper wrapper);
 }

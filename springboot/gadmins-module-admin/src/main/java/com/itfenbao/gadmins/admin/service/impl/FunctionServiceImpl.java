@@ -1,20 +1,26 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
-import cn.hutool.core.lang.func.Func;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunctionPointVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.mapper.FunctionMapper;
+import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
+import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
+import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.core.utils.TokenUtils;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -26,6 +32,12 @@ import java.util.List;
  */
 @Service
 public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> implements IFunctionService {
+
+    @Autowired
+    IAccountService accountService;
+
+    @Autowired
+    IRlAccountRoleService accountRoleService;
 
     @Override
     public boolean saveOrUpdate(FunctionPoint functionPoint) {
@@ -81,6 +93,43 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
         }
         wrapper.groupBy("_function.id");
         return this.baseMapper.queryAuthFunctions(wrapper);
+    }
+
+    @Override
+    public boolean hasFunctionById(Integer id) {
+        int accountId = Integer.parseInt(TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN));
+        boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
+        if (isSuperAdmin) {
+            return true;
+        }
+        List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
+        return this.baseMapper.queryIdsByRoles(
+                Wrappers.query()
+                        .eq("_function.id", id)
+                        .in("_function_role.role_id", roleIds)
+                        .groupBy("_function.id")).size() > 0;
+    }
+
+    @Override
+    public List<AuthFunctionPointVO> getListForCurrentAccountById(Integer id) {
+        List<AuthFunctionPointVO> funcs = null;
+        // 根据当前用户查询授权的功能点
+        int accountId = Integer.parseInt(TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN));
+        boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
+        if (isSuperAdmin) {
+            funcs = this.baseMapper.queryAllFunctionPoints(
+                    Wrappers.query().eq("_function.p_id", id).groupBy("_function.id"))
+                    .stream()
+                    .filter(func -> !func.getCode().endsWith("-vm")).collect(Collectors.toList());
+        } else {
+            List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
+            funcs = this.baseMapper.quertByRoles(
+                    Wrappers.query()
+                            .eq("_function.p_id", id)
+                            .in("_function_role.role_id", roleIds)
+                            .groupBy("_function.id"));
+        }
+        return funcs;
     }
 
     private Function createFunction(FunctionPoint functionPoint) {

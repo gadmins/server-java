@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.admin.data.dto.param.UpdateFunctionPointParam;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunctionPointVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionPointVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
@@ -28,10 +29,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -47,6 +51,8 @@ import java.util.Map;
 @Api(tags = "系统功能点")
 @Menu(value = "function", parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "功能组管理", desc = "系统菜单功能配置管理", url = "/system/function")
 public class FunctionController {
+
+    private final static String API_METHOD = "api_method";
 
     @Autowired
     IMenuService menuService;
@@ -114,19 +120,61 @@ public class FunctionController {
     @GetMapping("/tabledata/{id}")
     @ApiOperation("获取列表Schema")
     public JsonResult tableData(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id) {
-        // 1. columns
-        // 2. btn: {
-        //      toolbar:
-        //      op:
-        //    }
-        return JsonResult.success();
+        if (!functionService.hasFunctionById(id)) {
+            return JsonResult.http403();
+        }
+        LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(FunctionConfig::getFuncId, id);
+        Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
+        if (rs == null) {
+            return JsonResult.failMessage("数据不匹配，请检查");
+        }
+        if (rs.containsKey(API_METHOD) && !rs.get(API_METHOD).toString().equalsIgnoreCase(HttpMethod.GET.name())) {
+            return JsonResult.failMessage("请确认是否查询列表Schema");
+        }
+        try {
+            convertToMap(rs, "data_schema");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Map<String, Object> apiMap = new LinkedHashMap<>();
+        apiMap.put("url", rs.get("api_url"));
+        apiMap.put("method", rs.get("api_method"));
+        Map<String, Object> schemaMap = (Map<String, Object>) rs.get("data_schema");
+        Map<String, Object> mapResult = new LinkedHashMap<>(schemaMap);
+        Map<String, Object> btnMap = new LinkedHashMap<>();
+        mapResult.put("api", apiMap);
+        mapResult.put("btn", btnMap);
+        List<AuthFunctionPointVO> funcs = this.functionService.getListForCurrentAccountById(id);
+        if (funcs != null) {
+            btnMap.put("op", funcs.stream().filter(i -> i.getBtnGroup().equalsIgnoreCase(Function.BtnGroup.OP)).collect(Collectors.toList()));
+            btnMap.put("toolbar", funcs.stream().filter(i -> i.getBtnGroup().equalsIgnoreCase(Function.BtnGroup.TOOLBAR)).collect(Collectors.toList()));
+        }
+        return JsonResult.success(mapResult);
     }
 
     @GetMapping("/formdata/{id}")
     @ApiOperation("获取表单Schema")
     public JsonResult formData(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id) {
-        // 1. schema
-        return JsonResult.success();
+        if (!functionService.hasFunctionById(id)) {
+            return JsonResult.http403();
+        }
+        LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(FunctionConfig::getFuncId, id);
+        Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
+        if (rs == null) {
+            return JsonResult.failMessage("数据不匹配，请检查");
+        }
+        if (rs.containsKey(API_METHOD) && rs.get(API_METHOD).toString().equalsIgnoreCase(HttpMethod.GET.name())) {
+            return JsonResult.failMessage("请确认是否查询表单Schema");
+        }
+        try {
+            convertToMap(rs, "data_schema");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Map<String, Object> schemaMap = (Map<String, Object>) rs.get("data_schema");
+        return JsonResult.success(schemaMap);
     }
 
     private void convertToMap(Map map, String... keys) throws JsonProcessingException {

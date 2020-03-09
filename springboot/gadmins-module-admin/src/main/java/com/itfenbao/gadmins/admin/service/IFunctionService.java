@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
+import com.itfenbao.gadmins.admin.data.vo.AuthFunctionPointVO;
 import com.itfenbao.gadmins.admin.data.vo.FunctionVO;
 import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
@@ -25,5 +26,9 @@ public interface IFunctionService extends IService<Function> {
     List<Integer> getPIdsByRoles(List<Integer> roleIds);
 
     List<AuthFunciontVO> getFunctionsByRoles(List<Integer> roleIds);
+
+    boolean hasFunctionById(Integer id);
+
+    List<AuthFunctionPointVO> getListForCurrentAccountById(Integer id);
 
 }
