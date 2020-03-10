@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.param.LoginParam;
 import com.itfenbao.gadmins.admin.data.dto.param.account.AddAccountParam;
@@ -72,6 +73,9 @@ public class AccountController {
     @PostMapping
     @ApiOperation("添加账号")
     public JsonResult create(@RequestBody AddAccountParam param) {
+        if (accountService.count(Wrappers.<Account>lambdaQuery().eq(Account::getName, param.getName())) > 0) {
+            return JsonResult.failMessage("账户名已存在");
+        }
         Account account = new Account();
         account.setName(param.getName());
         account.setPassword(param.getPassword());

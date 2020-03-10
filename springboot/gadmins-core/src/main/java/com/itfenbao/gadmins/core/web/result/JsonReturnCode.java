@@ -6,13 +6,17 @@ package com.itfenbao.gadmins.core.web.result;
  * @author itfenbao
  */
 public enum JsonReturnCode {
+    /**
+     * 成功
+     */
+    SUCCESS(200, "成功"),
     PARAMETER_ERROR(400, "参数错误"),
     NOT_LOGIN(401, "未登录"),
-    SUCCESS(200, "成功"),
-    FAIL(500, "内部失败"),
-    FAIL_TOKEN(501, "Token过期"),
     ACCESS_ERROR(403, "禁止访问"),
-    NOT_FOUND(404, "未发现");
+    NOT_FOUND(404, "未发现"),
+    FAIL(500, "内部失败"),
+    FAIL_TOKEN(501, "Token过期");
+
     private Integer code;
     private String desc;
 
