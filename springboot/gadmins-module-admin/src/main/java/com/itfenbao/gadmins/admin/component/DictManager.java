@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.component;
+package com.itfenbao.gadmins.admin.component;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.entity.Dict;

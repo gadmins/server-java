@@ -31,4 +31,10 @@ public interface IFunctionService extends IService<Function> {
 
     List<AuthFunctionPointVO> getListForCurrentAccountById(Integer id);
 
+    /**
+     * @param roleIds
+     * @return
+     */
+    List<AuthFunciontVO> getAuthFunciontVOS(List<Integer> roleIds);
+
 }

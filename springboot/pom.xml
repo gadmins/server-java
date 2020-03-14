@@ -64,10 +64,9 @@
     <modules>
         <module>gadmins-api</module>
         <module>gadmins-core</module>
+        <module>gadmins-core-config</module>
         <module>gadmins-module-admin</module>
-        <module>gadmins-module-app</module>
         <module>spring-boot-starter-swagger</module>
         <module>tools</module>
-        <module>gadmins-core-config</module>
     </modules>
 </project>
