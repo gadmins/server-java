@@ -62,7 +62,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         Menu one = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getCode()));
         if (one == null) {
             Menu menu = createMenu(menuConfig);
-            if(this.save(menu)) {
+            if (this.save(menu)) {
                 return true;
             }
         } else {
@@ -111,23 +111,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (!isSuperAdmin) {
             List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
             List<Integer> funcPids = this.functionService.getPIdsByRoles(roleIds);
-
-            // 查询角色功能
-            funciontVOS = this.functionService.getFunctionsByRoles(roleIds);
-
-            // 获取-vm的实际功能（即-vm的pid）
-            List<Integer> vmIds = funciontVOS.stream().filter(i -> i.getCode().endsWith("-vm")).map(i -> i.getId()).collect(Collectors.toList());
-            List<Integer> realIds = this.functionService.list(Wrappers.<Function>lambdaQuery().in(Function::getId, vmIds))
-                    .stream().map(i -> i.getPId()).collect(Collectors.toList());
-            List<AuthFunciontVO> realAuths = this.functionService.list(Wrappers.<Function>lambdaQuery().in(Function::getId, realIds))
-                    .stream().map(i -> {
-                        AuthFunciontVO funciontVO = new AuthFunciontVO();
-                        funciontVO.setId(i.getId());
-                        funciontVO.setCode(i.getFuncCode());
-                        return funciontVO;
-                    }).collect(Collectors.toList());
-            // 去重添加
-            funciontVOS = CollUtil.addAllIfNotContains(funciontVOS, realAuths);
+            funciontVOS = this.functionService.getAuthFunciontVOS(roleIds);
 
             // 查询角色菜单ids
             LambdaQueryWrapper<RlMenuRole> wrapper = Wrappers.<RlMenuRole>lambdaQuery();

@@ -1,5 +1,7 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -130,6 +132,34 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
                             .groupBy("_function.id"));
         }
         return funcs;
+    }
+
+    @Override
+    public List<AuthFunciontVO> getAuthFunciontVOS(List<Integer> roleIds) {
+        List<AuthFunciontVO> funciontVOS;// 查询角色功能
+        funciontVOS = this.getFunctionsByRoles(roleIds);
+
+        List<AuthFunciontVO> realAuths = null;
+        // 获取-vm的实际功能（即-vm的pid）
+        List<Integer> vmIds = funciontVOS.stream().filter(i -> i.getCode().endsWith("-vm")).map(i -> i.getId()).collect(Collectors.toList());
+        LambdaQueryWrapper<Function> funcWrapper = Wrappers.<Function>lambdaQuery();
+        if (!CollectionUtils.isEmpty(vmIds)) {
+            funcWrapper.in(Function::getId, vmIds);
+            List<Integer> realIds = this.list(funcWrapper)
+                    .stream().map(i -> i.getPId()).collect(Collectors.toList());
+            realAuths = this.list(Wrappers.<Function>lambdaQuery().in(Function::getId, realIds))
+                    .stream().map(i -> {
+                        AuthFunciontVO funciontVO = new AuthFunciontVO();
+                        funciontVO.setId(i.getId());
+                        funciontVO.setCode(i.getFuncCode());
+                        return funciontVO;
+                    }).collect(Collectors.toList());
+        }
+        // 去重添加
+        if (!CollectionUtils.isEmpty(realAuths)) {
+            funciontVOS = CollUtil.addAllIfNotContains(funciontVOS, realAuths);
+        }
+        return funciontVOS;
     }
 
     private Function createFunction(FunctionPoint functionPoint) {
