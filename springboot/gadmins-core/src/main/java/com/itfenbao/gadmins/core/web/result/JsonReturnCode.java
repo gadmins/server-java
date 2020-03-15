@@ -9,12 +9,13 @@ public enum JsonReturnCode {
     /**
      * 成功
      */
-    SUCCESS(200, "成功"),
+    SUCCESS(0, "成功"),
+    FAIL(-1, "失败"),
     PARAMETER_ERROR(400, "参数错误"),
-    NOT_LOGIN(401, "未登录"),
+    NOT_LOGIN(401, "请登录"),
     ACCESS_ERROR(403, "禁止访问"),
     NOT_FOUND(404, "未发现"),
-    FAIL(500, "内部失败"),
+    INTERNAL_SERVER_ERROR(500, "内部错误"),
     FAIL_TOKEN(501, "Token过期");
 
     private Integer code;

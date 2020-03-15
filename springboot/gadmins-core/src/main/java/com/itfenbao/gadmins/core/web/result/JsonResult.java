@@ -49,10 +49,10 @@ public class JsonResult<T> implements IResult {
         return ret;
     }
 
-    public static <T> JsonResult<T> failToken() {
+    public static <T> JsonResult<T> fail(Integer code, String msg) {
         JsonResult<T> ret = new JsonResult<T>();
-        ret.setCode(JsonReturnCode.FAIL_TOKEN.getCode());
-        ret.setMsg(JsonReturnCode.FAIL_TOKEN.getDesc());
+        ret.setCode(code);
+        ret.setMsg(msg);
         return ret;
     }
 
@@ -62,18 +62,18 @@ public class JsonResult<T> implements IResult {
         return ret;
     }
 
+    public static <T> JsonResult<T> failToken() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.FAIL_TOKEN.getCode());
+        ret.setMsg(JsonReturnCode.FAIL_TOKEN.getDesc());
+        return ret;
+    }
+
     public static <T> JsonResult<T> failMessage(String msg) {
         JsonResult<T> ret = JsonResult.fail();
         ret.setMsg(msg);
         return ret;
     }
-
-    public static <T> JsonResult<T> successMessage(String msg) {
-        JsonResult<T> ret = JsonResult.success();
-        ret.setMsg(msg);
-        return ret;
-    }
-
 
     public static <T> JsonResult<T> success() {
         JsonResult<T> ret = new JsonResult<T>();
@@ -82,6 +82,11 @@ public class JsonResult<T> implements IResult {
         return ret;
     }
 
+    public static <T> JsonResult<T> success(String msg) {
+        JsonResult<T> ret = JsonResult.success();
+        ret.setMsg(msg);
+        return ret;
+    }
 
     public static <T> JsonResult<T> success(T data) {
         JsonResult<T> ret = JsonResult.success();
@@ -104,8 +109,7 @@ public class JsonResult<T> implements IResult {
     }
 
     public static <T> JsonResult<T> paramsErrorMessage(String msg) {
-        JsonResult<T> ret = new JsonResult<T>();
-        ret.setCode(JsonReturnCode.PARAMETER_ERROR.getCode());
+        JsonResult<T> ret = JsonResult.paramsError();
         ret.setMsg(msg);
         return ret;
     }
@@ -118,16 +122,13 @@ public class JsonResult<T> implements IResult {
     }
 
     public static <T> JsonResult<T> http404Message(String msg) {
-        JsonResult<T> ret = new JsonResult<T>();
-        ret.setCode(JsonReturnCode.NOT_FOUND.getCode());
+        JsonResult<T> ret = JsonResult.http404();
         ret.setMsg(msg);
         return ret;
     }
 
     public static <T> JsonResult<T> http404(T data) {
-        JsonResult<T> ret = new JsonResult<T>();
-        ret.setCode(JsonReturnCode.NOT_FOUND.getCode());
-        ret.setMsg(JsonReturnCode.NOT_FOUND.getDesc());
+        JsonResult<T> ret = JsonResult.http404();
         ret.setData(data);
         return ret;
     }
@@ -144,6 +145,19 @@ public class JsonResult<T> implements IResult {
         ret.setCode(JsonReturnCode.ACCESS_ERROR.getCode());
         ret.setMsg(JsonReturnCode.ACCESS_ERROR.getDesc());
         ret.setData(data);
+        return ret;
+    }
+
+    public static <T> JsonResult<T> http500() {
+        JsonResult<T> ret = new JsonResult<T>();
+        ret.setCode(JsonReturnCode.INTERNAL_SERVER_ERROR.getCode());
+        ret.setMsg(JsonReturnCode.INTERNAL_SERVER_ERROR.getDesc());
+        return ret;
+    }
+
+    public static <T> JsonResult<T> http500(String msg) {
+        JsonResult<T> ret = JsonResult.http500();
+        ret.setMsg(msg);
         return ret;
     }
 
