@@ -2,20 +2,22 @@ package com.itfenbao.gadmins.core.web.result;
 
 /**
  * json 结果
- * @author itfenbao
+ *
  * @param <T>
+ * @author itfenbao
  */
-public class JsonResult<T> {
+public class JsonResult<T> implements IResult {
     private Integer code;
     private String msg;
     private T data;
 
-    public Integer getCode() {
-        return code;
-    }
-
     public void setCode(Integer code) {
         this.code = code;
+    }
+
+    @Override
+    public Integer getCode() {
+        return code;
     }
 
     public String getMsg() {
