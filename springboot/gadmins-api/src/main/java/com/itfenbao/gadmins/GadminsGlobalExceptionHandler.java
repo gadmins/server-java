@@ -3,6 +3,7 @@ package com.itfenbao.gadmins;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.result.IResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -65,8 +66,8 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
 
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        if (o instanceof JsonResult) {
-            Integer code = ((JsonResult) o).getCode();
+        if (o instanceof IResult) {
+            Integer code = ((IResult) o).getCode();
             if (code != null && !(code.equals(HttpStatus.OK.value()))) {
                 serverHttpResponse.setStatusCode(HttpStatus.valueOf(code));
             }
