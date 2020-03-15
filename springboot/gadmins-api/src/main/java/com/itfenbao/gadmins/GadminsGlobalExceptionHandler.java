@@ -2,8 +2,9 @@ package com.itfenbao.gadmins;
 
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
-import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.result.IResult;
+import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.result.JsonReturnCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
             log.info("Global MethodArgumentNotValidException：{}", msg);
             return JsonResult.paramsErrorMessage(msg);
         } else {
-            return JsonResult.failMessage(e.getMessage());
+            return JsonResult.http500(e.getMessage());
         }
     }
 
@@ -68,8 +69,12 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (o instanceof IResult) {
             Integer code = ((IResult) o).getCode();
-            if (code != null && !(code.equals(HttpStatus.OK.value()))) {
-                serverHttpResponse.setStatusCode(HttpStatus.valueOf(code));
+            if (code != null && !(code.equals(JsonReturnCode.SUCCESS.getCode()))) {
+                try {
+                    HttpStatus status = HttpStatus.valueOf(code);
+                    serverHttpResponse.setStatusCode(status);
+                } catch (IllegalArgumentException e) {
+                }
             }
         }
         return o;
