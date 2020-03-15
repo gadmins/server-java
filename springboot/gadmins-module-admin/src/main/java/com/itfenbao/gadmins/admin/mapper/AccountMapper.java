@@ -24,13 +24,5 @@ public interface AccountMapper extends BaseMapper<Account> {
 
     List<Role> getRoles(Integer userId);
 
-    /**
-     * 真实删除
-     *
-     * @param wrapper
-     * @return
-     */
-    boolean realDelete(@Param(Constants.WRAPPER) Wrapper wrapper);
-
     int countSuperAdmin(Integer userId);
 }

@@ -6,12 +6,6 @@
         <result property="id" column="id"/>
         <collection property="roles" column="id" select="getRoles"/>
     </resultMap>
-    <delete id="realDelete">
-        delete from sys_admin_rl_account_role
-        <if test="ew != null">
-            ${ew.customSqlSegment}
-        </if>
-    </delete>
 
     <select id="getRoles" parameterType="integer" resultType="com.itfenbao.gadmins.admin.entity.Role">
         select _role.id, _role.name from sys_admin_rl_account_role as _account_role left join sys_admin_role as _role on
