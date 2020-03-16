@@ -133,8 +133,8 @@ public class JsonResult<T> implements IResult {
         return ret;
     }
 
-    public static <T> JsonResult<T> http403() {
-        JsonResult<T> ret = new JsonResult<T>();
+    public static JsonResult http403() {
+        JsonResult ret = new JsonResult();
         ret.setCode(JsonReturnCode.ACCESS_ERROR.getCode());
         ret.setMsg(JsonReturnCode.ACCESS_ERROR.getDesc());
         return ret;

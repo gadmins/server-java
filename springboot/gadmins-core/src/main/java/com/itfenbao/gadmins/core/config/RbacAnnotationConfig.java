@@ -3,6 +3,7 @@ package com.itfenbao.gadmins.core.config;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.PassToken;
+import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.service.IUserAuthService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,6 +11,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -58,7 +60,7 @@ public class RbacAnnotationConfig {
         if (userAuthService.hasAuth(function.value())) {
             return pjp.proceed();
         }
-        return JsonResult.http403();
+        return http403(method);
     }
 
     private Object proceFunctions(ProceedingJoinPoint pjp, Functions functions) throws Throwable {
@@ -73,7 +75,17 @@ public class RbacAnnotationConfig {
         if (Arrays.stream(functions.value()).anyMatch(f -> userAuthService.hasAuth(f.value()))) {
             return pjp.proceed();
         }
-        return JsonResult.http403();
+        return http403(method);
+    }
+
+    private Object http403(Method method) throws NoSuchMethodException {
+        if (method.getReturnType() == JsonResult.class) {
+            return JsonResult.http403();
+        } else if (method.getReturnType() == JsonPageResult.class) {
+            return JsonPageResult.http403();
+        }
+        Method http403Method = method.getReturnType().getMethod("http403");
+        return ReflectionUtils.invokeMethod(http403Method, null);
     }
 
 }

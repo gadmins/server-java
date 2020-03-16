@@ -19,4 +19,11 @@ public class JsonPageResult<T> extends JsonResult<PageData<T>> {
         return ret;
     }
 
+    public static JsonPageResult http403() {
+        JsonPageResult ret = new JsonPageResult();
+        ret.setCode(JsonReturnCode.ACCESS_ERROR.getCode());
+        ret.setMsg(JsonReturnCode.ACCESS_ERROR.getDesc());
+        return ret;
+    }
+
 }
