@@ -8,6 +8,7 @@ import java.util.Objects;
 public class AuthFunciontVO {
     private Integer id;
     private String code;
+    private String url;
 
     public Integer getId() {
         return id;
@@ -23,6 +24,14 @@ public class AuthFunciontVO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     @Override
@@ -47,6 +56,7 @@ public class AuthFunciontVO {
         return "AuthFunciontVO{" +
                 "id=" + id +
                 ", code='" + code + '\'' +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

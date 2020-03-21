@@ -104,6 +104,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         List<AuthFunciontVO> funciontVOS = this.functionService.list().stream().map(i -> {
             AuthFunciontVO funciontVO = new AuthFunciontVO();
             funciontVO.setId(i.getId());
+            funciontVO.setUrl(i.getFrontUrl());
             funciontVO.setCode(i.getFuncCode());
             return funciontVO;
         }).collect(Collectors.toList());
