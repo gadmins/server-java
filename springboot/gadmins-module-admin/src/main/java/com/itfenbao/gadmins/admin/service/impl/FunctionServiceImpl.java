@@ -151,6 +151,7 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
                     .stream().map(i -> {
                         AuthFunciontVO funciontVO = new AuthFunciontVO();
                         funciontVO.setId(i.getId());
+                        funciontVO.setUrl(i.getFrontUrl());
                         funciontVO.setCode(i.getFuncCode());
                         return funciontVO;
                     }).collect(Collectors.toList());

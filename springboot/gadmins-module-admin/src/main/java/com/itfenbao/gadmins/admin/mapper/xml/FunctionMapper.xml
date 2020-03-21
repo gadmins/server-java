@@ -17,7 +17,7 @@
         </if>
     </select>
     <select id="queryAuthFunctions" resultType="com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO">
-        select _function.id, _function.func_code as `code` from sys_admin_rl_function_role as _function_role left join
+        select _function.id, _function.func_code as `code`, _function.front_url as url from sys_admin_rl_function_role as _function_role left join
         sys_admin_function as
         _function on _function.id = _function_role.func_id
         <if test="ew != null">
