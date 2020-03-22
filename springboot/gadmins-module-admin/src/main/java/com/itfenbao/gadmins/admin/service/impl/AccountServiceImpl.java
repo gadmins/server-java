@@ -15,6 +15,7 @@ import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         if (query.getRoleId() > -1) {
             wrapper.eq("_role.id", query.getRoleId());
+        }
+        if (!CollectionUtils.isEmpty(query.getCreatedAt()) && query.getCreatedAt().size() > 1) {
+            wrapper.between("_account.created_at", query.getCreatedAt().get(0), query.getCreatedAt().get(1));
         }
         // 只查询非管理员账号
         wrapper.eq("_role.super_admin", 0);
