@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.config;
+package com.itfenbao.gadmins.core.config;
 
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;

@@ -1,0 +1,16 @@
+server:
+  port: 9999
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: java
+decorator:
+  datasource:
+    p6spy:
+      log-format: "%(currentTime) | SQL耗时： %(executionTime) ms | 连接信息： %(category)-%(connectionId) | 执行语句： %(sql)"
+logging:
+  level:
+    org.springframework.web: TRACE

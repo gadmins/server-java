@@ -1,0 +1,19 @@
+server:
+  port: 9999
+  undertow:
+    direct-buffers: true
+    io-threads: 4
+    worker-threads: 160
+spring:
+  profiles:
+    active: test
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
+api-access:
+  admin:
+    open: false
+    secret: test
+  app:
+    open: false
+    secret: fff
