@@ -64,11 +64,11 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                 menuConfig.setFunctionPoints(points);
                 menuConfigs.add(menuConfig);
             });
-            try {
-                log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(menuConfigs));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(menuConfigs));
+//            } catch (JsonProcessingException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
@@ -165,7 +165,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                     e.printStackTrace();
                 }
             } else {
-                log.error("no schema in " + method);
+                log.warn("no schema in " + method);
             }
         } else if (info.method == RequestMethod.POST || info.method == RequestMethod.PUT) {
             Class[] classes = method.getParameterTypes();
