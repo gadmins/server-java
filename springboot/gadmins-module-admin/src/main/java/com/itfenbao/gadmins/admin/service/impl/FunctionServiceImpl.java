@@ -99,7 +99,7 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
 
     @Override
     public boolean hasFunctionById(Integer id) {
-        int accountId = Integer.parseInt(TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN));
+        int accountId = Integer.parseInt(TokenUtils.getUniqueIdFromToken());
         boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
         if (isSuperAdmin) {
             return true;
@@ -116,7 +116,7 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
     public List<AuthFunctionPointVO> getListForCurrentAccountById(Integer id) {
         List<AuthFunctionPointVO> funcs = null;
         // 根据当前用户查询授权的功能点
-        int accountId = Integer.parseInt(TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN));
+        int accountId = Integer.parseInt(TokenUtils.getUniqueIdFromToken());
         boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
         if (isSuperAdmin) {
             funcs = this.baseMapper.queryAllFunctionPoints(

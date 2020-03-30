@@ -25,7 +25,7 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
     @Override
     public boolean hasAuth(String authCode) {
-        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
+        String id = TokenUtils.getUniqueIdFromToken();
         Integer accountId = Integer.parseInt(id);
         boolean isSuperAdmin = accountService.isSuperAdmin(accountId);
         if (isSuperAdmin) {
