@@ -28,7 +28,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -117,13 +116,12 @@ public class AccountController {
     /**
      * 获取当前用户的菜单
      *
-     * @param request
      * @return
      */
     @GetMapping("/menu")
     @ApiOperation("获取当前用户菜单")
-    public JsonResult<CoreMenuData> menu(HttpServletRequest request) {
-        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
+    public JsonResult<CoreMenuData> menu() {
+        String id = TokenUtils.getUniqueIdFromToken();
         return JsonResult.success(menuService.getCoreMenuData(Integer.parseInt(id)));
     }
 
@@ -179,7 +177,7 @@ public class AccountController {
     @GetMapping("/currentAccount")
     @ApiOperation("获取当前用户信息")
     public JsonResult<Account> currentAccount() {
-        String id = TokenUtils.getUniqueIdFromToken(AppConfig.TokenType.ADMIN);
+        String id = TokenUtils.getUniqueIdFromToken();
         Account account = accountService.getById(id);
         if (account == null) {
             return JsonResult.failMessage("用户不存在不存在");
@@ -193,8 +191,8 @@ public class AccountController {
     @PassToken
     @ApiOperation("账号退出")
     public JsonResult logout() {
-        String token = TokenUtils.getToken(AppConfig.TokenType.ADMIN);
-        TokenUtils.removeToken(AppConfig.TokenType.ADMIN, token);
+        String token = TokenUtils.getToken();
+        TokenUtils.removeToken(token);
         return JsonResult.success("登出成功");
     }
 }

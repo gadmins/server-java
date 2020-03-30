@@ -68,7 +68,8 @@ public class ListSchemaVO {
             Column c = new Column();
             c.title = property.value();
             c.dataIndex = field.getName();
-            c.valueType = "string";
+            // FIXME: 字段类型
+            c.valueType = "text";
             this.columns.add(c);
         }
     }

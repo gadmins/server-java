@@ -34,7 +34,7 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
-        String token = TokenUtils.getToken(tokenType);
+        String token = TokenUtils.getToken();
         // 检查token
         if (StringUtils.isEmpty(token)) {
             throw new NotLoginException();
@@ -42,7 +42,7 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
         String uniqueId = TokenUtils.getUniqueIdFromToken(tokenType, token);
         if (StringUtils.isEmpty(uniqueId)) {
             // token失效
-            TokenUtils.removeToken(tokenType, token);
+            TokenUtils.removeToken(token);
             throw new TokenFailException();
         }
         return true;
