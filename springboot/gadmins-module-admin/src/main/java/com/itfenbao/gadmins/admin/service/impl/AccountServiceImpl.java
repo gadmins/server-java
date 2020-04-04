@@ -53,8 +53,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         if (query.getRoleId() > -1) {
             wrapper.eq("_role.id", query.getRoleId());
         }
-        if (!CollectionUtils.isEmpty(query.getCreatedAt()) && query.getCreatedAt().size() > 1) {
-            wrapper.between("_account.created_at", query.getCreatedAt().get(0), query.getCreatedAt().get(1));
+        String[] createdAt = query.getCreatedAt();
+        if (createdAt != null && createdAt.length > 1) {
+            wrapper.between("_account.created_at", createdAt[0], createdAt[1]);
         }
         // 只查询非管理员账号
         wrapper.eq("_role.super_admin", 0);
