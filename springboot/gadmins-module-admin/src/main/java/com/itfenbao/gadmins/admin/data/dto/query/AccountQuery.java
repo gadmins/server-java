@@ -12,6 +12,6 @@ public class AccountQuery extends PageQuery {
 
     private String name;
     private long roleId = -1;
-    private List<String> createdAt;
+    private String[] createdAt;
 
 }
