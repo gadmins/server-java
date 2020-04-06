@@ -50,6 +50,9 @@ public class TokenUtils implements ApplicationContextAware {
         AuthProperties authProperties = getAuthProperties(tokenType);
         Cookie cookie = new Cookie(authProperties.getKey(), token);
         cookie.setPath("/");
+        if (!StringUtils.isEmpty(authProperties.getDomain())) {
+            cookie.setDomain(authProperties.getDomain());
+        }
         response.addCookie(cookie);
     }
 

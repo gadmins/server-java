@@ -2,11 +2,19 @@ package com.itfenbao.gadmins.core.auth;
 
 import com.itfenbao.gadmins.core.auth.token.JwtTokenManager;
 import com.itfenbao.gadmins.core.auth.token.TokenManager;
+import org.hibernate.validator.internal.util.DomainNameUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AuthProperties {
+    private final static Logger logger = LoggerFactory.getLogger(AuthProperties.class.getSimpleName());
     private boolean open = true;
     private Class<? extends TokenManager> tokenImplement = JwtTokenManager.class;
 
+    /**
+     * cookie domain
+     */
+    private String domain;
     /**
      * Cookies/Header 的key值
      */
@@ -39,6 +47,18 @@ public class AuthProperties {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        if (DomainNameUtil.isValidDomainAddress(domain)) {
+            this.domain = domain;
+        } else {
+            logger.error("["+domain+"] is not the correct domain name");
+        }
     }
 
     public Class getTokenImplement() {
