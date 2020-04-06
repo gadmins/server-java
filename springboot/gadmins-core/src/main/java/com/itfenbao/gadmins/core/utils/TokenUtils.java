@@ -5,10 +5,12 @@ import com.itfenbao.gadmins.core.auth.AuthAccessProperties;
 import com.itfenbao.gadmins.core.auth.AuthFrom;
 import com.itfenbao.gadmins.core.auth.AuthProperties;
 import com.itfenbao.gadmins.core.auth.token.TokenManager;
+import com.itfenbao.gadmins.core.exception.NoMatchTokeTypeException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 @Component
 public class TokenUtils implements ApplicationContextAware {
 
-    private final static String separator = "/";
+    private static AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private static AuthAccessProperties authAccessProperties;
 
@@ -125,12 +127,16 @@ public class TokenUtils implements ApplicationContextAware {
     private static AppConfig.TokenType getTokenType() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String uri = request.getRequestURI();
-        if (StringUtils.startsWithIgnoreCase(uri, AppConfig.AdminRoute.ADMIN + separator)) {
+        if (matchURI(AppConfig.AdminRoute.ADMIN, uri)) {
             return AppConfig.TokenType.ADMIN;
-        } else if (StringUtils.startsWithIgnoreCase(uri, AppConfig.AppRoute.APP + separator)) {
+        } else if (matchURI(AppConfig.AppRoute.APP, uri)) {
             return AppConfig.TokenType.APP;
         }
-        return AppConfig.TokenType.ADMIN;
+        throw new NoMatchTokeTypeException();
+    }
+
+    private static boolean matchURI(String pattern, String uri) {
+        return pathMatcher.match("/**/" + pattern + "/**", uri);
     }
 
 }
