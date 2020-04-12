@@ -50,9 +50,7 @@ public class DictController {
     @ApiOperation("分页查询")
     @Schema(Dict.class)
     public JsonPageResult<Dict> list(final DictQuery query) {
-        Page<Dict> page = new Page<>(query.getCurrent(), query.getPageSize());
-        dictService.page(page, Wrappers.<Dict>lambdaQuery().isNull(Dict::getPId));
-        return JsonPageResult.success(page);
+        return JsonPageResult.success(dictService.getListByPage(query));
     }
 
     @Functions({

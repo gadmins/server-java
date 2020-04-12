@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.param.role.AddRoleParam;
 import com.itfenbao.gadmins.admin.data.dto.param.role.UpdateRoleParam;
+import com.itfenbao.gadmins.admin.data.dto.query.RoleQuery;
 import com.itfenbao.gadmins.admin.data.vo.RoleMenuVO;
 import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
@@ -62,7 +63,7 @@ public class RoleController {
     @GetMapping()
     @ApiOperation(value = "分页查询非超管角色")
     @Schema(Role.class)
-    public JsonPageResult<Role> list(PageQuery query) {
+    public JsonPageResult<Role> list(RoleQuery query) {
         Page<Role> page = roleService.getPageListNotSuperAdmin(query);
         return JsonPageResult.success(page);
     }
