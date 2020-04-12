@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.admin.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.data.dto.query.RoleQuery;
 import com.itfenbao.gadmins.admin.entity.Role;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 
@@ -30,6 +31,6 @@ public interface IRoleService extends IService<Role> {
      * @param query
      * @return
      */
-    Page<Role> getPageListNotSuperAdmin(PageQuery query);
+    Page<Role> getPageListNotSuperAdmin(RoleQuery query);
 
 }

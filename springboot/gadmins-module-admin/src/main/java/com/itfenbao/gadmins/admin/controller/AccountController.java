@@ -1,10 +1,12 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.param.LoginParam;
 import com.itfenbao.gadmins.admin.data.dto.param.account.AddAccountParam;
+import com.itfenbao.gadmins.admin.data.dto.param.account.ModifyPwdParam;
 import com.itfenbao.gadmins.admin.data.dto.param.account.UpdateAccountParam;
 import com.itfenbao.gadmins.admin.data.dto.query.AccountQuery;
 import com.itfenbao.gadmins.admin.data.vo.AccountVO;
@@ -194,5 +196,23 @@ public class AccountController {
         String token = TokenUtils.getToken();
         TokenUtils.removeToken(token);
         return JsonResult.success("登出成功");
+    }
+
+    @PutMapping("/modifyPwd")
+    @ApiOperation("修改密码")
+    public JsonResult modifyPwd(@RequestBody ModifyPwdParam param) {
+        String id = TokenUtils.getUniqueIdFromToken();
+        Account account = accountService.getById(id);
+        if (account == null) {
+            return JsonResult.failMessage("用户不存在不存在");
+        }
+        if (!account.getPassword().equals(param.getOldPwd())) {
+            return JsonResult.failMessage("原密码错误");
+        }
+        LambdaUpdateWrapper<Account> updateWrapper = Wrappers.<Account>lambdaUpdate();
+        updateWrapper.set(Account::getPassword, param.getNewPwd());
+        updateWrapper.eq(Account::getId, Integer.parseInt(id));
+        accountService.update(updateWrapper);
+        return JsonResult.success("修改成功");
     }
 }
