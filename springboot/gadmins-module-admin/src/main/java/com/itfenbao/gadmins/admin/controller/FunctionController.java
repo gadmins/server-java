@@ -108,6 +108,9 @@ public class FunctionController {
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FunctionConfig::getFuncId, id);
         Map<String, Object> rs = functionConfigService.getMap(queryWrapper);
+        if (rs == null) {
+            return JsonResult.failMessage("数据不匹配，请检查");
+        }
         try {
             convertToMap(rs, "data_schema");
         } catch (JsonProcessingException e) {
@@ -141,7 +144,7 @@ public class FunctionController {
         apiMap.put("url", rs.get("api_url"));
         apiMap.put("method", rs.get("api_method"));
         Map<String, Object> schemaMap = (Map<String, Object>) rs.get("data_schema");
-        Map<String, Object> mapResult = new LinkedHashMap<>(schemaMap);
+        Map<String, Object> mapResult = schemaMap != null ? new LinkedHashMap<>(schemaMap) : new LinkedHashMap<>();
         Map<String, Object> btnMap = new LinkedHashMap<>();
         mapResult.put("api", apiMap);
         mapResult.put("btn", btnMap);
