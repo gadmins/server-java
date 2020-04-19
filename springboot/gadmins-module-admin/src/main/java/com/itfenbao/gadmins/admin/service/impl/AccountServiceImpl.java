@@ -13,9 +13,9 @@ import com.itfenbao.gadmins.admin.entity.RlAccountRole;
 import com.itfenbao.gadmins.admin.mapper.AccountMapper;
 import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
+import com.itfenbao.gadmins.core.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -59,6 +59,15 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
         // 只查询非管理员账号
         wrapper.eq("_role.super_admin", 0);
+        // 过滤自己
+        String accountId = TokenUtils.getUniqueIdFromToken();
+        if (!StringUtils.isEmpty(accountId)) {
+            try {
+                int id = Integer.parseInt(accountId);
+                wrapper.ne("_account.id", id);
+            } catch (Exception e) {
+            }
+        }
         wrapper.groupBy("_account.id");
         return this.baseMapper.getListByPage(page, wrapper);
     }
