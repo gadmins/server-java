@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
@@ -252,5 +253,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         Page<FunctionMenuVO> page = new Page<>(query.getCurrent(), query.getPageSize());
         Wrapper wrapper = Wrappers.query().eq("_menu.type", AppConfig.MenuType.MENU).orderByAsc("_menu.sort_number");
         return this.baseMapper.getListByPage(page, wrapper);
+    }
+
+    @Override
+    public boolean updatePidIsNULL(Integer id) {
+        return SqlHelper.retBool(this.baseMapper.updatePidIsNULL(id));
     }
 }

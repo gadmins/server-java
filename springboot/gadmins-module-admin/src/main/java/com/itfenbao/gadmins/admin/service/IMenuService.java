@@ -64,4 +64,6 @@ public interface IMenuService extends IService<Menu> {
     List<MenuVO> getAllMenu();
 
     Page<FunctionMenuVO> getListByPage(MenuQuery query);
+
+    boolean updatePidIsNULL(Integer id);
 }

@@ -38,4 +38,5 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     Page<FunctionMenuVO> getListByPage(Page<FunctionMenuVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
 
+    int updatePidIsNULL(Integer id);
 }

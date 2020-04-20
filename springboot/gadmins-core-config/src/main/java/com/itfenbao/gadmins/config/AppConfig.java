@@ -32,6 +32,8 @@ public final class AppConfig {
         public static final String ADMIN_DICT = ADMIN + "/dict";
         public static final String ADMIN_SETTINGS = ADMIN + "/settings";
         public static final String ADMIN_DB = ADMIN + "/db";
+        public static final String ADMIN_DATAWAY = ADMIN + "/dataway";
+        public static final String ADMIN_TOOL = ADMIN + "/tool";
     }
 
     /**
