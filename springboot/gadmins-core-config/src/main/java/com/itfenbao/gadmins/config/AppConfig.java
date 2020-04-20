@@ -44,8 +44,8 @@ public final class AppConfig {
     }
 
     public static final class MenuType {
-        public static final String SYS_MENU = "SYS_MENU";
-        public static final String NAV_MENU = "NAV_MENU";
+//        public static final String SYS_MENU = "SYS_MENU";
+//        public static final String NAV_MENU = "NAV_MENU";
         public static final String MENU = "MENU";
     }
 
@@ -57,5 +57,7 @@ public final class AppConfig {
         public static final String SETTINGS = "settings";
         public static final String DEVOPS = "devops";
     }
+
+    public static final boolean HIDDEN_SYS_API = false;
 
 }

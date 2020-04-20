@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_TOOL)
-@Api(tags = "系统代码工具")
+@Api(tags = "系统代码工具", hidden = AppConfig.HIDDEN_SYS_API)
 @Menu(value = "tool", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 10, icon = "tool", title = "代码工具", desc = "代码工具", url = "/system/tool")
 public class ToolController {
 

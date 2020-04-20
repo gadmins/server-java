@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_DATAWAY)
-@Api(tags = "系统动态接口")
+@Api(tags = "系统动态接口", hidden = AppConfig.HIDDEN_SYS_API)
 @Menu(value = "dataway", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 10, icon = "cloud", title = "动态接口管理", desc = "动态接口管理", url = "/system/dataway")
 public class DatawayController {
 
