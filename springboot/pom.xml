@@ -73,6 +73,7 @@
         <module>gadmins-core</module>
         <module>gadmins-core-config</module>
         <module>gadmins-module-admin</module>
+        <module>gadmins-module-devops</module>
         <module>spring-boot-starter-swagger</module>
         <module>tools</module>
     </modules>
