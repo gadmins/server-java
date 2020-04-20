@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+
 /**
  * <p>
  * 系统账号表 前端控制器
@@ -44,7 +45,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUNT)
-@Api(tags = "系统账号")
+@Api(tags = "系统账号", hidden = AppConfig.HIDDEN_SYS_API)
 @Menu(value = "account", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 2, title = "账户管理", desc = "系统账户管理", url = "/system/account")
 public class AccountController {
 

@@ -12,7 +12,6 @@ import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.Schema;
-import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import io.swagger.annotations.Api;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_ROLE)
-@Api(tags = "系统角色")
+@Api(tags = "系统角色", hidden = AppConfig.HIDDEN_SYS_API)
 @com.itfenbao.gadmins.core.annotation.Menu(value = "role", sort = 3, parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "角色管理", desc = "系统角色管理", url = "/system/role")
 public class RoleController {
 
