@@ -31,6 +31,7 @@ public final class AppConfig {
         public static final String ADMIN_ROLE = ADMIN + "/role";
         public static final String ADMIN_DICT = ADMIN + "/dict";
         public static final String ADMIN_SETTINGS = ADMIN + "/settings";
+        public static final String ADMIN_DB = ADMIN + "/db";
     }
 
     /**
@@ -52,6 +53,7 @@ public final class AppConfig {
     public static final class SysNavMenu {
         public static final String BASE_MGR = "basemgr";
         public static final String SETTINGS = "settings";
+        public static final String DEVOPS = "devops";
     }
 
 }
