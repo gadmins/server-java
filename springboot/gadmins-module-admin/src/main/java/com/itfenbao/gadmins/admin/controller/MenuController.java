@@ -124,6 +124,9 @@ public class MenuController {
             function.setFrontUrl(param.getUrl());
             functionService.updateById(function);
         }
+        if (param.getParentId() == null) {
+            menuService.updatePidIsNULL(menu.getId());
+        }
         menuService.updateById(menu);
         return JsonResult.success();
     }

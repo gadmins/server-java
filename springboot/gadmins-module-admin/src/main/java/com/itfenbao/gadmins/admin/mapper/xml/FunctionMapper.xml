@@ -3,7 +3,7 @@
 <mapper namespace="com.itfenbao.gadmins.admin.mapper.FunctionMapper">
 
     <select id="getListPidIsNull" resultType="com.itfenbao.gadmins.admin.data.vo.FunctionVO">
-        select _func.id, concat(_func.func_desc,' - ', _func.func_code) as title, _func.func_code
+        select _func.id, _func.func_desc as title, _func.func_code
         as `key`, _func.elink, _func.front_url
         as
         `url` from sys_admin_function as _func
