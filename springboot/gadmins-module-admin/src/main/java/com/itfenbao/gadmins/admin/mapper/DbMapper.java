@@ -19,4 +19,13 @@ public interface DbMapper {
 
     IPage<Map> listTableDataByPage(IPage<Map> page, @Param("name") String name, @Param(Constants.WRAPPER) Wrapper wrapper);
 
+    int isTableExist(String tableName);
+
+    void renameTableName(@Param("name") String name, @Param("newName") String newName);
+
+    void renameTableComment(@Param("name") String name, @Param("comment") String comment);
+
+    void createTable(@Param("name") String name, @Param("comment") String comment);
+
+    void dropTable(@Param("name") String name);
 }

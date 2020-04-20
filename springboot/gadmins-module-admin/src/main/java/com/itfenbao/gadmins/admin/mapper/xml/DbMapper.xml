@@ -25,4 +25,32 @@
         </if>
     </select>
 
+    <update id="renameTableName">
+        rename table ${name} to ${newName}
+    </update>
+
+    <update id="renameTableComment">
+         alter table ${name} comment '${comment}'
+    </update>
+
+    <update id="createTable">
+        CREATE TABLE ${name} (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+          `created_by` int(11) DEFAULT NULL COMMENT '创建人',
+          `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
+          `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+          `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+          `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
+          PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='${comment}';
+    </update>
+
+    <update id="dropTable">
+        drop table ${name}
+    </update>
+
+    <select id="isTableExist" resultType="int">
+        select count(*) from information_schema.TABLES where table_name = #{tableName}
+    </select>
+
 </mapper>

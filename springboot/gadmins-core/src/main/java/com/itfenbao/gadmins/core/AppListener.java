@@ -169,6 +169,9 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
             }
         } else if (info.method == RequestMethod.POST || info.method == RequestMethod.PUT) {
             Class[] classes = method.getParameterTypes();
+            if (info.method != RequestMethod.POST) {
+                log.info("fff", classes.length > 1);
+            }
             Class schemaType = info.method == RequestMethod.POST ? classes[0] : classes[1];
             FormSchemaVO formSchemaVO = new FormSchemaVO();
             ReflectionUtils.doWithFields(schemaType, field -> {

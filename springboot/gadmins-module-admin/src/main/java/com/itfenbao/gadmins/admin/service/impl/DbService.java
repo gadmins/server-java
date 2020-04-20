@@ -3,6 +3,8 @@ package com.itfenbao.gadmins.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.itfenbao.gadmins.admin.data.dto.param.db.AddTableParam;
+import com.itfenbao.gadmins.admin.data.dto.param.db.UpdateTableParam;
 import com.itfenbao.gadmins.admin.data.dto.query.DbQuery;
 import com.itfenbao.gadmins.admin.mapper.DbMapper;
 import com.itfenbao.gadmins.admin.service.IDbService;
@@ -63,4 +65,36 @@ public class DbService implements IDbService {
         }
         return mapper.listTableDataByPage(page, dbName + "." + query.getName(), wrapper);
     }
+
+    @Override
+    public boolean createTable(AddTableParam param) {
+        if (mapper.isTableExist(param.getName()) > 0) {
+            return false;
+        }
+        mapper.createTable(param.getName(), param.getComment());
+        return true;
+    }
+
+    @Override
+    public boolean dropTable(String name) {
+        if (mapper.isTableExist(name) > 0) {
+            mapper.dropTable(name);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateTable(String name, UpdateTableParam param) {
+        boolean has = mapper.isTableExist(name) > 0;
+        if (has) {
+            mapper.renameTableComment(name, param.getComment());
+        }
+        if (has && !name.equals(param.getNewName())) {
+            mapper.renameTableName(name, param.getNewName());
+        }
+        return true;
+    }
+
+
 }
