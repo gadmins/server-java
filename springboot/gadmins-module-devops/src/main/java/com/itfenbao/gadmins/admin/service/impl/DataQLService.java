@@ -1,7 +1,6 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
 import com.itfenbao.gadmins.admin.service.IDataQLService;
-import com.itfenbao.gadmins.core.web.result.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import net.hasor.dataql.DataQL;
 import net.hasor.dataql.Query;
@@ -22,7 +21,7 @@ public class DataQLService implements IDataQLService {
     DataQL dataQL;
 
     @Override
-    public JsonResult<Map<String, Object>> execuScript(String type, String script, Map<String, Object> params) {
+    public Map<String, Object> execuScript(String type, String script, Map<String, Object> params) {
         if ("sql".equalsIgnoreCase(type)) {
             script = DatawayUtils.evalCodeValueForSQL(script, params);
         }

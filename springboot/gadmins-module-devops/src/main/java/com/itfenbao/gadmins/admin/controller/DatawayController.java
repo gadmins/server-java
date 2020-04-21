@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins.admin.controller;
 
+import cn.hutool.core.map.MapUtil;
 import com.itfenbao.gadmins.admin.data.dto.query.ApiQuery;
 import com.itfenbao.gadmins.admin.data.dto.query.GroupQuery;
 import com.itfenbao.gadmins.admin.entity.DatawayApi;
@@ -12,6 +13,7 @@ import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.result.JsonReturnCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -127,7 +129,9 @@ public class DatawayController {
     @GetMapping("/test")
     @ApiOperation(value = "测试DataQL")
     public JsonResult test(String type, String script, Map<String, Object> request) {
-        return dataQLService.execuScript(type, script, request);
+        Map<String, Object> ret = dataQLService.execuScript(type, script, request);
+        int code = MapUtil.getInt(ret, "code");
+        return code == JsonReturnCode.SUCCESS.getCode() ? JsonResult.success(ret) : JsonResult.fail(ret);
     }
 
 }
