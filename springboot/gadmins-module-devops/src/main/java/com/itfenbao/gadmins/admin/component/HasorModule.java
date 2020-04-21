@@ -22,22 +22,15 @@ public class HasorModule implements SpringModule {
     @Autowired
     private DataSource dataSource;
 
-    private AppContext appContext;
-
     private DataQL hasorDataQl;
 
     @Override
     public void loadModule(ApiBinder apiBinder) throws Throwable {
-        // .DataSource form Spring boot into Hasor
         apiBinder.installModule(new JdbcModule(Level.Full, this.dataSource));
-        // .custom DataQL
-        //apiBinder.tryCast(QueryApiBinder.class).loadUdfSource(apiBinder.findClass(DimUdfSource.class));
-        //apiBinder.tryCast(QueryApiBinder.class).bindFragment("sql", SqlFragment.class);
     }
 
     @Override
     public void onStart(AppContext appContext) throws Throwable {
-        this.appContext = appContext;
         hasorDataQl = appContext.getInstance(DataQL.class);
     }
 

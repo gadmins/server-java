@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -57,6 +58,13 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
 
+    @Function(value = "sys:dataway:group:getbyid", sort = 0, title = "查询分组详情", desc = "查询分组详情")
+    @GetMapping("/group/{id}")
+    @ApiOperation(value = "查询分组详情")
+    public JsonResult addGroup(@PathVariable Integer id) {
+        return JsonResult.success(groupService.getById(id));
+    }
+
     @Function(value = "sys:dataway:group:del", sort = 0, title = "删除接口分组", desc = "删除动态接口分组")
     @DeleteMapping("/group/{id}")
     @ApiOperation(value = "删除接口分组")
@@ -90,6 +98,13 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
 
+    @Function(value = "sys:dataway:api:getbyid", sort = 0, title = "查询接口详情", desc = "查询接口详情")
+    @GetMapping("/api/{id}")
+    @ApiOperation(value = "查询接口详情")
+    public JsonResult detailApi(@PathVariable Integer id) {
+        return JsonResult.success(apiService.getById(id));
+    }
+
     @Function(value = "sys:dataway:api:del", sort = 0, title = "删除接口", desc = "删除动态接口")
     @DeleteMapping("/api/{id}")
     @ApiOperation(value = "删除接口")
@@ -111,8 +126,8 @@ public class DatawayController {
     @Function(value = "sys:dataway:test", sort = 0, title = "测试DataQL", desc = "测试DataQL")
     @GetMapping("/test")
     @ApiOperation(value = "测试DataQL")
-    public JsonResult test(String ql) {
-        return JsonResult.success();
+    public JsonResult test(String type, String script, Map<String, Object> request) {
+        return dataQLService.execuScript(type, script, request);
     }
 
 }

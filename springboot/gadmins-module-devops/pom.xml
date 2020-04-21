@@ -40,6 +40,12 @@
             <artifactId>hasor-dataql</artifactId>
             <version>${hasor.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.hasor</groupId>
+            <artifactId>hasor-dataql-fx</artifactId>
+            <version>${hasor.version}</version>
+        </dependency>
+
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
