@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
  * @author itfenbao
  */
 @Slf4j
+@ApiIgnore
 @RestController
 @RequestMapping
 public class DatawayApiController {
@@ -132,7 +134,10 @@ public class DatawayApiController {
             log.warn("[" + method + "] " + uri + " not found.");
             return null;
         }
-        return apiList.get(0);
+        if (apiList.get(0).getStatus() == 1) {
+            return apiList.get(0);
+        }
+        return null;
     }
 
 }

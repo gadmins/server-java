@@ -115,7 +115,6 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("删除失败");
     }
 
-
     @Function(value = "sys:dataway:api:update", sort = 0, title = "更新接口", desc = "更新动态接口")
     @PutMapping("/api/{id}")
     @ApiOperation(value = "更新接口")
@@ -123,6 +122,28 @@ public class DatawayController {
         datawayApi.setId(id);
         boolean ret = apiService.updateById(datawayApi);
         return ret ? JsonResult.success() : JsonResult.failMessage("更新失败");
+    }
+
+    @Function(value = "sys:dataway:api:publish", sort = 0, title = "发布接口", desc = "发布接口")
+    @PutMapping("/api/{id}/publish")
+    @ApiOperation(value = "发布接口")
+    public JsonResult publishApi(@PathVariable Integer id, Map<String, Object> params) {
+        DatawayApi api = new DatawayApi();
+        api.setId(id);
+        api.setStatus(1);
+        boolean ret = apiService.updateById(api);
+        return ret ? JsonResult.success() : JsonResult.failMessage("发布失败");
+    }
+
+    @Function(value = "sys:dataway:api:offline", sort = 0, title = "下线接口", desc = "下线接口")
+    @PutMapping("/api/{id}/offline")
+    @ApiOperation(value = "下线接口")
+    public JsonResult offlineApi(@PathVariable Integer id, Map<String, Object> params) {
+        DatawayApi api = new DatawayApi();
+        api.setId(id);
+        api.setStatus(0);
+        boolean ret = apiService.updateById(api);
+        return ret ? JsonResult.success() : JsonResult.failMessage("发布失败");
     }
 
     @Function(value = "sys:dataway:test", sort = 0, title = "测试DataQL", desc = "测试DataQL")
