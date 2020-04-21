@@ -57,6 +57,7 @@ public class BaseEntity implements Serializable {
      * 是否启用
      */
     @ApiModelProperty("是否启用")
+    @TableField("`enable`")
     protected Boolean enable;
 
     public Integer getId() {

@@ -11,6 +11,10 @@
 
     <artifactId>gadmins-module-devops</artifactId>
 
+    <properties>
+        <hasor.version>4.1.3</hasor.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.itfenbao</groupId>
@@ -21,6 +25,27 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.hasor</groupId>
+            <artifactId>hasor-db</artifactId>
+            <version>${hasor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.hasor</groupId>
+            <artifactId>hasor-spring</artifactId>
+            <version>${hasor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.hasor</groupId>
+            <artifactId>hasor-dataql</artifactId>
+            <version>${hasor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.hasor</groupId>
+            <artifactId>hasor-dataql-fx</artifactId>
+            <version>${hasor.version}</version>
+        </dependency>
+
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -30,6 +55,24 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <!-- DataQL introspection -->
+            <plugin>
+                <groupId>net.hasor</groupId>
+                <artifactId>dataql-maven-plugin</artifactId>
+                <version>${hasor.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>dataql</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <ignoreError>false</ignoreError>
+                </configuration>
+            </plugin>
+        </plugins>
         <resources>
             <resource>
                 <!-- xml放在java目录下-->

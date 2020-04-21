@@ -49,15 +49,15 @@ public class JsonResult<T> implements IResult {
         return ret;
     }
 
-    public static <T> JsonResult<T> fail(Integer code, String msg) {
-        JsonResult<T> ret = new JsonResult<T>();
-        ret.setCode(code);
-        ret.setMsg(msg);
+    public static <T> JsonResult<T> fail(T data) {
+        JsonResult<T> ret = JsonResult.fail();
+        ret.setData(data);
         return ret;
     }
 
-    public static <T> JsonResult<T> fail(T data) {
+    public static <T> JsonResult<T> fail(String msg, T data) {
         JsonResult<T> ret = JsonResult.fail();
+        ret.setMsg(msg);
         ret.setData(data);
         return ret;
     }
