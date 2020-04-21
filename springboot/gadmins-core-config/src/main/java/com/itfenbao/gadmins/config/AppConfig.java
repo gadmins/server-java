@@ -20,11 +20,14 @@ public final class AppConfig {
         public static final String APP_TOKEN = "Access-Token";
     }
 
+    private static final String ALL = "/**/*";
+
     /**
      * 管理端接口路由
      */
     public static final class AdminRoute {
         public static final String ADMIN = "/adminapi";
+        public static final String ADMIN_ALL = "/adminapi" + ALL;
         public static final String ADMIN_ACCOUNT = ADMIN + "/account";
         public static final String ADMIN_FUNCTION = ADMIN + "/function";
         public static final String ADMIN_MENU = ADMIN + "/menu";
@@ -41,6 +44,7 @@ public final class AppConfig {
      */
     public static final class AppRoute {
         public static final String APP = "/appapi";
+        public static final String APP_ALL = "/appapi" + ALL;
     }
 
     public static final class MenuType {
