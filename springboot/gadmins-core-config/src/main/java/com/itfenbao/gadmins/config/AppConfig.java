@@ -44,7 +44,7 @@ public final class AppConfig {
     }
 
     public static final class MenuType {
-//        public static final String SYS_MENU = "SYS_MENU";
+        //        public static final String SYS_MENU = "SYS_MENU";
 //        public static final String NAV_MENU = "NAV_MENU";
         public static final String MENU = "MENU";
     }
@@ -59,5 +59,49 @@ public final class AppConfig {
     }
 
     public static final boolean HIDDEN_SYS_API = false;
+
+    // 统一接口组 描述
+    public static final Group[] GROUPS = new Group[]{
+            new Group("adminapi", "后台接口", AdminRoute.ADMIN)
+    };
+
+    private static class Group {
+        String type;
+        String label;
+        String urlPrefix;
+
+        public Group() {
+        }
+
+        public Group(String type, String label, String urlPrefix) {
+            this.type = type;
+            this.label = label;
+            this.urlPrefix = urlPrefix;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public String getUrlPrefix() {
+            return urlPrefix;
+        }
+
+        public void setUrlPrefix(String urlPrefix) {
+            this.urlPrefix = urlPrefix;
+        }
+    }
 
 }

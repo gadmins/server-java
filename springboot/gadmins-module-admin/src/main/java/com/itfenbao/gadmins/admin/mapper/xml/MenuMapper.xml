@@ -9,7 +9,7 @@
     </select>
 <!--    <select id="getAllMenuByUserId" resultType="com.itfenbao.gadmins.admin.data.vo.MenuVO">-->
 <!--        select * from sys_admin_menu where id in (select menu_id from sys_admin_rl_menu_role where role_id in (select-->
-<!--        role_id from sys_admin_rl_account_role where account_id = 2) group by menu_id)-->
+<!--        role_id from sys_admin_rl_account_role where account_id = 2) datawayGroup by menu_id)-->
 <!--    </select>-->
     <select id="getAllMenuTree" resultType="com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode">
         select _menu.id, _menu.p_id as parentId, _menu.type, _menu.icon, _menu.txt as `title`, _menu.sort_number,
