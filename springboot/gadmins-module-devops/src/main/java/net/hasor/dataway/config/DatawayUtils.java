@@ -15,7 +15,7 @@
  */
 package net.hasor.dataway.config;
 
-import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.result.JsonReturnCode;
 import net.hasor.dataql.QueryResult;
 import net.hasor.dataql.domain.DataModel;
 import net.hasor.dataql.runtime.ThrowRuntimeException;
@@ -57,12 +57,14 @@ public class DatawayUtils {
         return System.currentTimeMillis() - localRequestTime.get();
     }
 
-    public static JsonResult<Map<String, Object>> queryResultToResult(QueryResult queryResult) {
+    public static Map<String, Object> queryResultToResult(QueryResult queryResult) {
         return queryResultToResultWithSpecialValue(queryResult, queryResult.getData());
     }
 
-    public static JsonResult<Map<String, Object>> queryResultToResultWithSpecialValue(QueryResult queryResult, Object specialValue) {
-        return JsonResult.success(new LinkedHashMap<String, Object>() {{
+    public static Map<String, Object> queryResultToResultWithSpecialValue(QueryResult queryResult, Object specialValue) {
+        return new LinkedHashMap<String, Object>() {{
+            put("code", JsonReturnCode.SUCCESS.getCode());
+            put("message", JsonReturnCode.SUCCESS.getDesc());
             put("lifeCycleTime", currentLostTime());
             put("executionTime", queryResult.executionTime());
             //
@@ -71,24 +73,26 @@ public class DatawayUtils {
             } else {
                 put("data", specialValue);
             }
-        }});
+        }};
     }
 
-    public static JsonResult<Map<String, Object>> exceptionToResult(Exception e) {
+    public static Map<String, Object> exceptionToResult(Exception e) {
         if (e instanceof ThrowRuntimeException) {
-            return JsonResult.fail(e.getMessage(), new LinkedHashMap<String, Object>() {{
+            return new LinkedHashMap<String, Object>() {{
                 put("code", ((ThrowRuntimeException) e).getThrowCode());
+                put("message", e.getMessage());
                 put("lifeCycleTime", currentLostTime());
                 put("executionTime", ((ThrowRuntimeException) e).getExecutionTime());
                 put("data", ((ThrowRuntimeException) e).getResult().unwrap());
-            }});
+            }};
         } else {
-            return JsonResult.fail(e.getMessage(), new LinkedHashMap<String, Object>() {{
+            return new LinkedHashMap<String, Object>() {{
                 put("code", 500);
+                put("message", e.getMessage());
                 put("lifeCycleTime", currentLostTime());
                 put("executionTime", -1);
                 put("data", e.getMessage());
-            }});
+            }};
         }
     }
 }
