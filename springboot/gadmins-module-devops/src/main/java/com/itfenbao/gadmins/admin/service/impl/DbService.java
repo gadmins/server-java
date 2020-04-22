@@ -71,7 +71,7 @@ public class DbService implements IDbService {
         if (mapper.isTableExist(param.getName()) > 0) {
             return false;
         }
-        mapper.createTable(param.getName(), param.getComment());
+        mapper.createTable(param.getName(), param.getComment(), param.isHasDelete());
         return true;
     }
 

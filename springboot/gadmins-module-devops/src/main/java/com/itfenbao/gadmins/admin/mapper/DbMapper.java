@@ -27,7 +27,7 @@ public interface DbMapper {
 
     Map<String, String> getCreateDDL(@Param("name") String name);
 
-    void createTable(@Param("name") String name, @Param("comment") String comment);
+    void createTable(@Param("name") String name, @Param("comment") String comment, boolean hasDelete);
 
     void dropTable(@Param("name") String name);
 }
