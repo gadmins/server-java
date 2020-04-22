@@ -7,4 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AddTableParam extends UpdateTableParam {
     String name;
+    boolean hasDelete;
 }

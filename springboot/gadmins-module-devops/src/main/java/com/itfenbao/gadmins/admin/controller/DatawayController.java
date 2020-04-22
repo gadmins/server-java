@@ -1,6 +1,8 @@
 package com.itfenbao.gadmins.admin.controller;
 
 import cn.hutool.core.map.MapUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.admin.data.dto.query.ApiQuery;
 import com.itfenbao.gadmins.admin.data.dto.query.GroupQuery;
 import com.itfenbao.gadmins.admin.entity.DatawayApi;
@@ -30,6 +32,9 @@ import java.util.Map;
 @Api(tags = "系统动态接口", hidden = AppConfig.HIDDEN_SYS_API)
 @Menu(value = "dataway", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 1, icon = "cloud", title = "动态接口管理", desc = "动态接口管理", url = "/system/dataway")
 public class DatawayController {
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Autowired
     IDataQLService dataQLService;
@@ -125,7 +130,7 @@ public class DatawayController {
     @ApiOperation(value = "更新接口")
     public JsonResult updateApi(@PathVariable Integer id, @RequestBody DatawayApi datawayApi) {
         datawayApi.setId(id);
-        DatawayApi idApi =  apiService.getById(id);
+        DatawayApi idApi = apiService.getById(id);
         if (idApi.getStatus() == 1) {
             return JsonResult.failMessage("接口已发布，禁止更新");
         }
@@ -158,8 +163,16 @@ public class DatawayController {
     @Function(value = "sys:dataway:test", sort = 12, title = "测试DataQL", desc = "测试DataQL")
     @GetMapping("/test")
     @ApiOperation(value = "测试DataQL")
-    public JsonResult test(String type, String script, Map<String, Object> request) {
-        Map<String, Object> ret = dataQLService.execuScript(type, script, request);
+    public JsonResult test(String type, String script, String params) {
+        Map ps = MapUtil.newHashMap();
+        if (!StringUtils.isEmpty(params)) {
+            try {
+                ps = objectMapper.readValue(params, Map.class);
+            } catch (JsonProcessingException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        Map<String, Object> ret = dataQLService.execuScript(type, script, ps);
         int code = MapUtil.getInt(ret, "code");
         return code == JsonReturnCode.SUCCESS.getCode() ? JsonResult.success(ret) : JsonResult.fail(ret);
     }
