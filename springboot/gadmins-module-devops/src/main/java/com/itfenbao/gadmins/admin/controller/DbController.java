@@ -19,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.ADMIN_DB)
 @Api(tags = "系统数据表", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "table", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 10, icon = "database", title = "数据表管理", desc = "系统数据表管理", url = "/system/table")
+@Menu(value = "table", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 0, icon = "database", title = "数据表管理", desc = "系统数据表管理", url = "/system/table")
 public class DbController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class DbController {
         return JsonPageResult.success(dbService.listTableByPage(query));
     }
 
-    @Function(value = "sys:table:add", sort = 0, title = "添加", desc = "添加数据表", btnGroup = Function.BtnGroup.TOOLBAR)
+    @Function(value = "sys:table:add", sort = 1, title = "添加", desc = "添加数据表", btnGroup = Function.BtnGroup.TOOLBAR)
     @PostMapping("/table")
     @ApiOperation(value = "创建数据表")
     public JsonResult addTable(@RequestBody AddTableParam param) {
@@ -40,7 +40,7 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
 
-    @Function(value = "sys:table:del", sort = 0, title = "查询", desc = "删除数据表")
+    @Function(value = "sys:table:del", sort = 2, title = "查询", desc = "删除数据表")
     @DeleteMapping("/table/{name}")
     @ApiOperation(value = "删除数据表")
     public JsonResult delTable(@PathVariable("name") String[] name) {
@@ -53,7 +53,7 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("删除失败");
     }
 
-    @Function(value = "sys:table:update", sort = 0, title = "修改", desc = "修改数据表", btnGroup = Function.BtnGroup.TOOLBAR)
+    @Function(value = "sys:table:update", sort = 3, title = "修改", desc = "修改数据表", btnGroup = Function.BtnGroup.TOOLBAR)
     @PutMapping("/table/{name}")
     @ApiOperation(value = "修改数据表")
     public JsonResult updateTable(@PathVariable("name") String name, @RequestBody UpdateTableParam param) {
@@ -61,14 +61,14 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("更新失败");
     }
 
-    @Function(value = "sys:table:column:list", sort = 0, title = "查询", desc = "查询数据表结构")
+    @Function(value = "sys:table:column:list", sort = 4, title = "查询", desc = "查询数据表结构")
     @GetMapping("/column")
     @ApiOperation(value = "数据表结构查询")
     public JsonPageResult<Map> listColumn(DbQuery query) {
         return JsonPageResult.success(dbService.listColumnByPage(query));
     }
 
-    @Function(value = "sys:table:data:list", sort = 0, title = "查询", desc = "查询表数据")
+    @Function(value = "sys:table:data:list", sort = 5, title = "查询", desc = "查询表数据")
     @GetMapping("/data")
     @ApiOperation(value = "数据表数据")
     public JsonPageResult<Map> listTableData(DbQuery query) {

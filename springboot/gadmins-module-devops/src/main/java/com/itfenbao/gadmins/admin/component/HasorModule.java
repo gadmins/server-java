@@ -5,8 +5,6 @@ import net.hasor.core.ApiBinder;
 import net.hasor.core.AppContext;
 import net.hasor.core.DimModule;
 import net.hasor.dataql.DataQL;
-import net.hasor.dataql.QueryApiBinder;
-import net.hasor.dataql.fx.db.SqlFragment;
 import net.hasor.db.JdbcModule;
 import net.hasor.db.Level;
 import net.hasor.spring.SpringModule;
@@ -29,7 +27,6 @@ public class HasorModule implements SpringModule {
     @Override
     public void loadModule(ApiBinder apiBinder) throws Throwable {
         apiBinder.installModule(new JdbcModule(Level.Full, this.dataSource));
-        apiBinder.tryCast(QueryApiBinder.class).bindFragment("sql", SqlFragment.class);
     }
 
     @Override

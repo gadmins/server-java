@@ -1,7 +1,8 @@
 package com.itfenbao.gadmins.admin.mapper;
 
-import com.itfenbao.gadmins.admin.entity.DatawayApi;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.itfenbao.gadmins.admin.entity.DatawayApi;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -12,5 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2020-04-21
  */
 public interface ApiMapper extends BaseMapper<DatawayApi> {
+
+    @Update("UPDATE sys_dataway_api SET api_path=REPLACE(api_path,#{oldPrefix},#{newPrefix})  WHERE group_id = #{groupId}")
+    boolean updateUrlBy(Integer groupId, String oldPrefix, String newPrefix);
 
 }

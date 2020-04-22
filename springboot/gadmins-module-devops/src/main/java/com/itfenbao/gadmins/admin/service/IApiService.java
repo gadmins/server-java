@@ -14,5 +14,9 @@ import com.itfenbao.gadmins.admin.entity.DatawayApi;
  * @since 2020-04-21
  */
 public interface IApiService extends IService<DatawayApi> {
+
     IPage<DatawayApi> listByPage(ApiQuery query);
+
+    boolean updateUrlBy(Integer groupId, String oldPrefix, String newPrefix);
+
 }
