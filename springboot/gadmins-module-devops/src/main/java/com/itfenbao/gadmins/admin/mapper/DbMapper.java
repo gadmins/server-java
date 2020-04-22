@@ -25,6 +25,8 @@ public interface DbMapper {
 
     void renameTableComment(@Param("name") String name, @Param("comment") String comment);
 
+    Map<String, String> getCreateDDL(@Param("name") String name);
+
     void createTable(@Param("name") String name, @Param("comment") String comment);
 
     void dropTable(@Param("name") String name);

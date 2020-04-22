@@ -32,4 +32,5 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, DatawayGroup> imp
         }
         return this.page(page, wrapper);
     }
+
 }

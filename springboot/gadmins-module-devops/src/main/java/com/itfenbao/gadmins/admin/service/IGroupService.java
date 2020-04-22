@@ -1,9 +1,9 @@
 package com.itfenbao.gadmins.admin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.admin.data.dto.query.GroupQuery;
 import com.itfenbao.gadmins.admin.entity.DatawayGroup;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
@@ -16,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IGroupService extends IService<DatawayGroup> {
 
     IPage<DatawayGroup> listByPage(GroupQuery query);
+
 }

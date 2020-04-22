@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins.admin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.itfenbao.gadmins.core.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -55,5 +56,8 @@ public class DatawayApi extends BaseEntity {
     @ApiModelProperty(value = "脚本类型")
     private String scriptType;
 
+    @ApiModelProperty(value = "逻辑删除")
+    @TableLogic
+    private Boolean deleted;
 
 }

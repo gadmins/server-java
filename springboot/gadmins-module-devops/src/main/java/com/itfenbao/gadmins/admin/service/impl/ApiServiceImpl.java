@@ -32,4 +32,9 @@ public class ApiServiceImpl extends ServiceImpl<ApiMapper, DatawayApi> implement
         }
         return this.page(page, wrapper);
     }
+
+    @Override
+    public boolean updateUrlBy(Integer groupId, String oldPrefix, String newPrefix) {
+        return this.baseMapper.updateUrlBy(groupId, oldPrefix, newPrefix);
+    }
 }

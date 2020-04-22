@@ -235,7 +235,45 @@ CREATE TABLE `sys_admin_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统角色表';
 
 
+DROP TABLE IF EXISTS `sys_dataway_group`;
 
+CREATE TABLE `sys_dataway_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_type` varchar(50) NOT NULL COMMENT '分组',
+  `url_prefix` varchar(100) NOT NULL COMMENT '分组URL前缀',
+  `desc` varchar(255) NOT NULL COMMENT '组描述',
+  `menu_id` int(11) DEFAULT NULL COMMENT '菜单ID',
+  `created_by` int(11) DEFAULT NULL COMMENT '创建人',
+  `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
+  `deleted` tinyint(1) DEFAULT '0' COMMENT '逻辑删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='dataway分组表';
+
+DROP TABLE IF EXISTS `sys_dataway_api`;
+
+CREATE TABLE `sys_dataway_api` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_id` int(11) NOT NULL COMMENT '分组ID',
+  `func_id` int(11) DEFAULT NULL COMMENT '功能ID',
+  `api_method` varchar(12) NOT NULL COMMENT '请求方法',
+  `api_path` varchar(512) NOT NULL COMMENT '请求路径',
+  `api_comment` varchar(255) NOT NULL COMMENT '注释',
+  `api_script` mediumtext NOT NULL COMMENT '脚本内容',
+  `api_req_schema` mediumtext NOT NULL COMMENT '请求结构',
+  `api_resp_schema` mediumtext NOT NULL COMMENT '响应结构',
+  `script_type` varchar(12) NOT NULL COMMENT '脚本类型',
+  `status` int(2) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0 草稿 1 发布',
+  `created_by` int(11) DEFAULT NULL COMMENT '创建人',
+  `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
+  `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='dataway接口表';
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

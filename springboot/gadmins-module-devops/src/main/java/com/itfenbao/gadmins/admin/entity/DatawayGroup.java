@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.admin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.itfenbao.gadmins.core.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -21,7 +22,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("sys_dataway_group")
-@ApiModel(value="DatawayGroup对象", description="dataway分组表")
+@ApiModel(value = "DatawayGroup对象", description = "dataway分组表")
 public class DatawayGroup extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -39,5 +40,8 @@ public class DatawayGroup extends BaseEntity {
     @ApiModelProperty(value = "菜单ID")
     private Integer menuId;
 
+    @ApiModelProperty(value = "逻辑删除")
+    @TableLogic
+    private Boolean deleted;
 
 }

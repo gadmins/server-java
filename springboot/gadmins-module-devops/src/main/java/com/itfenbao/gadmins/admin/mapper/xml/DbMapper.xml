@@ -33,6 +33,10 @@
          alter table ${name} comment '${comment}'
     </update>
 
+    <select id="getCreateDDL" resultType="java.util.Map">
+        SHOW CREATE TABLE ${name}
+    </select>
+
     <update id="createTable">
         CREATE TABLE ${name} (
           `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
