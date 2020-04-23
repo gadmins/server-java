@@ -13,6 +13,7 @@ import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.AppListener;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
@@ -51,7 +52,7 @@ public class MenuController {
     @Autowired
     AppListener appListener;
 
-    @Function(value = "sys.menu.list", sort = 0, title = "查询", desc = "查询菜单", menu = true)
+    @MenuFunction(value = "sys.menu.list", title = "查询", desc = "查询菜单")
     @GetMapping("/tree")
     @ApiOperation("获取菜单树")
     public JsonResult<List<MenuTreeNode>> menuTree() {

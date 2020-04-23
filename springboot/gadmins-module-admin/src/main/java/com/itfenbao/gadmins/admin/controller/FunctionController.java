@@ -20,6 +20,7 @@ import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.annotation.Schema;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
@@ -73,7 +74,7 @@ public class FunctionController {
     }
 
     @GetMapping("/menu")
-    @Function(value = "sys:function:list", sort = 0, title = "查询", desc = "查询功能组", menu = true)
+    @MenuFunction(value = "sys:function:list", title = "查询", desc = "查询功能组")
     @ApiOperation("功能组分页查询")
     @Schema(FunctionMenuVO.class)
     public JsonPageResult<FunctionMenuVO> menuList(MenuQuery query) {

@@ -1,8 +1,8 @@
 package com.itfenbao.gadmins.admin.controller;
 
 import com.itfenbao.gadmins.config.AppConfig;
-import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountSettingsController {
 
     @GetMapping
-    @Function(value = "sys:accountsettings:info", sort = 0, title = "查询", desc = "获取当前用户信息", menu = true)
+    @MenuFunction(value = "sys:accountsettings:info", title = "查询", desc = "获取当前用户信息")
     public JsonResult info() {
         return JsonResult.success();
     }

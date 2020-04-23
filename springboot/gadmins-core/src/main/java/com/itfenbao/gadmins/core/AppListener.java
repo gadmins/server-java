@@ -2,10 +2,7 @@ package com.itfenbao.gadmins.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itfenbao.gadmins.core.annotation.Function;
-import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.annotation.Menu;
-import com.itfenbao.gadmins.core.annotation.Schema;
+import com.itfenbao.gadmins.core.annotation.*;
 import com.itfenbao.gadmins.core.web.vo.FormSchemaVO;
 import com.itfenbao.gadmins.core.web.vo.ListSchemaVO;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
@@ -47,20 +44,23 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                 Method[] methods = bean.getClass().getMethods();
                 Arrays.stream(methods)
                         .filter(m -> AnnotationUtils.findAnnotation(m, Function.class) != null
-                                || AnnotationUtils.findAnnotation(m, Functions.class) != null)
+                                || AnnotationUtils.findAnnotation(m, Functions.class) != null
+                                || AnnotationUtils.findAnnotation(m, MenuFunction.class) != null)
                         .forEach(m -> {
-                            RequestInfo requestInfo = getRequestInfo(m, bean);
+                            RequestInfo requestInfo = getRequestInfo(m);
+                            MenuFunction menuFunction = AnnotationUtils.findAnnotation(m, MenuFunction.class);
                             Function function = AnnotationUtils.findAnnotation(m, Function.class);
                             Functions functions = AnnotationUtils.findAnnotation(m, Functions.class);
                             if (function != null) {
-                                points.add(createFunctionPoint(baseRoutePath, function, requestInfo, menuConfig.getUrl()));
+                                points.add(createFunctionPoint(baseRoutePath, FunctionInfo.createFunctionInfo(function, menuFunction), requestInfo, menuConfig.getUrl()));
                             } else if (functions != null) {
                                 Arrays.stream(functions.value()).forEach(function1 -> {
-                                    points.add(createFunctionPoint(baseRoutePath, function1, requestInfo, menuConfig.getUrl()));
+                                    points.add(createFunctionPoint(baseRoutePath, FunctionInfo.createFunctionInfo(function1, menuFunction), requestInfo, menuConfig.getUrl()));
                                 });
                             }
                         });
                 points.sort(Comparator.comparing(FunctionPoint::getSort));
+                points.sort(Comparator.comparing(FunctionPoint::isMenu, (a, b) -> a.booleanValue() == true ? 1 : 0));
                 menuConfig.setFunctionPoints(points);
                 menuConfigs.add(menuConfig);
             });
@@ -99,22 +99,22 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
      * @param requestInfo
      * @return
      */
-    private FunctionPoint createFunctionPoint(String baseRoutePath, Function function, RequestInfo requestInfo, String url) {
+    private FunctionPoint createFunctionPoint(String baseRoutePath, FunctionInfo function, RequestInfo requestInfo, String url) {
         FunctionPoint functionPoint = new FunctionPoint();
-        functionPoint.setGroup(function.group());
-        functionPoint.setCode(function.value());
-        functionPoint.setTitle(function.title());
-        functionPoint.setDesc(function.desc());
-        functionPoint.setIcon(function.icon());
-        functionPoint.setSort(function.sort());
-        functionPoint.setMenu(function.menu());
+        functionPoint.setGroup(function.group);
+        functionPoint.setCode(function.value);
+        functionPoint.setTitle(function.title);
+        functionPoint.setDesc(function.desc);
+        functionPoint.setIcon(function.icon);
+        functionPoint.setSort(function.sort);
+        functionPoint.setMenu(function.menu);
 
-        functionPoint.setUrl(StringUtils.isEmpty(function.url()) ? null : function.url());
-        if (function.menu()) {
+        functionPoint.setUrl(StringUtils.isEmpty(function.url) ? null : function.url);
+        if (function.menu) {
             functionPoint.setUrl(url);
         }
-        functionPoint.setParentCode(StringUtils.isEmpty(function.parentCode()) ? null : function.parentCode());
-        functionPoint.setBtnGroup(function.btnGroup());
+        functionPoint.setParentCode(StringUtils.isEmpty(function.parentCode) ? null : function.parentCode);
+        functionPoint.setBtnGroup(function.btnGroup);
 
         FunctionPointConfig pointConfig = new FunctionPointConfig();
         pointConfig.setUrl(baseRoutePath + requestInfo.url);
@@ -124,7 +124,8 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
         return functionPoint;
     }
 
-    private RequestInfo getRequestInfo(Method method, Object bean) {
+
+    private RequestInfo getRequestInfo(Method method) {
         RequestInfo info = new RequestInfo();
         GetMapping get = AnnotationUtils.findAnnotation(method, GetMapping.class);
         PostMapping post = AnnotationUtils.findAnnotation(method, PostMapping.class);
@@ -196,5 +197,50 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
         public String url;
         public RequestMethod method;
         public String schema;
+    }
+
+    private static class FunctionInfo {
+        public String value;
+        public String group;
+        public String title;
+        public String desc;
+        public String icon;
+        public int sort;
+        public boolean menu;
+        public String url;
+        public String parentCode;
+        public String btnGroup;
+
+        static FunctionInfo createFunctionInfo(Function function, MenuFunction menuFunction) {
+            boolean hasMenu = menuFunction != null;
+            FunctionInfo info = new FunctionInfo();
+            info.menu = hasMenu;
+            info.sort = function.sort();
+            info.url = function.url();
+            info.parentCode = function.parentCode();
+            info.btnGroup = function.btnGroup();
+
+            info.value = function.value();
+            if (hasMenu) {
+                info.value = menuFunction.value();
+            }
+            info.group = function.group();
+            if (hasMenu) {
+                info.group = menuFunction.group();
+            }
+            info.title = function.title();
+            if (hasMenu) {
+                info.title = menuFunction.title();
+            }
+            info.desc = function.desc();
+            if (hasMenu) {
+                info.desc = menuFunction.desc();
+            }
+            info.icon = function.icon();
+            if (hasMenu) {
+                info.icon = menuFunction.icon();
+            }
+            return info;
+        }
     }
 }

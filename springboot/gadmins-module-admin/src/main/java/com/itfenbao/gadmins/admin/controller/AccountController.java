@@ -58,7 +58,7 @@ public class AccountController {
     @Autowired
     IMenuService menuService;
 
-    @Function(value = "sys:account:list", sort = 0, title = "查询", desc = "查询账号", menu = true)
+    @MenuFunction(value = "sys:account:list", title = "查询", desc = "查询账号")
     @GetMapping()
     @ApiOperation(value = "账号查询")
     @Schema(AccountVO.class)

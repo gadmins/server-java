@@ -9,10 +9,7 @@ import com.itfenbao.gadmins.admin.data.dto.query.DictQuery;
 import com.itfenbao.gadmins.admin.entity.Dict;
 import com.itfenbao.gadmins.admin.service.IDictService;
 import com.itfenbao.gadmins.config.AppConfig;
-import com.itfenbao.gadmins.core.annotation.Function;
-import com.itfenbao.gadmins.core.annotation.Functions;
-import com.itfenbao.gadmins.core.annotation.Menu;
-import com.itfenbao.gadmins.core.annotation.Schema;
+import com.itfenbao.gadmins.core.annotation.*;
 import com.itfenbao.gadmins.core.event.RefreshDictEvent;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -45,7 +42,7 @@ public class DictController {
     @Autowired
     ApplicationContext applicationContext;
 
-    @Function(value = "sys:dict:list", sort = 0, title = "查询", desc = "查询字典", menu = true)
+    @MenuFunction(value = "sys:dict:list", title = "查询", desc = "查询字典")
     @GetMapping()
     @ApiOperation("分页查询")
     @Schema(Dict.class)

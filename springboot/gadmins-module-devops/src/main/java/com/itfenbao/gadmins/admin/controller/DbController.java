@@ -7,6 +7,7 @@ import com.itfenbao.gadmins.admin.service.IDbService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import io.swagger.annotations.Api;
@@ -25,9 +26,9 @@ public class DbController {
     @Autowired
     IDbService dbService;
 
-    @Function(value = "sys:table:list", sort = 0, title = "查询", desc = "查询数据表", menu = true)
+    @MenuFunction(value = "sys:table:list", title = "查询列表", desc = "查询数据表")
     @GetMapping("/table")
-    @ApiOperation(value = "数据表查询")
+    @ApiOperation(value = "查询数据表列表")
     public JsonPageResult<Map> listTable(DbQuery query) {
         return JsonPageResult.success(dbService.listTableByPage(query));
     }
@@ -40,7 +41,7 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
 
-    @Function(value = "sys:table:del", sort = 2, title = "查询", desc = "删除数据表")
+    @Function(value = "sys:table:del", sort = 2, title = "删除", desc = "删除数据表")
     @DeleteMapping("/table/{name}")
     @ApiOperation(value = "删除数据表")
     public JsonResult delTable(@PathVariable("name") String[] name) {
@@ -61,14 +62,14 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("更新失败");
     }
 
-    @Function(value = "sys:table:column:list", sort = 4, title = "查询", desc = "查询数据表结构")
+    @Function(value = "sys:table:column:list", sort = 4, title = "查询表结构", desc = "查询数据表结构")
     @GetMapping("/column")
     @ApiOperation(value = "数据表结构查询")
     public JsonPageResult<Map> listColumn(DbQuery query) {
         return JsonPageResult.success(dbService.listColumnByPage(query));
     }
 
-    @Function(value = "sys:table:data:list", sort = 5, title = "查询", desc = "查询表数据")
+    @Function(value = "sys:table:data:list", sort = 5, title = "查询数据", desc = "查询表数据")
     @GetMapping("/data")
     @ApiOperation(value = "数据表数据")
     public JsonPageResult<Map> listTableData(DbQuery query) {
