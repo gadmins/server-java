@@ -13,6 +13,7 @@ import com.itfenbao.gadmins.admin.service.IGroupService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.result.JsonReturnCode;
@@ -51,9 +52,9 @@ public class DatawayController {
         return JsonResult.success(AppConfig.GROUPS);
     }
 
-    @Function(value = "sys:dataway:group:list", sort = 0, title = "查询接口分组", desc = "查询动态接口分组", menu = true)
+    @MenuFunction(value = "sys:dataway:group:list", title = "查询接口分组列表", desc = "查询动态接口分组列表")
     @GetMapping("/group")
-    @ApiOperation(value = "查询接口分组")
+    @ApiOperation(value = "查询接口分组列表")
     public JsonPageResult<DatawayGroup> list(GroupQuery query) {
         return JsonPageResult.success(groupService.listByPage(query));
     }
@@ -95,14 +96,14 @@ public class DatawayController {
     }
 
 
-    @Function(value = "sys:dataway:api:list", sort = 5, title = "查询接口", desc = "查询动态接口")
+    @Function(value = "sys:dataway:api:list", sort = 5, title = "查询接口列表", desc = "查询动态接口列表")
     @GetMapping("/api")
-    @ApiOperation(value = "查询接口")
+    @ApiOperation(value = "查询接口列表")
     public JsonPageResult<DatawayApi> apilist(ApiQuery query) {
         return JsonPageResult.success(apiService.listByPage(query));
     }
 
-    @Function(value = "sys:dataway:api:add", sort = 6, title = "添加接口", desc = "添加动态接口")
+    @Function(value = "sys:dataway:api:add", parentCode = "sys:dataway:api:list", sort = 6, title = "添加接口", desc = "添加动态接口")
     @PostMapping("/api")
     @ApiOperation(value = "添加接口")
     public JsonResult addApi(@RequestBody DatawayApi datawayApi) {
@@ -110,14 +111,14 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
 
-    @Function(value = "sys:dataway:api:getbyid", sort = 7, title = "查询接口详情", desc = "查询接口详情")
+    @Function(value = "sys:dataway:api:getbyid", parentCode = "sys:dataway:api:list", sort = 7, title = "查询接口详情", desc = "查询接口详情")
     @GetMapping("/api/{id}")
     @ApiOperation(value = "查询接口详情")
     public JsonResult detailApi(@PathVariable Integer id) {
         return JsonResult.success(apiService.getById(id));
     }
 
-    @Function(value = "sys:dataway:api:del", sort = 8, title = "删除接口", desc = "删除动态接口")
+    @Function(value = "sys:dataway:api:del", parentCode = "sys:dataway:api:list", sort = 8, title = "删除接口", desc = "删除动态接口")
     @DeleteMapping("/api/{id}")
     @ApiOperation(value = "删除接口")
     public JsonResult delApi(@PathVariable List<Integer> id) {
@@ -125,7 +126,7 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("删除失败");
     }
 
-    @Function(value = "sys:dataway:api:update", sort = 9, title = "更新接口", desc = "更新动态接口")
+    @Function(value = "sys:dataway:api:update", parentCode = "sys:dataway:api:list", sort = 9, title = "更新接口", desc = "更新动态接口")
     @PutMapping("/api/{id}")
     @ApiOperation(value = "更新接口")
     public JsonResult updateApi(@PathVariable Integer id, @RequestBody DatawayApi datawayApi) {
@@ -138,7 +139,7 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("更新失败");
     }
 
-    @Function(value = "sys:dataway:api:publish", sort = 10, title = "发布接口", desc = "发布接口")
+    @Function(value = "sys:dataway:api:publish", parentCode = "sys:dataway:api:list", sort = 10, title = "发布接口", desc = "发布接口")
     @PutMapping("/api/{id}/publish")
     @ApiOperation(value = "发布接口")
     public JsonResult publishApi(@PathVariable Integer id, Map<String, Object> params) {
@@ -149,7 +150,7 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("发布失败");
     }
 
-    @Function(value = "sys:dataway:api:offline", sort = 11, title = "下线接口", desc = "下线接口")
+    @Function(value = "sys:dataway:api:offline", parentCode = "sys:dataway:api:list", sort = 11, title = "下线接口", desc = "下线接口")
     @PutMapping("/api/{id}/offline")
     @ApiOperation(value = "下线接口")
     public JsonResult offlineApi(@PathVariable Integer id, Map<String, Object> params) {

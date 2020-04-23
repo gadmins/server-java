@@ -11,6 +11,7 @@ import com.itfenbao.gadmins.admin.entity.*;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Functions;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.annotation.Schema;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -55,10 +56,7 @@ public class RoleController {
     @Autowired
     IFunctionService functionService;
 
-    @com.itfenbao.gadmins.core.annotation.Function(
-            value = "sys:role:list", sort = 0,
-            title = "查询", desc = "查询角色", menu = true
-    )
+    @MenuFunction(value = "sys:role:list", title = "查询", desc = "查询角色")
     @GetMapping()
     @ApiOperation(value = "分页查询非超管角色")
     @Schema(Role.class)

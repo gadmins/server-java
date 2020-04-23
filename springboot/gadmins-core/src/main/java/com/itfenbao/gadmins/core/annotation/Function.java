@@ -1,16 +1,15 @@
 package com.itfenbao.gadmins.core.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 用来标注菜单功能点
+ *
  * @author itfenbao
  */
-@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Inherited
 public @interface Function {
 
     // 功能编码
@@ -20,7 +19,7 @@ public @interface Function {
     String group() default "admin";
 
     // 功能名称
-    String title() default "";
+    String title();
 
     // 功能描述
     String desc();
@@ -30,9 +29,6 @@ public @interface Function {
 
     // 排序
     int sort();
-
-    // 是否是菜单功能
-    boolean menu() default false;
 
     String url() default "";
 
