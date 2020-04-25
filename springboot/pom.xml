@@ -51,6 +51,31 @@
                 <artifactId>knife4j-spring-ui</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.itfenbao</groupId>
+                <artifactId>gadmins-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itfenbao</groupId>
+                <artifactId>gadmins-core-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itfenbao</groupId>
+                <artifactId>spring-boot-starter-swagger</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itfenbao</groupId>
+                <artifactId>gadmins-module-admin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itfenbao</groupId>
+                <artifactId>gadmins-module-devops</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
