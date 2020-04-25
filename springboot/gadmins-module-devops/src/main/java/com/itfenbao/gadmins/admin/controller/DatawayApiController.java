@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.entity.DatawayApi;
 import com.itfenbao.gadmins.admin.service.IApiService;
 import com.itfenbao.gadmins.admin.service.IDataQLService;
-import com.itfenbao.gadmins.admin.service.IGroupService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -33,9 +32,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping
 public class DatawayApiController {
-
-    @Autowired
-    IGroupService groupService;
 
     @Autowired
     IApiService apiService;

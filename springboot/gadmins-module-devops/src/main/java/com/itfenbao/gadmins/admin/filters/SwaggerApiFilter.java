@@ -1,7 +1,10 @@
 package com.itfenbao.gadmins.admin.filters;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fasterxml.classmate.TypeBindings;
+import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
@@ -14,14 +17,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.UriComponents;
 import springfox.documentation.OperationNameGenerator;
 import springfox.documentation.builders.OperationBuilder;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.*;
+import springfox.documentation.spi.service.contexts.Defaults;
 import springfox.documentation.spring.web.DocumentationCache;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.mappers.ServiceModelToSwagger2Mapper;
@@ -32,7 +40,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Optional.ofNullable;
 import static springfox.documentation.swagger.common.HostNameProvider.componentsFrom;
@@ -80,8 +90,11 @@ public class SwaggerApiFilter implements Filter {
     }
 
     private void generateDatawayApi(String groupName, ApplicationContext context, OperationNameGenerator nameGenerator, Documentation documentation) {
+        Defaults defaults = context.getBean(Defaults.class);
         IGroupService groupService = context.getBean(IGroupService.class);
         IApiService apiService = context.getBean(IApiService.class);
+        ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+        TypeResolver typeResolver = context.getBean(TypeResolver.class);
         groupService.list(Wrappers.<DatawayGroup>lambdaQuery().eq(DatawayGroup::getGroupType, groupName)).forEach(it -> {
             String tagStr = "动态接口-" + it.getDesc();
             Tag tag = new Tag(tagStr, it.getDesc());
@@ -92,10 +105,51 @@ public class SwaggerApiFilter implements Filter {
                             .eq(DatawayApi::getStatus, 1)
             );
             apis.forEach(api -> {
+                List<Parameter> parameters = CollUtil.newArrayList();
+                String reqSchemaStr = api.getApiReqSchema();
+                if (!StringUtils.isEmpty(reqSchemaStr)) {
+                    try {
+                        Map reqSchema = objectMapper.readValue(reqSchemaStr, Map.class);
+                        List<LinkedHashMap<String, String>> pathList = MapUtil.get(reqSchema, "path", List.class);
+                        List<LinkedHashMap<String, String>> queryList = MapUtil.get(reqSchema, "query", List.class);
+//                        List<LinkedHashMap<String, String>> bodyList = MapUtil.get(reqSchema, "body", List.class);
+                        if (!CollectionUtils.isEmpty(pathList)) {
+                            pathList.forEach(p -> {
+                                parameters.add(
+                                        new ParameterBuilder()
+                                                .name(p.get("name"))
+                                                .description(p.get("desc"))
+                                                .type(typeResolver.resolve(TypeBindings.emptyBindings(), String.class))
+                                                .parameterType("path")
+                                                .modelRef(new ModelRef(p.get("type")))
+                                                .required(true)
+                                                .build()
+                                );
+                            });
+                        }
+                        if (!CollectionUtils.isEmpty(queryList)) {
+                            queryList.forEach(p -> {
+                                parameters.add(
+                                        new ParameterBuilder()
+                                                .name(p.get("name"))
+                                                .description(p.get("desc"))
+                                                .type(typeResolver.resolve(TypeBindings.emptyBindings(), String.class))
+                                                .parameterType("query")
+                                                .modelRef(new ModelRef(p.get("type")))
+                                                .build()
+                                );
+                            });
+                        }
+                    } catch (JsonProcessingException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
                 Operation operation = new OperationBuilder(nameGenerator)
                         .method(HttpMethod.valueOf(api.getApiMethod()))
+                        .responseMessages(Sets.newHashSet(defaults.defaultResponseMessages().get(RequestMethod.valueOf(api.getApiMethod()))))
                         .uniqueId("test")
                         .summary(api.getApiComment())
+                        .parameters(parameters)
                         .tags(Sets.newHashSet(tagStr))
                         .build();
                 ApiDescription apiDescription = new ApiDescription(it.getUrlPrefix(), api.getApiPath(), api.getApiComment(), Arrays.asList(operation), false);
