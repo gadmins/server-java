@@ -33,6 +33,9 @@ public class DbService implements IDbService {
         if (!StringUtils.isEmpty(query.getName())) {
             wrapper.like("TABLE_NAME", query.getName());
         }
+        if (!StringUtils.isEmpty(query.getComment())) {
+            wrapper.like("TABLE_COMMENT", query.getComment());
+        }
         String[] createdAt = query.getCreatedAt();
         if (createdAt != null && createdAt.length > 1) {
             wrapper.between("CREATE_TIME", createdAt[0], createdAt[1]);

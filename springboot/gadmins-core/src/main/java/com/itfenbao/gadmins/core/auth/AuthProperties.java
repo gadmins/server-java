@@ -31,7 +31,7 @@ public class AuthProperties {
     /**
      * 有效期：单位秒,默认1天
      */
-    private long expireTime = 1 * 24 * 60 * 60;
+    private long expireTime = 2 * 24 * 60 * 60;
 
     public AuthProperties() {
     }

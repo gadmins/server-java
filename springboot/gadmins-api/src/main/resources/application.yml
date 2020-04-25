@@ -24,8 +24,7 @@ mybatis-plus:
 api-access:
   admin:
     open: true
-    secret: test
+    secret: SKxnWUIfGwg1V@mB
   app:
     open: false
-    secret: fff
 HASOR_DATAQL_FX_PAGE_DIALECT: mysql

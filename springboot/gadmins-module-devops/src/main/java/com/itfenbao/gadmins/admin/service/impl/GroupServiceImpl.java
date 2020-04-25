@@ -30,6 +30,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, DatawayGroup> imp
         if (!StringUtils.isEmpty(query.getGroupType())) {
             wrapper.eq(DatawayGroup::getGroupType, query.getGroupType());
         }
+        String[] createdAt = query.getCreatedAt();
+        if (createdAt != null && createdAt.length > 1) {
+            wrapper.between(DatawayGroup::getCreatedAt, createdAt[0], createdAt[1]);
+        }
         return this.page(page, wrapper);
     }
 
