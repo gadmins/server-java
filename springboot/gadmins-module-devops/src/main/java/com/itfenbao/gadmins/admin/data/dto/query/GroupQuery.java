@@ -8,4 +8,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GroupQuery extends PageQuery {
     String groupType;
+    String[] createdAt;
 }

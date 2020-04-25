@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.admin.controller;
 
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itfenbao.gadmins.admin.data.dto.query.ApiQuery;
@@ -63,6 +64,10 @@ public class DatawayController {
     @PostMapping("/group")
     @ApiOperation(value = "添加接口分组")
     public JsonResult addGroup(@RequestBody DatawayGroup datawayGroup) {
+        DatawayGroup getOne = groupService.getOne(Wrappers.<DatawayGroup>lambdaQuery().eq(DatawayGroup::getUrlPrefix, datawayGroup.getUrlPrefix()));
+        if (getOne != null) {
+            return JsonResult.failMessage("URL前缀已存在");
+        }
         boolean ret = groupService.save(datawayGroup);
         return ret ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
@@ -107,6 +112,14 @@ public class DatawayController {
     @PostMapping("/api")
     @ApiOperation(value = "添加接口")
     public JsonResult addApi(@RequestBody DatawayApi datawayApi) {
+        DatawayApi getOne = apiService.getOne(
+                Wrappers.<DatawayApi>lambdaQuery()
+                        .eq(DatawayApi::getApiMethod, datawayApi.getApiMethod())
+                        .eq(DatawayApi::getApiPath, datawayApi.getApiPath())
+        );
+        if (getOne != null) {
+            return JsonResult.failMessage(datawayApi.getApiMethod() + " " + datawayApi.getApiPath() + " 已存在");
+        }
         boolean ret = apiService.save(datawayApi);
         return ret ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }

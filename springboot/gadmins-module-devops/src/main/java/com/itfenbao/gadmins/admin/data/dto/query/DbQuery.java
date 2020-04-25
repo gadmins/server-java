@@ -9,5 +9,6 @@ import lombok.EqualsAndHashCode;
 public class DbQuery extends PageQuery {
     String dbName;
     String name;
+    String comment;
     String[] createdAt;
 }

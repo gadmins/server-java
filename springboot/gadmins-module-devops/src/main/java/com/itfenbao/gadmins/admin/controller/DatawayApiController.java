@@ -3,13 +3,13 @@ package com.itfenbao.gadmins.admin.controller;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.entity.DatawayApi;
-import com.itfenbao.gadmins.admin.entity.DatawayGroup;
 import com.itfenbao.gadmins.admin.service.IApiService;
 import com.itfenbao.gadmins.admin.service.IDataQLService;
-import com.itfenbao.gadmins.admin.service.IGroupService;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.result.JsonReturnCode;
+import com.itfenbao.gadmins.core.web.service.IUserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class DatawayApiController {
 
     @Autowired
-    IGroupService groupService;
-
-    @Autowired
     IApiService apiService;
 
     @Autowired
     IDataQLService dataQLService;
+
+    @Autowired
+    IUserAuthService userAuthService;
 
     @GetMapping(value = {
             AppConfig.AdminRoute.ADMIN_ALL
@@ -91,9 +91,10 @@ public class DatawayApiController {
      * @return
      */
     private JsonResult execScript(HttpServletRequest request, AntPathMatcher antPathMatcher, DatawayApi api, Map<String, Object> params) {
+        String contextPath = SpringBootUtils.getContextPath();
         String uri = request.getRequestURI();
         // 获取PathVars
-        Map<String, String> pathVars = antPathMatcher.extractUriTemplateVariables(api.getApiPath(), uri);
+        Map<String, String> pathVars = antPathMatcher.extractUriTemplateVariables(contextPath + api.getApiPath(), uri);
         if (!CollectionUtils.isEmpty(pathVars)) {
             pathVars.forEach((k, v) -> {
                 params.put(k, v);
@@ -116,20 +117,18 @@ public class DatawayApiController {
      * @return
      */
     private DatawayApi matchDataWayApi(HttpServletRequest request, AntPathMatcher antPathMatcher) {
+        String contextPath = SpringBootUtils.getContextPath();
         String uri = request.getRequestURI();
         String method = request.getMethod();
-        List<DatawayGroup> groupList = groupService.list().stream().filter(it -> uri.startsWith(it.getUrlPrefix())).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(groupList)) {
-            log.warn("[" + method + "] " + uri + " not found.");
-            return null;
-        }
-
-        List<DatawayApi> apiList = apiService.list(Wrappers.<DatawayApi>lambdaQuery().eq(DatawayApi::getApiMethod, method).eq(DatawayApi::getGroupId, groupList.get(0).getId()));
+        List<DatawayApi> apiList = apiService.list(Wrappers.<DatawayApi>lambdaQuery().eq(DatawayApi::getApiMethod, method));
         if (CollectionUtils.isEmpty(apiList)) {
             log.warn("[" + method + "] " + uri + " not found.");
             return null;
         }
-        apiList = apiList.stream().filter(it -> it.getApiPath().equals(uri) || antPathMatcher.match(it.getApiPath(), uri)).collect(Collectors.toList());
+        apiList = apiList.stream().filter(it -> {
+            String path = contextPath + it.getApiPath();
+            return path.equals(uri) || antPathMatcher.match(path, uri);
+        }).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(apiList)) {
             log.warn("[" + method + "] " + uri + " not found.");
             return null;
