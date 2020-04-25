@@ -58,12 +58,10 @@
         <dependency>
             <groupId>com.itfenbao</groupId>
             <artifactId>gadmins-module-admin</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.itfenbao</groupId>
             <artifactId>gadmins-module-devops</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- 模块引入 end -->
 
