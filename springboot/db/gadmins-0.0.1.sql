@@ -242,7 +242,6 @@ CREATE TABLE `sys_dataway_group` (
   `group_type` varchar(50) NOT NULL COMMENT '分组',
   `url_prefix` varchar(100) NOT NULL COMMENT '分组URL前缀',
   `desc` varchar(255) NOT NULL COMMENT '组描述',
-  `menu_id` int(11) DEFAULT NULL COMMENT '菜单ID',
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -257,7 +256,7 @@ DROP TABLE IF EXISTS `sys_dataway_api`;
 CREATE TABLE `sys_dataway_api` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_id` int(11) NOT NULL COMMENT '分组ID',
-  `func_id` int(11) DEFAULT NULL COMMENT '功能ID',
+  `func_code` varchar(255) DEFAULT NULL COMMENT '功能CODE',
   `api_method` varchar(12) NOT NULL COMMENT '请求方法',
   `api_path` varchar(512) NOT NULL COMMENT '请求路径',
   `api_comment` varchar(255) NOT NULL COMMENT '注释',

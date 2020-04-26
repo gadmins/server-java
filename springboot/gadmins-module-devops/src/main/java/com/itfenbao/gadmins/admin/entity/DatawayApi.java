@@ -29,8 +29,8 @@ public class DatawayApi extends BaseEntity {
     @ApiModelProperty(value = "分组ID")
     private Integer groupId;
 
-    @ApiModelProperty(value = "功能ID")
-    private Integer funcId;
+    @ApiModelProperty(value = "功能CODE")
+    private String funcCode;
 
     @ApiModelProperty(value = "状态：0 草稿 1 发布")
     private Integer status;

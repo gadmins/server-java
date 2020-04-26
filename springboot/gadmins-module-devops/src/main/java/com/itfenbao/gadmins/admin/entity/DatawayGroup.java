@@ -37,9 +37,6 @@ public class DatawayGroup extends BaseEntity {
     @TableField("`desc`")
     private String desc;
 
-    @ApiModelProperty(value = "菜单ID")
-    private Integer menuId;
-
     @ApiModelProperty(value = "逻辑删除")
     @TableLogic
     private Boolean deleted;
