@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.core.config;
 
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
+import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.annotation.PassToken;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -25,6 +26,12 @@ public class RbacAnnotationConfig {
     IUserAuthService userAuthService;
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.stereotype.Controller *) && @annotation(function)")
+    public Object menuFunctionAccessCheck(final ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {
+        System.out.println("MenuFunction Access Check:" + function);
+        return proceMenuFunction(pjp, function);
+    }
+
+    @org.aspectj.lang.annotation.Around("within(@org.springframework.stereotype.Controller *) && @annotation(function)")
     public Object functionAccessCheck(final ProceedingJoinPoint pjp, Function function) throws Throwable {
         System.out.println("Function Access Check:" + function);
         return proceFunction(pjp, function);
@@ -34,6 +41,12 @@ public class RbacAnnotationConfig {
     public Object functionsAccessCheck(final ProceedingJoinPoint pjp, Functions functions) throws Throwable {
         System.out.println("Function Access Check:" + functions);
         return proceFunctions(pjp, functions);
+    }
+
+    @org.aspectj.lang.annotation.Around("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(function)")
+    public Object restMenuFunctionAccessCheck(final ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {
+        System.out.println("MenuFunction Rest Access Check:" + function);
+        return proceMenuFunction(pjp, function);
     }
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(function)")
@@ -49,6 +62,21 @@ public class RbacAnnotationConfig {
     }
 
     private Object proceFunction(ProceedingJoinPoint pjp, Function function) throws Throwable {
+        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+        Method method = methodSignature.getMethod();
+        if (method.isAnnotationPresent(PassToken.class)) {
+            PassToken passToken = method.getAnnotation(PassToken.class);
+            if (passToken.required()) {
+                return pjp.proceed();
+            }
+        }
+        if (userAuthService.hasAuth(function.value())) {
+            return pjp.proceed();
+        }
+        return http403(method);
+    }
+
+    private Object proceMenuFunction(ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
         Method method = methodSignature.getMethod();
         if (method.isAnnotationPresent(PassToken.class)) {

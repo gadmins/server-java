@@ -6,10 +6,18 @@ server:
     worker-threads: 160
 spring:
   profiles:
+#    active: docker
     active: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     default-property-inclusion: non_null
+  resources:
+    static-locations:
+      - classpath:/META-INF/resources/
+      - classpath:/META-INF/resources/
+      - classpath:/static/
+      - classpath:/public/
+      - file:///Users/ifenbao/Documents/DockerWork/upload/
 mybatis-plus:
   mapper-locations:
     - classpath*:/mapper/**/*Mapper.xml

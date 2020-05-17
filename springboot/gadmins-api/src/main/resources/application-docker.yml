@@ -1,0 +1,37 @@
+server:
+  port: 9999
+spring:
+  profiles: docker
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://docker.for.mac.host.internal:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: java
+  devtools:
+    restart:
+      enabled: true
+decorator:
+  datasource:
+    p6spy:
+      log-format: "%(currentTime) | SQL耗时： %(executionTime) ms | 连接信息： %(category)-%(connectionId) | 执行语句： %(sql)"
+swagger:
+  docket:
+    adminapi:
+      enable: true
+      title: 通用管理系统-系统模块接口
+      description: gadmins 接口文档
+      version: 1.0.0
+      license: Apache License, Version 2.0
+      licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
+      base-package:
+        - com.itfenbao.gadmins.core
+        - com.itfenbao.gadmins.admin
+      base-path:
+        - /**
+      exclude-path:
+        - /error
+      contact:
+        name: itfenbao
+logging:
+  level:
+    org.springframework.web: TRACE
