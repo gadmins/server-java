@@ -14,7 +14,8 @@
     </select>
 
     <select id="getListByPage" resultMap="accountVO">
-        select _account.id, _account.name, _account.created_by, _account.updated_by, _account.created_at,
+        select _account.id, _account.name, _account.lock , _account.created_by,
+        _account.updated_by, _account.created_at,
         _account.updated_at,
         _account.enable from sys_admin_account as
         _account left join `sys_admin_rl_account_role`

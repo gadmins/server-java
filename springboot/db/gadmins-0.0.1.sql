@@ -29,6 +29,8 @@ CREATE TABLE `sys_admin_account` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '用户名',
   `password` varchar(255) NOT NULL DEFAULT '' COMMENT '密码',
+  `vaild_error_times` int(11) DEFAULT NULL COMMENT '验证错误次数',
+  `lock` tinyint(1) NOT NULL DEFAULT '0' COMMENT '账户锁定',
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

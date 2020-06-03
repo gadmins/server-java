@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins.admin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.itfenbao.gadmins.core.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -14,7 +15,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author itfenbao
- * @since 2020-03-04
+ * @since 2020-06-03
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -30,6 +31,13 @@ public class Account extends BaseEntity {
 
     @ApiModelProperty(value = "密码")
     private String password;
+
+    @ApiModelProperty(value = "验证错误次数")
+    private Integer vaildErrorTimes;
+
+    @ApiModelProperty(value = "账户锁定")
+    @TableField("`lock`")
+    private Boolean lock;
 
 
 }

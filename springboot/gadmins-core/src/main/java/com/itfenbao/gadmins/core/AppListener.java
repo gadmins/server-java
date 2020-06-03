@@ -170,15 +170,19 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
             }
         } else if (info.method == RequestMethod.POST || info.method == RequestMethod.PUT) {
             Class[] classes = method.getParameterTypes();
-            Class schemaType = info.method == RequestMethod.POST ? classes[0] : classes[1];
-            FormSchemaVO formSchemaVO = new FormSchemaVO();
-            ReflectionUtils.doWithFields(schemaType, field -> {
-                formSchemaVO.addFormItem(field);
-            });
-            try {
-                info.schema = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(formSchemaVO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+            boolean isPOST = info.method == RequestMethod.POST;
+            if (!isPOST && classes.length < 2) {
+            } else {
+                FormSchemaVO formSchemaVO = new FormSchemaVO();
+                Class schemaType = isPOST ? classes[0] : classes[1];
+                ReflectionUtils.doWithFields(schemaType, field -> {
+                    formSchemaVO.addFormItem(field);
+                });
+                try {
+                    info.schema = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(formSchemaVO);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
