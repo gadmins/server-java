@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -20,12 +21,18 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createdAt", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "createdBy", Integer.class, Integer.parseInt(TokenUtils.getUniqueIdFromToken()));
+        String uId = TokenUtils.getUniqueIdFromToken();
+        if (!StringUtils.isEmpty(uId)) {
+            this.strictInsertFill(metaObject, "createdBy", Integer.class, Integer.parseInt(TokenUtils.getUniqueIdFromToken()));
+        }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, "updatedAt", LocalDateTime.class, LocalDateTime.now());
-        this.strictUpdateFill(metaObject, "updatedBy", Integer.class, Integer.parseInt(TokenUtils.getUniqueIdFromToken()));
+        String uId = TokenUtils.getUniqueIdFromToken();
+        if (!StringUtils.isEmpty(uId)) {
+            this.strictUpdateFill(metaObject, "updatedBy", Integer.class, Integer.parseInt(uId));
+        }
     }
 }

@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -116,6 +117,25 @@ public class AccountController {
         return JsonResult.success();
     }
 
+    @Function(
+            value = "sys:account:unlock", sort = 5,
+            title = "批量解锁", desc = "解锁账户",
+            btnGroup = Function.BtnGroup.TOOLBAR
+    )
+    @PutMapping("/unlock/{ids}")
+    @ApiOperation("解锁账号")
+    public JsonResult unlock(@PathVariable List<Integer> ids) {
+        List<Account> accounts = ids.stream().map(it -> {
+            Account account = new Account();
+            account.setId(it);
+            account.setVaildErrorTimes(null);
+            account.setLock(false);
+            return account;
+        }).collect(Collectors.toList());
+        accountService.updateBatchById(accounts);
+        return JsonResult.success();
+    }
+
     /**
      * 获取当前用户的菜单
      *
@@ -128,6 +148,8 @@ public class AccountController {
         return JsonResult.success(menuService.getCoreMenuData(Integer.parseInt(id)));
     }
 
+    private final static int MAX_LOGIN_ACTION = 5;
+
     @PostMapping("/login")
     @PassToken
     @ApiOperation("登录")
@@ -139,8 +161,25 @@ public class AccountController {
             if (StringUtils.isEmpty(login.getPassword())) {
                 return JsonResult.paramsErrorMessage("密码不能为空");
             }
-            final Account account = this.accountService.findByNameAndPassword(login.getUserName(), login.getPassword());
+            Account account = this.accountService.getOne(Wrappers.<Account>lambdaQuery().eq(Account::getName, login.getUserName()));
             if (account != null) {
+                if (account.getLock()) {
+                    return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
+                }
+                if (!login.getPassword().equals(account.getPassword())) {
+                    if (account.getVaildErrorTimes() != null) {
+                        account.setVaildErrorTimes(account.getVaildErrorTimes() + 1);
+                        if (account.getVaildErrorTimes() >= MAX_LOGIN_ACTION) {
+                            account.setLock(true);
+                            this.accountService.updateById(account);
+                            return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
+                        }
+                    } else {
+                        account.setVaildErrorTimes(1);
+                    }
+                    this.accountService.updateById(account);
+                    return JsonResult.paramsErrorMessage("密码错误，还剩" + (MAX_LOGIN_ACTION - account.getVaildErrorTimes()) + "次输入机会");
+                }
                 String token = TokenUtils.createToken(AppConfig.TokenType.ADMIN, account.getId() + "");
                 boolean isCookie = TokenUtils.isCookie(AppConfig.TokenType.ADMIN);
                 if (isCookie) {
@@ -150,7 +189,7 @@ public class AccountController {
                     return JsonResult.success("登录成功", new TokenVO(token));
                 }
             } else {
-                return JsonResult.paramsErrorMessage("用户名和密码错误");
+                return JsonResult.paramsErrorMessage("用户不存在");
             }
         } else if (LoginParam.LOGIN_TYPE_MOBILE.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getMobile())) {
