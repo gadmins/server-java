@@ -1,7 +1,9 @@
 package com.itfenbao.gadmins.admin.service;
 
-import com.itfenbao.gadmins.admin.entity.RlFunctionRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.entity.RlFunctionRole;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-02-23
  */
 public interface IRlFunctionRoleService extends IService<RlFunctionRole> {
-
+    /**
+     * 删除角色关联
+     *
+     * @param ids 角色ID集合
+     * @return
+     */
+    boolean removeByRoleIds(List<Integer> ids);
 }

@@ -166,6 +166,7 @@ public class AccountController {
                 if (account.getLock()) {
                     return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
                 }
+                // 密码错误
                 if (!login.getPassword().equals(account.getPassword())) {
                     if (account.getVaildErrorTimes() != null) {
                         account.setVaildErrorTimes(account.getVaildErrorTimes() + 1);
@@ -182,6 +183,8 @@ public class AccountController {
                 }
                 String token = TokenUtils.createToken(AppConfig.TokenType.ADMIN, account.getId() + "");
                 boolean isCookie = TokenUtils.isCookie(AppConfig.TokenType.ADMIN);
+                account.setVaildErrorTimes(null);
+                this.accountService.updateById(account);
                 if (isCookie) {
                     TokenUtils.setTokenCookie(AppConfig.TokenType.ADMIN, token, response);
                     return JsonResult.success("登录成功");
