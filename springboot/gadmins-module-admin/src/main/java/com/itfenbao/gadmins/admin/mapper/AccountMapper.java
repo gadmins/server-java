@@ -20,9 +20,20 @@ import java.util.List;
  * @since 2020-02-16
  */
 public interface AccountMapper extends BaseMapper<Account> {
+
     Page<AccountVO> getListByPage(Page<AccountVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
+
+    /**
+     * 单表分页查询（不能通过角色等查询）
+     * @param page
+     * @param wrapper
+     * @return
+     */
+    Page<AccountVO> listAccoutByPage(Page<AccountVO> page, @Param(Constants.WRAPPER) Wrapper wrapper);
 
     List<Role> getRoles(Integer userId);
 
     int countSuperAdmin(Integer userId);
+
+    int querySuperAdminId();
 }

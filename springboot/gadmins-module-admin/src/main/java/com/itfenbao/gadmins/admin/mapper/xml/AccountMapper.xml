@@ -9,18 +9,23 @@
 
     <select id="getRoles" parameterType="integer" resultType="com.itfenbao.gadmins.admin.entity.Role">
         select _role.id, _role.name from sys_admin_rl_account_role as _account_role left join sys_admin_role as _role on
-        _role.id =
-        _account_role.role_id where _account_role.account_id = #{userId}
+        _role.id = _account_role.role_id where _account_role.account_id = #{userId}
     </select>
 
     <select id="getListByPage" resultMap="accountVO">
         select _account.id, _account.name, _account.lock , _account.created_by,
-        _account.updated_by, _account.created_at,
-        _account.updated_at,
-        _account.enable from sys_admin_account as
-        _account left join `sys_admin_rl_account_role`
-        as _rl_account_role on _account.id = _rl_account_role.account_id
+        _account.updated_by, _account.created_at, _account.updated_at, _account.enable from sys_admin_account as
+        _account
+        left join `sys_admin_rl_account_role` as _rl_account_role on _account.id = _rl_account_role.account_id
         left join `sys_admin_role` as _role on _rl_account_role.role_id = _role.id
+        <if test="ew != null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+    <select id="listAccoutByPage" resultType="com.itfenbao.gadmins.admin.data.vo.AccountVO">
+        select _account.id, _account.name, _account.lock , _account.created_by,
+        _account.updated_by, _account.created_at, _account.updated_at, _account.enable from sys_admin_account as
+        _account
         <if test="ew != null">
             ${ew.customSqlSegment}
         </if>
@@ -30,5 +35,8 @@
         left join sys_admin_rl_account_role as _account_role on _account_role.account_id = _accout.id
         left join sys_admin_role as _role on _role.id = _account_role.role_id
         where _accout.id = #{userId} and _role.super_admin = 1
+    </select>
+    <select id="querySuperAdminId" resultType="java.lang.Integer">
+        SELECT account_id from sys_admin_rl_account_role WHERE role_id = (SELECT id from sys_admin_role WHERE super_admin = 1)
     </select>
 </mapper>

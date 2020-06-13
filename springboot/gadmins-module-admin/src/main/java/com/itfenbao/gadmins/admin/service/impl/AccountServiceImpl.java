@@ -1,6 +1,5 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -36,13 +35,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     IRlAccountRoleService accountRoleService;
 
     @Override
-    public Account findByNameAndPassword(String userName, String password) {
-        LambdaQueryWrapper<Account> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Account::getName, userName).eq(Account::getPassword, password);
-        return this.baseMapper.selectOne(queryWrapper);
-    }
-
-    @Override
     public Page<AccountVO> getListByPage(AccountQuery query) {
         Page<AccountVO> page = new Page<>(query.getCurrent(), query.getPageSize());
         QueryWrapper<Account> wrapper = Wrappers.query();
@@ -50,26 +42,34 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         if (!StringUtils.isEmpty(query.getName())) {
             wrapper.like("_account.name", query.getName());
         }
-        if (query.getRoleId() > -1) {
-            wrapper.eq("_role.id", query.getRoleId());
-        }
         String[] createdAt = query.getCreatedAt();
         if (createdAt != null && createdAt.length > 1) {
             wrapper.between("_account.created_at", createdAt[0], createdAt[1]);
         }
-        // 只查询非管理员账号
-        wrapper.eq("_role.super_admin", 0);
-        // 过滤自己
+        // 是否需要连接查询
+        boolean joinSelect = query.getRoleId() > -1;
+        if (joinSelect) {
+            wrapper.eq("_role.id", query.getRoleId());
+        }
+        // 过滤自己和超管
+        if (joinSelect) {
+            // 只查询非管理员账号
+            wrapper.eq("_role.super_admin", 0);
+        }
         String accountId = TokenUtils.getUniqueIdFromToken();
         if (!StringUtils.isEmpty(accountId)) {
             try {
                 int id = Integer.parseInt(accountId);
-                wrapper.ne("_account.id", id);
+                if (joinSelect) {
+                    wrapper.ne("_account.id", id);
+                } else {
+                    wrapper.notIn("_account.id", id, getSuperAdminId());
+                }
             } catch (Exception e) {
             }
         }
         wrapper.groupBy("_account.id");
-        return this.baseMapper.getListByPage(page, wrapper);
+        return joinSelect ? this.baseMapper.getListByPage(page, wrapper) : this.baseMapper.listAccoutByPage(page, wrapper);
     }
 
     @Override
@@ -93,5 +93,10 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public boolean isSuperAdmin(Integer id) {
         return this.baseMapper.countSuperAdmin(id) > 0;
+    }
+
+    @Override
+    public Integer getSuperAdminId() {
+        return this.baseMapper.querySuperAdminId();
     }
 }

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -14,5 +15,5 @@ import java.util.List;
 @ApiModel(value="AccountVO", description="账号VO")
 public class AccountVO extends Account {
     @ApiModelProperty("角色组")
-    private List<Role> roles;
+    private List<Role> roles = Collections.emptyList();
 }

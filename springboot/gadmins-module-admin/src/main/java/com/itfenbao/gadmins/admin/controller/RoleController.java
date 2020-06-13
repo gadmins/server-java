@@ -51,6 +51,9 @@ public class RoleController {
     IRlFunctionRoleService functionRoleService;
 
     @Autowired
+    IRlAccountRoleService accountRoleService;
+
+    @Autowired
     IMenuService menuService;
 
     @Autowired
@@ -143,6 +146,7 @@ public class RoleController {
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "删除角色")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {
+        menuRoleService.removeByRoleIds(ids);
         roleService.removeByIds(ids);
         return JsonResult.success();
     }

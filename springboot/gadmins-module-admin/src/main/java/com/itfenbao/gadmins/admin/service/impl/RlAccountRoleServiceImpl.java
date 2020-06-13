@@ -1,9 +1,10 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.entity.RlAccountRole;
 import com.itfenbao.gadmins.admin.mapper.RlAccountRoleMapper;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,5 +23,10 @@ public class RlAccountRoleServiceImpl extends ServiceImpl<RlAccountRoleMapper, R
     @Override
     public List<Integer> getRoleIdsByAccountId(Integer accountId) {
         return this.baseMapper.getRoleIdsByAccountId(accountId);
+    }
+
+    @Override
+    public boolean removeByRoleIds(List<Integer> roleIds) {
+        return remove(Wrappers.<RlAccountRole>lambdaQuery().in(RlAccountRole::getRoleId, roleIds));
     }
 }

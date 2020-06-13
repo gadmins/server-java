@@ -18,15 +18,6 @@ import com.itfenbao.gadmins.admin.entity.Account;
 public interface IAccountService extends IService<Account> {
 
     /**
-     * 通过用户名和密码查询
-     *
-     * @param userName
-     * @param password
-     * @return
-     */
-    Account findByNameAndPassword(String userName, String password);
-
-    /**
      * 分页查询
      *
      * @param query
@@ -36,6 +27,7 @@ public interface IAccountService extends IService<Account> {
 
     /**
      * 更新用户
+     *
      * @param param
      * @return
      */
@@ -43,8 +35,12 @@ public interface IAccountService extends IService<Account> {
 
     /**
      * 判断用户是否是超管
+     *
      * @param id
      * @return
      */
     boolean isSuperAdmin(Integer id);
+
+    Integer getSuperAdminId();
+
 }
