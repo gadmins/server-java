@@ -36,6 +36,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>dm.jdbc</groupId>-->
+<!--            <artifactId>driver</artifactId>-->
+<!--            <version>1.8</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/../libs/DmJdbcDriver18.jar</systemPath>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
