@@ -4,15 +4,13 @@ import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.annotation.PassToken;
-import com.itfenbao.gadmins.core.web.result.JsonPageResult;
-import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.exception.NotAuthorizedException;
 import com.itfenbao.gadmins.core.web.service.IUserAuthService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -28,13 +26,13 @@ public class RbacAnnotationConfig {
     @org.aspectj.lang.annotation.Around("within(@org.springframework.stereotype.Controller *) && @annotation(function)")
     public Object menuFunctionAccessCheck(final ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {
         System.out.println("MenuFunction Access Check:" + function);
-        return proceMenuFunction(pjp, function);
+        return proceFunction(pjp, function.value());
     }
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.stereotype.Controller *) && @annotation(function)")
     public Object functionAccessCheck(final ProceedingJoinPoint pjp, Function function) throws Throwable {
         System.out.println("Function Access Check:" + function);
-        return proceFunction(pjp, function);
+        return proceFunction(pjp, function.value());
     }
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.stereotype.Controller *) && @annotation(functions)")
@@ -46,13 +44,13 @@ public class RbacAnnotationConfig {
     @org.aspectj.lang.annotation.Around("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(function)")
     public Object restMenuFunctionAccessCheck(final ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {
         System.out.println("MenuFunction Rest Access Check:" + function);
-        return proceMenuFunction(pjp, function);
+        return proceFunction(pjp, function.value());
     }
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(function)")
     public Object restFunctionAccessCheck(final ProceedingJoinPoint pjp, Function function) throws Throwable {
         System.out.println("Function Rest Access Check:" + function);
-        return proceFunction(pjp, function);
+        return proceFunction(pjp, function.value());
     }
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(functions)")
@@ -61,7 +59,7 @@ public class RbacAnnotationConfig {
         return proceFunctions(pjp, functions);
     }
 
-    private Object proceFunction(ProceedingJoinPoint pjp, Function function) throws Throwable {
+    private Object proceFunction(ProceedingJoinPoint pjp, String value) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
         Method method = methodSignature.getMethod();
         if (method.isAnnotationPresent(PassToken.class)) {
@@ -70,25 +68,10 @@ public class RbacAnnotationConfig {
                 return pjp.proceed();
             }
         }
-        if (userAuthService.hasAuth(function.value())) {
+        if (userAuthService.hasAuth(value)) {
             return pjp.proceed();
         }
-        return http403(method);
-    }
-
-    private Object proceMenuFunction(ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {
-        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-        Method method = methodSignature.getMethod();
-        if (method.isAnnotationPresent(PassToken.class)) {
-            PassToken passToken = method.getAnnotation(PassToken.class);
-            if (passToken.required()) {
-                return pjp.proceed();
-            }
-        }
-        if (userAuthService.hasAuth(function.value())) {
-            return pjp.proceed();
-        }
-        return http403(method);
+        throw new NotAuthorizedException();
     }
 
     private Object proceFunctions(ProceedingJoinPoint pjp, Functions functions) throws Throwable {
@@ -103,17 +86,7 @@ public class RbacAnnotationConfig {
         if (Arrays.stream(functions.value()).anyMatch(f -> userAuthService.hasAuth(f.value()))) {
             return pjp.proceed();
         }
-        return http403(method);
-    }
-
-    private Object http403(Method method) throws NoSuchMethodException {
-        if (method.getReturnType() == JsonResult.class) {
-            return JsonResult.http403();
-        } else if (method.getReturnType() == JsonPageResult.class) {
-            return JsonPageResult.http403();
-        }
-        Method http403Method = method.getReturnType().getMethod("http403");
-        return ReflectionUtils.invokeMethod(http403Method, null);
+        throw new NotAuthorizedException();
     }
 
 }

@@ -22,6 +22,7 @@ import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.annotation.Schema;
+import com.itfenbao.gadmins.core.exception.NotAuthorizedException;
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -125,7 +126,7 @@ public class FunctionController {
     @ApiOperation("获取列表Schema")
     public JsonResult tableData(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id) {
         if (!functionService.hasFunctionById(id)) {
-            return JsonResult.http403();
+            throw new NotAuthorizedException();
         }
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FunctionConfig::getFuncId, id);
@@ -161,7 +162,7 @@ public class FunctionController {
     @ApiOperation("获取表单Schema")
     public JsonResult formData(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id) {
         if (!functionService.hasFunctionById(id)) {
-            return JsonResult.http403();
+            throw new NotAuthorizedException();
         }
         LambdaQueryWrapper<FunctionConfig> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(FunctionConfig::getFuncId, id);

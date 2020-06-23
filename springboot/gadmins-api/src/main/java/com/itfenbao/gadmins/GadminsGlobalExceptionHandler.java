@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins;
 
+import com.itfenbao.gadmins.core.exception.NotAuthorizedException;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
 import com.itfenbao.gadmins.core.web.result.IResult;
@@ -40,6 +41,8 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
         log.error("Gadmins Exception", e);
         if (e instanceof NotLoginException) {
             return JsonResult.noLogin();
+        } else if (e instanceof NotAuthorizedException) {
+            return JsonResult.http403();
         } else if (e instanceof TokenFailException) {
             return JsonResult.failToken();
         } else if (e instanceof BindException) {
