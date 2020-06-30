@@ -1,6 +1,5 @@
 package com.itfenbao.gadmins.admin.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,7 +44,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.ADMIN_ACCOUNT)
+@RequestMapping(AppConfig.AdminRoute.ACCOUNT)
 @Api(tags = "系统账号", hidden = AppConfig.HIDDEN_SYS_API)
 @Menu(value = "account", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 2, title = "账户管理", desc = "系统账户管理", url = "/system/account")
 public class AccountController {
@@ -168,6 +167,9 @@ public class AccountController {
                 }
                 // 密码错误
                 if (!login.getPassword().equals(account.getPassword())) {
+                    if (accountService.isSuperAdmin(account.getId())) {
+                        return JsonResult.paramsErrorMessage("密码错误");
+                    }
                     if (account.getVaildErrorTimes() != null) {
                         account.setVaildErrorTimes(account.getVaildErrorTimes() + 1);
                         if (account.getVaildErrorTimes() >= MAX_LOGIN_ACTION) {

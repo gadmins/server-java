@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.admin.data.dto.query.RoleQuery;
 import com.itfenbao.gadmins.admin.entity.Role;
-import com.itfenbao.gadmins.core.web.query.PageQuery;
 
 import java.util.List;
 

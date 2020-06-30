@@ -2,8 +2,9 @@ server:
   port: 9999
   undertow:
     direct-buffers: true
-    io-threads: 4
-    worker-threads: 160
+    threads:
+      io: 4
+      worker: 160
 spring:
   profiles:
 #    active: docker
@@ -18,6 +19,12 @@ spring:
       - classpath:/static/
       - classpath:/public/
       - file:///Users/ifenbao/Documents/DockerWork/upload/
+  cache:
+    type: caffeine
+    cache-names:
+      - gadmins
+    caffeine:
+      spec: initialCapacity=50,maximumSize=500,expireAfterWrite=10s
 mybatis-plus:
   mapper-locations:
     - classpath*:/mapper/**/*Mapper.xml

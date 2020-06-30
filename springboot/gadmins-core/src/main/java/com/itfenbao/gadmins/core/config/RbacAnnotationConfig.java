@@ -20,8 +20,12 @@ import java.util.Arrays;
 @Component
 public class RbacAnnotationConfig {
 
-    @Autowired
     IUserAuthService userAuthService;
+
+    @Autowired
+    public void setUserAuthService(IUserAuthService userAuthService) {
+        this.userAuthService = userAuthService;
+    }
 
     @org.aspectj.lang.annotation.Around("within(@org.springframework.stereotype.Controller *) && @annotation(function)")
     public Object menuFunctionAccessCheck(final ProceedingJoinPoint pjp, MenuFunction function) throws Throwable {

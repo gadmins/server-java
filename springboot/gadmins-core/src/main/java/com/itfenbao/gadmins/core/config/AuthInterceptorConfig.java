@@ -24,10 +24,10 @@ public class AuthInterceptorConfig implements WebMvcConfigurer {
         AuthProperties admin = this.properties.getAdmin();
         AuthProperties app = this.properties.getApp();
         if (admin.isOpen()) {
-            registry.addInterceptor(new AuthTokenInterceptor(AppConfig.TokenType.ADMIN)).addPathPatterns(AppConfig.AdminRoute.ADMIN + "/**");
+            registry.addInterceptor(new AuthTokenInterceptor(AppConfig.TokenType.ADMIN)).addPathPatterns(AppConfig.AdminRoute.ALL);
         }
         if (app.isOpen()) {
-            registry.addInterceptor(new AuthTokenInterceptor(AppConfig.TokenType.APP)).addPathPatterns(AppConfig.AppRoute.APP + "/**");
+            registry.addInterceptor(new AuthTokenInterceptor(AppConfig.TokenType.APP)).addPathPatterns(AppConfig.AppRoute.ALL);
         }
     }
 

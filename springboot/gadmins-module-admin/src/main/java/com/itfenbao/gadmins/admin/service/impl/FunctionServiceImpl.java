@@ -13,7 +13,6 @@ import com.itfenbao.gadmins.admin.mapper.FunctionMapper;
 import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
-import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,8 +4,6 @@ import com.itfenbao.gadmins.core.web.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class AccountQuery extends PageQuery {
