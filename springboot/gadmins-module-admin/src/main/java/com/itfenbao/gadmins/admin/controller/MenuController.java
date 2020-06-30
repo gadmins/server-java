@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 2020-02-13
  */
 @RestController
-@RequestMapping(AppConfig.AdminRoute.ADMIN_MENU)
+@RequestMapping(AppConfig.AdminRoute.MENU)
 @Api(tags = "系统菜单", hidden = AppConfig.HIDDEN_SYS_API)
 @com.itfenbao.gadmins.core.annotation.Menu(value = "menu", sort = 1, parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
 public class MenuController {

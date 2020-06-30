@@ -4,24 +4,24 @@ import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
 import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
-import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import com.itfenbao.gadmins.core.web.service.IUserAuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class UserAuthServiceImpl implements IUserAuthService {
-    @Autowired
-    IAccountService accountService;
 
-    @Autowired
-    IRlAccountRoleService accountRoleService;
+    final IAccountService accountService;
+    final IRlAccountRoleService accountRoleService;
+    final IFunctionService functionService;
 
-    @Autowired
-    IFunctionService functionService;
+    public UserAuthServiceImpl(IAccountService accountService, IRlAccountRoleService accountRoleService, IFunctionService functionService) {
+        this.accountService = accountService;
+        this.accountRoleService = accountRoleService;
+        this.functionService = functionService;
+    }
 
     @Override
     public boolean hasAuth(String authCode) {
@@ -32,7 +32,7 @@ public class UserAuthServiceImpl implements IUserAuthService {
             return true;
         }
         List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
-        List<AuthFunciontVO> funciontVOS = this.functionService.getAuthFunciontVOS(roleIds);
-        return funciontVOS.stream().anyMatch(i -> i.getCode().equals(authCode));
+        List<AuthFunciontVO> functionVOS = this.functionService.getAuthFunciontVOS(roleIds);
+        return functionVOS.stream().anyMatch(i -> i.getCode().equals(authCode));
     }
 }

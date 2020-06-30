@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.ADMIN_FUNCTION)
+@RequestMapping(AppConfig.AdminRoute.FUNCTION)
 @Api(tags = "系统功能点", hidden = AppConfig.HIDDEN_SYS_API)
 @Menu(value = "function", parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "功能组管理", desc = "系统菜单功能配置管理", url = "/system/function")
 public class FunctionController {

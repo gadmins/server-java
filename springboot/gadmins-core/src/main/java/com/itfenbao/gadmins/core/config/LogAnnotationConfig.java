@@ -1,7 +1,6 @@
 package com.itfenbao.gadmins.core.config;
 
 
-import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Log;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;

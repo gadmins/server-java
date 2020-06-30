@@ -31,8 +31,8 @@ import java.util.Map;
  */
 public class DatawayUtils {
     public static String evalCodeValueForSQL(String strCodeValue, Map<String, Object> strRequestBody) {
-        StringBuilder paramKeyBuilder = new StringBuilder("");
-        StringBuilder callKeyBuilder = new StringBuilder("");
+        StringBuilder paramKeyBuilder = new StringBuilder();
+        StringBuilder callKeyBuilder = new StringBuilder();
         for (String key : strRequestBody.keySet()) {
             paramKeyBuilder.append("`" + key + "`,");
             callKeyBuilder.append("${" + key + "},");
@@ -48,9 +48,11 @@ public class DatawayUtils {
 
     private static final ThreadLocal<Long> localRequestTime = ThreadLocal.withInitial(System::currentTimeMillis);
 
-    public static void resetLocalTime() {
+    public static long resetLocalTime() {
+        long currentTimeMillis = System.currentTimeMillis();
         localRequestTime.remove();
-        localRequestTime.set(System.currentTimeMillis());
+        localRequestTime.set(currentTimeMillis);
+        return currentTimeMillis;
     }
 
     public static long currentLostTime() {
@@ -64,7 +66,7 @@ public class DatawayUtils {
     public static Map<String, Object> queryResultToResultWithSpecialValue(QueryResult queryResult, Object specialValue) {
         return new LinkedHashMap<String, Object>() {{
             put("code", JsonReturnCode.SUCCESS.getCode());
-            put("message", JsonReturnCode.SUCCESS.getDesc());
+            put("msg", JsonReturnCode.SUCCESS.getDesc());
             put("lifeCycleTime", currentLostTime());
             put("executionTime", queryResult.executionTime());
             //
@@ -80,7 +82,7 @@ public class DatawayUtils {
         if (e instanceof ThrowRuntimeException) {
             return new LinkedHashMap<String, Object>() {{
                 put("code", ((ThrowRuntimeException) e).getThrowCode());
-                put("message", e.getMessage());
+                put("msg", e.getMessage());
                 put("lifeCycleTime", currentLostTime());
                 put("executionTime", ((ThrowRuntimeException) e).getExecutionTime());
                 put("data", ((ThrowRuntimeException) e).getResult().unwrap());
@@ -88,10 +90,9 @@ public class DatawayUtils {
         } else {
             return new LinkedHashMap<String, Object>() {{
                 put("code", 500);
-                put("message", e.getMessage());
+                put("msg", e.getMessage());
                 put("lifeCycleTime", currentLostTime());
                 put("executionTime", -1);
-                put("data", e.getMessage());
             }};
         }
     }

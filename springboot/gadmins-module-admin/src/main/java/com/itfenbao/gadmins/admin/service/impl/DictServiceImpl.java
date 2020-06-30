@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.dto.query.DictQuery;
 import com.itfenbao.gadmins.admin.entity.Dict;
-import com.itfenbao.gadmins.admin.entity.Role;
 import com.itfenbao.gadmins.admin.mapper.DictMapper;
 import com.itfenbao.gadmins.admin.service.IDictService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
-import com.itfenbao.gadmins.admin.entity.Function;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,6 +1,5 @@
 package com.itfenbao.gadmins.admin.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;

@@ -5,7 +5,6 @@ import com.itfenbao.gadmins.admin.entity.Dict;
 import com.itfenbao.gadmins.admin.service.IDictService;
 import com.itfenbao.gadmins.core.web.service.IDictManager;
 import com.itfenbao.gadmins.core.web.vo.DictVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,8 +14,11 @@ import java.util.stream.Collectors;
 @Component
 public class DictManager implements IDictManager {
 
-    @Autowired
-    IDictService dictService;
+    final IDictService dictService;
+
+    public DictManager(IDictService dictService) {
+        this.dictService = dictService;
+    }
 
     @Override
     public List<DictVO> getDictsByCode(String code) {

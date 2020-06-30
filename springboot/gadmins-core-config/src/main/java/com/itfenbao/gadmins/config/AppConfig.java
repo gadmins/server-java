@@ -26,25 +26,25 @@ public final class AppConfig {
      * 管理端接口路由
      */
     public static final class AdminRoute {
-        public static final String ADMIN = "/adminapi";
-        public static final String ADMIN_ALL = "/adminapi" + ALL;
-        public static final String ADMIN_ACCOUNT = ADMIN + "/account";
-        public static final String ADMIN_FUNCTION = ADMIN + "/function";
-        public static final String ADMIN_MENU = ADMIN + "/menu";
-        public static final String ADMIN_ROLE = ADMIN + "/role";
-        public static final String ADMIN_DICT = ADMIN + "/dict";
-        public static final String ADMIN_SETTINGS = ADMIN + "/settings";
-        public static final String ADMIN_DB = ADMIN + "/db";
-        public static final String ADMIN_DATAWAY = ADMIN + "/dataway";
-        public static final String ADMIN_TOOL = ADMIN + "/tool";
+        public static final String ROOT = "/adminapi";
+        public static final String ALL = ROOT + AppConfig.ALL;
+        public static final String ACCOUNT = ROOT + "/account";
+        public static final String FUNCTION = ROOT + "/function";
+        public static final String MENU = ROOT + "/menu";
+        public static final String ROLE = ROOT + "/role";
+        public static final String DICT = ROOT + "/dict";
+        public static final String SETTINGS = ROOT + "/settings";
+        public static final String DB = ROOT + "/db";
+        public static final String DATAWAY = ROOT + "/dataway";
+        public static final String TOOL = ROOT + "/tool";
     }
 
     /**
      * App端接口路由
      */
     public static final class AppRoute {
-        public static final String APP = "/appapi";
-        public static final String APP_ALL = "/appapi" + ALL;
+        public static final String ROOT = "/appapi";
+        public static final String ALL = ROOT + AppConfig.ALL;
     }
 
     public static final class MenuType {
@@ -66,7 +66,8 @@ public final class AppConfig {
 
     // 统一接口组 描述
     public static final Group[] GROUPS = new Group[]{
-            new Group("adminapi", "后台接口", AdminRoute.ADMIN)
+            new Group("adminapi", "后台接口", AdminRoute.ROOT),
+            new Group("appapi", "APP接口", AppRoute.ROOT)
     };
 
     private static class Group {
