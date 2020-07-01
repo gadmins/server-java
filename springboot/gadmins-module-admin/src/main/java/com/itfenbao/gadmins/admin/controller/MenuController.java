@@ -15,16 +15,13 @@ import com.itfenbao.gadmins.core.AppListener;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
+import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
-import com.itfenbao.gadmins.core.web.service.IDbService;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
@@ -54,9 +51,6 @@ public class MenuController {
 
     @Autowired
     IFunctionConfigService functionConfigService;
-
-    @Autowired
-    IDbService dbService;
 
     @Autowired
     AppListener appListener;
@@ -151,19 +145,14 @@ public class MenuController {
         return JsonResult.success();
     }
 
-    private final String SCHEMA_SQL = "classpath:sql/menu_data.sql";
+    private final String SCHEMA_SQL = "classpath:sql/menu_init_data.sql";
     @Autowired
     private DataSource datasource;
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @GetMapping("/reset")
     @ApiOperation("重置菜单")
     public JsonResult reset() throws SQLException {
-        dbService.truncateTable("sys_admin_menu");
-        dbService.truncateTable("sys_admin_function");
-        Resource resource = applicationContext.getResource(SCHEMA_SQL);
-        ScriptUtils.executeSqlScript(datasource.getConnection(), resource);
+        SpringBootUtils.executeSqlScript(datasource, SCHEMA_SQL);
         scanMenus();
         return JsonResult.success();
     }
