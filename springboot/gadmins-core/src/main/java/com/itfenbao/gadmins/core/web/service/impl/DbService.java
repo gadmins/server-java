@@ -1,25 +1,27 @@
-package com.itfenbao.gadmins.devops.service.impl;
+package com.itfenbao.gadmins.core.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.itfenbao.gadmins.devops.data.dto.param.db.AddTableParam;
-import com.itfenbao.gadmins.devops.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.devops.data.dto.query.DbQuery;
-import com.itfenbao.gadmins.devops.mapper.DbMapper;
-import com.itfenbao.gadmins.devops.service.IDbService;
 import com.itfenbao.gadmins.core.utils.PageUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
+import com.itfenbao.gadmins.core.web.data.dto.query.DbQuery;
+import com.itfenbao.gadmins.core.web.mapper.DbMapper;
+import com.itfenbao.gadmins.core.web.service.IDbService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
 @Service
 public class DbService implements IDbService {
 
-    @Autowired
     DbMapper mapper;
+
+    public DbService(DbMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public IPage<Map> listTableByPage(DbQuery query) {
@@ -30,10 +32,10 @@ public class DbService implements IDbService {
             dbName = mapper.queryCurrenDBName();
         }
         wrapper.eq("TABLE_SCHEMA", dbName);
-        if (!StringUtils.isEmpty(query.getName())) {
+        if (StringUtils.isNotBlank(query.getName())) {
             wrapper.like("TABLE_NAME", query.getName());
         }
-        if (!StringUtils.isEmpty(query.getComment())) {
+        if (StringUtils.isNotBlank(query.getComment())) {
             wrapper.like("TABLE_COMMENT", query.getComment());
         }
         String[] createdAt = query.getCreatedAt();
@@ -52,7 +54,7 @@ public class DbService implements IDbService {
             dbName = mapper.queryCurrenDBName();
         }
         wrapper.eq("TABLE_SCHEMA", dbName);
-        if (!StringUtils.isEmpty(query.getName())) {
+        if (StringUtils.isNotBlank(query.getName())) {
             wrapper.eq("TABLE_NAME", query.getName());
         }
         return mapper.listColumnByPage(page, wrapper);
@@ -82,6 +84,15 @@ public class DbService implements IDbService {
     public boolean dropTable(String name) {
         if (mapper.isTableExist(name) > 0) {
             mapper.dropTable(name);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean truncateTable(String name) {
+        if (mapper.isTableExist(name) > 0) {
+            mapper.truncateTable(name);
             return true;
         }
         return false;

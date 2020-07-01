@@ -1,10 +1,10 @@
 package com.itfenbao.gadmins.core.component;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -22,8 +22,8 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.strictInsertFill(metaObject, "createdAt", LocalDateTime.class, LocalDateTime.now());
         String uId = TokenUtils.getUniqueIdFromToken();
-        if (!StringUtils.isEmpty(uId)) {
-            this.strictInsertFill(metaObject, "createdBy", Integer.class, Integer.parseInt(TokenUtils.getUniqueIdFromToken()));
+        if (StringUtils.isNotBlank(uId)) {
+            this.strictInsertFill(metaObject, "createdBy", Integer.class, Integer.parseInt(uId));
         }
     }
 
@@ -31,7 +31,7 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, "updatedAt", LocalDateTime.class, LocalDateTime.now());
         String uId = TokenUtils.getUniqueIdFromToken();
-        if (!StringUtils.isEmpty(uId)) {
+        if (StringUtils.isNotBlank(uId)) {
             this.strictUpdateFill(metaObject, "updatedBy", Integer.class, Integer.parseInt(uId));
         }
     }

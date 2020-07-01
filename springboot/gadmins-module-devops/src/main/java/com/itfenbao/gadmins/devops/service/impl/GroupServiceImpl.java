@@ -2,15 +2,15 @@ package com.itfenbao.gadmins.devops.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.core.utils.PageUtils;
 import com.itfenbao.gadmins.devops.data.dto.query.GroupQuery;
 import com.itfenbao.gadmins.devops.entity.DatawayGroup;
 import com.itfenbao.gadmins.devops.mapper.GroupMapper;
 import com.itfenbao.gadmins.devops.service.IGroupService;
-import com.itfenbao.gadmins.core.utils.PageUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -27,7 +27,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, DatawayGroup> imp
     public IPage<DatawayGroup> listByPage(GroupQuery query) {
         IPage<DatawayGroup> page = PageUtils.page(query);
         LambdaQueryWrapper<DatawayGroup> wrapper = Wrappers.lambdaQuery();
-        if (!StringUtils.isEmpty(query.getGroupType())) {
+        if (StringUtils.isNotBlank(query.getGroupType())) {
             wrapper.eq(DatawayGroup::getGroupType, query.getGroupType());
         }
         String[] createdAt = query.getCreatedAt();

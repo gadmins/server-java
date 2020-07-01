@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.UpdateMenuParam;
@@ -15,14 +16,19 @@ import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.service.IDbService;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -48,6 +54,9 @@ public class MenuController {
 
     @Autowired
     IFunctionConfigService functionConfigService;
+
+    @Autowired
+    IDbService dbService;
 
     @Autowired
     AppListener appListener;
@@ -78,25 +87,17 @@ public class MenuController {
     @PostMapping
     @ApiOperation("添加菜单")
     public JsonResult add(@RequestBody AddMenuParam param) {
-        int count = menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()));
-        if (count > 0) {
+        if (menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode())) > 0) {
             return JsonResult.failMessage("编码已存在");
         }
         Menu menu = new Menu();
         menu.setPId(param.getParentId());
-        menu.setType(param.getType());
         menu.setTxt(param.getTxt());
         menu.setMCode(param.getMcode());
         menu.setIcon(param.getIcon());
         menu.setSortNumber(param.getSortNumber());
-        if (param.getFuncId() != null) {
-            menu.setFuncId(param.getFuncId());
-            com.itfenbao.gadmins.admin.entity.Function function = new com.itfenbao.gadmins.admin.entity.Function();
-            function.setId(param.getFuncId());
-            function.setElink(param.getElink());
-            function.setFrontUrl(param.getUrl());
-            functionService.updateById(function);
-        }
+        menu.setType(param.getType());
+        updateFunction(param, menu);
         menuService.save(menu);
 
         return JsonResult.success();
@@ -106,17 +107,25 @@ public class MenuController {
     @PutMapping("/{id}")
     @ApiOperation("修改菜单")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateMenuParam param) {
-        int count = menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()).ne(Menu::getId, id));
-        if (count > 0) {
+        if (menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()).ne(Menu::getId, id)) > 0) {
             return JsonResult.failMessage("编码已存在");
         }
         Menu menu = new Menu();
-        menu.setId(id);
         menu.setPId(param.getParentId());
         menu.setTxt(param.getTxt());
         menu.setMCode(param.getMcode());
         menu.setIcon(param.getIcon());
         menu.setSortNumber(param.getSortNumber());
+        menu.setId(id);
+        updateFunction(param, menu);
+        if (param.getParentId() == null) {
+            menuService.updatePidIsNULL(menu.getId());
+        }
+        menuService.updateById(menu);
+        return JsonResult.success();
+    }
+
+    private void updateFunction(UpdateMenuParam param, Menu menu) {
         if (param.getFuncId() != null) {
             menu.setFuncId(param.getFuncId());
             com.itfenbao.gadmins.admin.entity.Function function = new com.itfenbao.gadmins.admin.entity.Function();
@@ -125,11 +134,6 @@ public class MenuController {
             function.setFrontUrl(param.getUrl());
             functionService.updateById(function);
         }
-        if (param.getParentId() == null) {
-            menuService.updatePidIsNULL(menu.getId());
-        }
-        menuService.updateById(menu);
-        return JsonResult.success();
     }
 
     @Function(value = "sys.menu.del", sort = 3, title = "批量删除", desc = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
@@ -143,14 +147,36 @@ public class MenuController {
     @GetMapping("/refresh")
     @ApiOperation("刷新菜单")
     public JsonResult refresh() {
+        scanMenus();
+        return JsonResult.success();
+    }
+
+    private final String SCHEMA_SQL = "classpath:sql/menu_data.sql";
+    @Autowired
+    private DataSource datasource;
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @GetMapping("/reset")
+    @ApiOperation("重置菜单")
+    public JsonResult reset() throws SQLException {
+        dbService.truncateTable("sys_admin_menu");
+        dbService.truncateTable("sys_admin_function");
+        Resource resource = applicationContext.getResource(SCHEMA_SQL);
+        ScriptUtils.executeSqlScript(datasource.getConnection(), resource);
+        scanMenus();
+        return JsonResult.success();
+    }
+
+    private void scanMenus() {
         List<MenuConfig> menuConfigs = appListener.getMenuConfigs();
         menuConfigs.forEach(mc -> {
             AtomicReference<Integer> funcId = new AtomicReference<>();
             // 先处理 parentCode 为空
-            mc.getFunctionPoints().stream().filter(f -> StringUtils.isEmpty(f.getParentCode())).forEach(fp -> {
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isBlank(f.getParentCode())).forEach(fp -> {
                 saveFunctionPointAndConfig(funcId, fp);
             });
-            mc.getFunctionPoints().stream().filter(f -> !StringUtils.isEmpty(f.getParentCode())).forEach(fp -> {
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isNotBlank(f.getParentCode())).forEach(fp -> {
                 saveFunctionPointAndConfig(funcId, fp);
             });
             if (funcId.get() != null) {
@@ -158,7 +184,6 @@ public class MenuController {
             }
             menuService.saveOrUpdate(mc);
         });
-        return JsonResult.success();
     }
 
     private void saveFunctionPointAndConfig(AtomicReference<Integer> funcId, FunctionPoint fp) {

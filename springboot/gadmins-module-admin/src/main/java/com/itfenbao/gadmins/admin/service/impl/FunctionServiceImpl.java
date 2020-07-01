@@ -3,6 +3,7 @@ package com.itfenbao.gadmins.admin.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itfenbao.gadmins.admin.data.vo.AuthFunciontVO;
@@ -18,7 +19,6 @@ import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -171,7 +171,7 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
         function.setFrontUrl(functionPoint.getUrl());
         function.setBtnGroup(functionPoint.getBtnGroup());
         function.setSortNumber(functionPoint.getSort());
-        if (!StringUtils.isEmpty(functionPoint.getParentCode())) {
+        if (StringUtils.isNotBlank(functionPoint.getParentCode())) {
             Function one = this.getOne(Wrappers.<Function>lambdaQuery().eq(Function::getFuncCode, functionPoint.getParentCode()));
             if (one != null) {
                 function.setPId(one.getId());

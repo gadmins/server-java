@@ -1,15 +1,15 @@
 package com.itfenbao.gadmins.devops.controller;
 
-import com.itfenbao.gadmins.devops.data.dto.param.db.AddTableParam;
-import com.itfenbao.gadmins.devops.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.devops.data.dto.query.DbQuery;
-import com.itfenbao.gadmins.devops.service.IDbService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
+import com.itfenbao.gadmins.core.web.data.dto.query.DbQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.service.IDbService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,11 @@
-package com.itfenbao.gadmins.devops.mapper;
+package com.itfenbao.gadmins.core.web.mapper;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.Map;
 
@@ -29,5 +30,9 @@ public interface DbMapper {
 
     void createTable(@Param("name") String name, @Param("comment") String comment, boolean hasDelete);
 
+    @Update("drop table ${name}")
     void dropTable(@Param("name") String name);
+
+    @Update("truncate table ${name}")
+    void truncateTable(@Param("name") String name);
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.CamelCaseLinkedMap;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -27,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -86,7 +86,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         menu.setMCode(menuConfig.getCode());
         menu.setTxt(menuConfig.getTitle());
         menu.setIcon(menuConfig.getIcon());
-        if (!StringUtils.isEmpty(menuConfig.getParentCode())) {
+        if (StringUtils.isNotBlank(menuConfig.getParentCode())) {
             Menu getMenu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getParentCode()));
             if (getMenu != null) {
                 menu.setPId(getMenu.getId());

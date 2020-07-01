@@ -2,15 +2,15 @@ package com.itfenbao.gadmins.devops.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itfenbao.gadmins.core.utils.PageUtils;
 import com.itfenbao.gadmins.devops.data.dto.query.ApiQuery;
 import com.itfenbao.gadmins.devops.entity.DatawayApi;
 import com.itfenbao.gadmins.devops.mapper.ApiMapper;
 import com.itfenbao.gadmins.devops.service.IApiService;
-import com.itfenbao.gadmins.core.utils.PageUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -30,13 +30,13 @@ public class ApiServiceImpl extends ServiceImpl<ApiMapper, DatawayApi> implement
         if (query.getStatus() != null) {
             wrapper.eq(DatawayApi::getStatus, query.getStatus());
         }
-        if (!StringUtils.isEmpty(query.getApiMethod())) {
+        if (StringUtils.isNotBlank(query.getApiMethod())) {
             wrapper.eq(DatawayApi::getApiMethod, query.getApiMethod());
         }
-        if (!StringUtils.isEmpty(query.getApiPath())) {
+        if (StringUtils.isNotBlank(query.getApiPath())) {
             wrapper.like(DatawayApi::getApiPath, query.getApiPath());
         }
-        if (!StringUtils.isEmpty(query.getApiComment())) {
+        if (StringUtils.isNotBlank(query.getApiComment())) {
             wrapper.like(DatawayApi::getApiComment, query.getApiComment());
         }
         return this.page(page, wrapper);
