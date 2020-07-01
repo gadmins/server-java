@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,7 +16,6 @@ import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         Page<AccountVO> page = new Page<>(query.getCurrent(), query.getPageSize());
         QueryWrapper<Account> wrapper = Wrappers.query();
         wrapper.eq("_account.enable", 1);
-        if (!StringUtils.isEmpty(query.getName())) {
+        if (StringUtils.isNotBlank(query.getName())) {
             wrapper.like("_account.name", query.getName());
         }
         String[] createdAt = query.getCreatedAt();
@@ -57,7 +57,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             wrapper.eq("_role.super_admin", 0);
         }
         String accountId = TokenUtils.getUniqueIdFromToken();
-        if (!StringUtils.isEmpty(accountId)) {
+        if (StringUtils.isNotBlank(accountId)) {
             try {
                 int id = Integer.parseInt(accountId);
                 if (joinSelect) {

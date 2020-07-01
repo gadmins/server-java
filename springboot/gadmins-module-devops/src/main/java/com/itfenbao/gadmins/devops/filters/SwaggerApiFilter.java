@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.devops.filters;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.classmate.TypeBindings;
 import com.fasterxml.classmate.TypeResolver;
@@ -18,7 +19,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -107,7 +107,7 @@ public class SwaggerApiFilter implements Filter {
             apis.forEach(api -> {
                 List<Parameter> parameters = CollUtil.newArrayList();
                 String reqSchemaStr = api.getApiReqSchema();
-                if (!StringUtils.isEmpty(reqSchemaStr)) {
+                if (StringUtils.isNotBlank(reqSchemaStr)) {
                     try {
                         Map reqSchema = objectMapper.readValue(reqSchemaStr, Map.class);
                         List<LinkedHashMap<String, String>> pathList = MapUtil.get(reqSchema, "path", List.class);

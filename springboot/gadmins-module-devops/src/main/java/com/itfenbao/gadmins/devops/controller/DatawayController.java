@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.devops.controller;
 
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +22,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -93,7 +93,7 @@ public class DatawayController {
         datawayGroup.setId(id);
         DatawayGroup idGroup = groupService.getById(id);
         boolean ret = groupService.updateById(datawayGroup);
-        if (!StringUtils.isEmpty(datawayGroup.getUrlPrefix()) && !idGroup.getUrlPrefix().equalsIgnoreCase(datawayGroup.getUrlPrefix())) {
+        if (StringUtils.isNotBlank(datawayGroup.getUrlPrefix()) && !idGroup.getUrlPrefix().equalsIgnoreCase(datawayGroup.getUrlPrefix())) {
             apiService.updateUrlBy(id, idGroup.getUrlPrefix(), datawayGroup.getUrlPrefix());
         }
         return ret ? JsonResult.success() : JsonResult.failMessage("更新失败");
@@ -178,7 +178,7 @@ public class DatawayController {
     @ApiOperation(value = "测试DataQL")
     public Map test(String type, String script, String params) {
         Map ps = MapUtil.newHashMap();
-        if (!StringUtils.isEmpty(params)) {
+        if (StringUtils.isNotBlank(params)) {
             try {
                 ps = objectMapper.readValue(params, Map.class);
             } catch (JsonProcessingException e) {

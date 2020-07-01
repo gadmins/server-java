@@ -165,34 +165,8 @@ public class AccountController {
                 if (account.getLock()) {
                     return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
                 }
-                // 密码错误
-                if (!login.getPassword().equals(account.getPassword())) {
-                    if (accountService.isSuperAdmin(account.getId())) {
-                        return JsonResult.paramsErrorMessage("密码错误");
-                    }
-                    if (account.getVaildErrorTimes() != null) {
-                        account.setVaildErrorTimes(account.getVaildErrorTimes() + 1);
-                        if (account.getVaildErrorTimes() >= MAX_LOGIN_ACTION) {
-                            account.setLock(true);
-                            this.accountService.updateById(account);
-                            return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
-                        }
-                    } else {
-                        account.setVaildErrorTimes(1);
-                    }
-                    this.accountService.updateById(account);
-                    return JsonResult.paramsErrorMessage("密码错误，还剩" + (MAX_LOGIN_ACTION - account.getVaildErrorTimes()) + "次输入机会");
-                }
-                String token = TokenUtils.createToken(AppConfig.TokenType.ADMIN, account.getId() + "");
-                boolean isCookie = TokenUtils.isCookie(AppConfig.TokenType.ADMIN);
-                account.setVaildErrorTimes(null);
-                this.accountService.updateById(account);
-                if (isCookie) {
-                    TokenUtils.setTokenCookie(AppConfig.TokenType.ADMIN, token, response);
-                    return JsonResult.success("登录成功");
-                } else {
-                    return JsonResult.success("登录成功", new TokenVO(token));
-                }
+                boolean isPwdRight = login.getPassword().equals(account.getPassword());
+                return isPwdRight ? handlePwdRight(response, account) : handlePwdError(account);
             } else {
                 return JsonResult.paramsErrorMessage("用户不存在");
             }
@@ -206,6 +180,50 @@ public class AccountController {
             return JsonResult.paramsErrorMessage("暂未实现手机号登录");
         }
         return JsonResult.paramsErrorMessage("登录失败");
+    }
+
+    /**
+     * 密码正确处理
+     *
+     * @param response
+     * @param account
+     * @return
+     */
+    private JsonResult handlePwdRight(HttpServletResponse response, Account account) {
+        String token = TokenUtils.createToken(AppConfig.TokenType.ADMIN, account.getId() + "");
+        boolean isCookie = TokenUtils.isCookie(AppConfig.TokenType.ADMIN);
+        account.setVaildErrorTimes(null);
+        this.accountService.updateById(account);
+        if (isCookie) {
+            TokenUtils.setTokenCookie(AppConfig.TokenType.ADMIN, token, response);
+            return JsonResult.success("登录成功");
+        } else {
+            return JsonResult.success("登录成功", new TokenVO(token));
+        }
+    }
+
+    /**
+     * 密码错误处理
+     *
+     * @param account
+     * @return
+     */
+    private JsonResult handlePwdError(Account account) {
+        if (accountService.isSuperAdmin(account.getId())) {
+            return JsonResult.paramsErrorMessage("密码错误");
+        }
+        if (account.getVaildErrorTimes() != null) {
+            account.setVaildErrorTimes(account.getVaildErrorTimes() + 1);
+            if (account.getVaildErrorTimes() >= MAX_LOGIN_ACTION) {
+                account.setLock(true);
+                this.accountService.updateById(account);
+                return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
+            }
+        } else {
+            account.setVaildErrorTimes(1);
+        }
+        this.accountService.updateById(account);
+        return JsonResult.paramsErrorMessage("密码错误，还剩" + (MAX_LOGIN_ACTION - account.getVaildErrorTimes()) + "次输入机会");
     }
 
     /**

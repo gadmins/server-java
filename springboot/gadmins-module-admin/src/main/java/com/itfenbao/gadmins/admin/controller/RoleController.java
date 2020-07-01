@@ -82,23 +82,8 @@ public class RoleController {
         role.setRCode(param.getRcode());
         role.setRDesc(param.getRdesc());
         roleService.save(role);
-
-        List<RlMenuRole> menuRoles = param.getMenuIds().stream().map(menuId -> {
-            RlMenuRole menuRole = new RlMenuRole();
-            menuRole.setRoleId(role.getId());
-            menuRole.setMenuId(menuId);
-            return menuRole;
-        }).collect(Collectors.toList());
-        menuRoleService.saveBatch(menuRoles);
-
-        List<RlFunctionRole> functionRoles = param.getFuncIds().stream().map(funcId -> {
-            RlFunctionRole functionRole = new RlFunctionRole();
-            functionRole.setRoleId(role.getId());
-            functionRole.setFuncId(funcId);
-            return functionRole;
-        }).collect(Collectors.toList());
-        functionRoleService.saveBatch(functionRoles);
-
+        saveMenuRoles(param, role.getId());
+        saveFunctionRoles(role, param.getFuncIds());
         return JsonResult.success();
     }
 
@@ -119,21 +104,8 @@ public class RoleController {
         menuRoleService.remove(Wrappers.<RlMenuRole>lambdaQuery().eq(RlMenuRole::getRoleId, id));
         functionRoleService.remove(Wrappers.<RlFunctionRole>lambdaQuery().eq(RlFunctionRole::getRoleId, id));
 
-        List<RlMenuRole> menuRoles = param.getMenuIds().stream().map(menuId -> {
-            RlMenuRole menuRole = new RlMenuRole();
-            menuRole.setRoleId(role.getId());
-            menuRole.setMenuId(menuId);
-            return menuRole;
-        }).collect(Collectors.toList());
-        menuRoleService.saveBatch(menuRoles);
-
-        List<RlFunctionRole> functionRoles = param.getFuncIds().stream().map(funcId -> {
-            RlFunctionRole functionRole = new RlFunctionRole();
-            functionRole.setRoleId(role.getId());
-            functionRole.setFuncId(funcId);
-            return functionRole;
-        }).collect(Collectors.toList());
-        functionRoleService.saveBatch(functionRoles);
+        saveMenuRoles(param, role.getId());
+        saveFunctionRoles(role, param.getFuncIds());
 
         return JsonResult.success();
     }
@@ -178,4 +150,23 @@ public class RoleController {
         return JsonResult.success(roleService.getAllRoleNotSuperAdmin());
     }
 
+    private void saveFunctionRoles(Role role, List<Integer> funcIds) {
+        List<RlFunctionRole> functionRoles = funcIds.stream().map(funcId -> {
+            RlFunctionRole functionRole = new RlFunctionRole();
+            functionRole.setRoleId(role.getId());
+            functionRole.setFuncId(funcId);
+            return functionRole;
+        }).collect(Collectors.toList());
+        functionRoleService.saveBatch(functionRoles);
+    }
+
+    private void saveMenuRoles(@RequestBody UpdateRoleParam param, Integer roleId) {
+        List<RlMenuRole> menuRoles = param.getMenuIds().stream().map(menuId -> {
+            RlMenuRole menuRole = new RlMenuRole();
+            menuRole.setRoleId(roleId);
+            menuRole.setMenuId(menuId);
+            return menuRole;
+        }).collect(Collectors.toList());
+        menuRoleService.saveBatch(menuRoles);
+    }
 }

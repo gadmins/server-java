@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,12 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                 RequestMapping controllerMapping = AnnotationUtils.findAnnotation(bean.getClass(), RequestMapping.class);
                 String baseRoutePath = controllerMapping.value()[0];
                 Method[] methods = bean.getClass().getMethods();
+                boolean hasMenuFunc = Arrays.stream(methods).filter(m -> AnnotationUtils.findAnnotation(m, MenuFunction.class) != null).count() == 1;
+                if (!hasMenuFunc) {
+                    Class realClass = ClassUtils.getUserClass(bean.getClass());
+                    throw new RuntimeException("@Menu needs to cooperate with @MenuFunction\n\tat " + realClass.getName() + "(" + realClass.getSimpleName() + ".java:1)");
+                }
+
                 Arrays.stream(methods)
                         .filter(m -> AnnotationUtils.findAnnotation(m, Function.class) != null
                                 || AnnotationUtils.findAnnotation(m, Functions.class) != null

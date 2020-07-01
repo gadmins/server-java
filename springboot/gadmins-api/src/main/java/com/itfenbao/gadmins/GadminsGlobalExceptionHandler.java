@@ -38,7 +38,6 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
     @ExceptionHandler(value = Exception.class) //该注解声明异常处理方法
     @ResponseBody
     public JsonResult exceptionHandler(HttpServletRequest request, Exception e) {
-        log.error("Gadmins Exception", e);
         if (e instanceof NotLoginException) {
             return JsonResult.noLogin();
         } else if (e instanceof NotAuthorizedException) {
@@ -59,6 +58,7 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
             log.info("Global MethodArgumentNotValidException：{}", msg);
             return JsonResult.paramsErrorMessage(msg);
         } else {
+            log.error("Gadmins Exception", e);
             return JsonResult.http500(e.getMessage());
         }
     }

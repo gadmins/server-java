@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins.core.utils;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.auth.AuthAccessProperties;
 import com.itfenbao.gadmins.core.auth.AuthFrom;
@@ -12,7 +13,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -50,7 +50,7 @@ public class TokenUtils implements ApplicationContextAware {
         AuthProperties authProperties = getAuthProperties(tokenType);
         Cookie cookie = new Cookie(authProperties.getKey(), token);
         cookie.setPath("/");
-        if (!StringUtils.isEmpty(authProperties.getDomain()) && !authProperties.getDomain().equals("*")) {
+        if (StringUtils.isNotBlank(authProperties.getDomain()) && !authProperties.getDomain().equals("*")) {
             cookie.setDomain(authProperties.getDomain());
         }
         response.addCookie(cookie);
