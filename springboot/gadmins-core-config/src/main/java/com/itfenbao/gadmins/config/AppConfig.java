@@ -48,18 +48,30 @@ public final class AppConfig {
     }
 
     public static final class MenuType {
-        //        public static final String SYS_MENU = "SYS_MENU";
-//        public static final String NAV_MENU = "NAV_MENU";
+        public static final String SYS_MENU = "SYS_MENU";
+        public static final String NAV_MENU = "NAV_MENU";
         public static final String MENU = "MENU";
+    }
+
+    /**
+     * 系统菜单
+     */
+    public static final class SysMenu {
+        // 默认菜单 -- start --
+        public static final String SYS_HOME = "home";
+        public static final String SYS_SYSTEM = "system";
+        // 默认菜单 -- end --
     }
 
     /**
      * 系统内置导航菜单，便于菜单挂载
      */
     public static final class SysNavMenu {
+        // 默认菜单 -- start --
         public static final String BASE_MGR = "basemgr";
         public static final String SETTINGS = "settings";
         public static final String DEVOPS = "devops";
+        // 默认菜单 -- end --
     }
 
     public static final boolean HIDDEN_SYS_API = false;
