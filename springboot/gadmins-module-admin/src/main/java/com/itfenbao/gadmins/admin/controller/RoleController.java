@@ -119,6 +119,8 @@ public class RoleController {
     @ApiOperation(value = "删除角色")
     public JsonResult deletes(@PathVariable() List<Integer> ids) {
         menuRoleService.removeByRoleIds(ids);
+        functionRoleService.removeByRoleIds(ids);
+        accountRoleService.removeByRoleIds(ids);
         roleService.removeByIds(ids);
         return JsonResult.success();
     }
