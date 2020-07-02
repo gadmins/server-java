@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class GadminsConfig {
 
 //    /**
-//     * 配置导航菜单
+//     * 配置菜单
 //     *
 //     * @return
 //     */
