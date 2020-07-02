@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
@@ -11,6 +12,7 @@ import com.itfenbao.gadmins.admin.service.IFunctionConfigService;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.config.menu.MenuConfig;
 import com.itfenbao.gadmins.core.AppListener;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
@@ -18,9 +20,9 @@ import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
-import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author itfenbao
  * @since 2020-02-13
  */
+@Slf4j
 @RestController
 @RequestMapping(AppConfig.AdminRoute.MENU)
 @Api(tags = "系统菜单", hidden = AppConfig.HIDDEN_SYS_API)
@@ -157,8 +160,13 @@ public class MenuController {
         return JsonResult.success();
     }
 
+    /**
+     * 扫描所有菜单
+     */
     private void scanMenus() {
-        List<MenuConfig> menuConfigs = appListener.getMenuConfigs();
+        scanMenuConfig();
+        // 扫描注解菜单及功能
+        List<com.itfenbao.gadmins.core.web.vo.menu.MenuConfig> menuConfigs = appListener.getMenuConfigs();
         menuConfigs.forEach(mc -> {
             AtomicReference<Integer> funcId = new AtomicReference<>();
             // 先处理 parentCode 为空
@@ -173,6 +181,45 @@ public class MenuController {
             }
             menuService.saveOrUpdate(mc);
         });
+    }
+
+    MenuConfig menuConfig;
+
+    @Autowired(required = false)
+    public void setMenuConfig(MenuConfig menuConfig) {
+        this.menuConfig = menuConfig;
+    }
+
+    /**
+     * 扫码Bean配置菜单
+     */
+    private void scanMenuConfig() {
+        if (menuConfig != null && CollectionUtils.isNotEmpty(menuConfig.getNavMenus())) {
+            menuConfig.getSysMenus().forEach(sys -> {
+                Menu menu = menuService.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, sys.getCode()));
+                if (menu == null) {
+                    menu = new Menu();
+                    menu.setMCode(sys.getCode());
+                }
+                menu.setType(AppConfig.MenuType.SYS_MENU);
+                menu.setTxt(sys.getTitle());
+                menu.setSortNumber(sys.getSort());
+                menuService.saveOrUpdate(menu);
+            });
+            menuConfig.getNavMenus().forEach(nav -> {
+                Menu parentMenu = menuService.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, nav.getParentCode()));
+                Menu menu = menuService.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, nav.getCode()));
+                if (menu == null) {
+                    menu = new Menu();
+                    menu.setMCode(nav.getCode());
+                }
+                menu.setPId(parentMenu.getId());
+                menu.setType(AppConfig.MenuType.NAV_MENU);
+                menu.setTxt(nav.getTitle());
+                menu.setSortNumber(nav.getSort());
+                menuService.saveOrUpdate(menu);
+            });
+        }
     }
 
     private void saveFunctionPointAndConfig(AtomicReference<Integer> funcId, FunctionPoint fp) {
