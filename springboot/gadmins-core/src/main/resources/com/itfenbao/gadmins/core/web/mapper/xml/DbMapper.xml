@@ -25,14 +25,6 @@
         </if>
     </select>
 
-    <update id="renameTableName">
-        rename table ${name} to ${newName}
-    </update>
-
-    <update id="renameTableComment">
-         alter table ${name} comment '${comment}'
-    </update>
-
     <select id="getCreateDDL" resultType="java.util.Map">
         SHOW CREATE TABLE ${name}
     </select>

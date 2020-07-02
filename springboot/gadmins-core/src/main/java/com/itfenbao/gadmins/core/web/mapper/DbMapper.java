@@ -22,8 +22,10 @@ public interface DbMapper {
 
     int isTableExist(String tableName);
 
+    @Update("rename table ${name} to ${newName}")
     void renameTableName(@Param("name") String name, @Param("newName") String newName);
 
+    @Update("alter table ${name} comment '${comment}'")
     void renameTableComment(@Param("name") String name, @Param("comment") String comment);
 
     Map<String, String> getCreateDDL(@Param("name") String name);
