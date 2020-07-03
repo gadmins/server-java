@@ -22,7 +22,7 @@
             ${ew.customSqlSegment}
         </if>
     </select>
-    <select id="listAccoutByPage" resultType="com.itfenbao.gadmins.admin.data.vo.AccountVO">
+    <select id="listAccoutByPage" resultMap="accountVO">
         select _account.id, _account.name, _account.lock , _account.created_by,
         _account.updated_by, _account.created_at, _account.updated_at, _account.enable from sys_admin_account as
         _account
