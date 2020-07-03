@@ -63,7 +63,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 if (joinSelect) {
                     wrapper.ne("_account.id", id);
                 } else {
-                    wrapper.notIn("_account.id", id, getSuperAdminId());
+                    int saAccountId = getSuperAdminId();
+                    if (saAccountId == id) {
+                        wrapper.notIn("_account.id", id);
+                    } else {
+                        wrapper.notIn("_account.id", id, saAccountId);
+                    }
                 }
             } catch (Exception e) {
             }
