@@ -8,7 +8,7 @@ import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.data.vo.FunctionMenuVO;
 import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Menu;
-import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 
 import java.util.List;
 
@@ -25,10 +25,10 @@ public interface IMenuService extends IService<Menu> {
     /**
      * 保存或更新菜单
      *
-     * @param menuConfig
+     * @param menuBean
      * @return
      */
-    boolean saveOrUpdate(MenuConfig menuConfig);
+    boolean saveOrUpdate(MenuBean menuBean);
 
     /**
      * 获取前端核心菜单
