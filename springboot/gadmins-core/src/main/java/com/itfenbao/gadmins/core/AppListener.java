@@ -43,10 +43,12 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                 RequestMapping controllerMapping = AnnotationUtils.findAnnotation(bean.getClass(), RequestMapping.class);
                 String baseRoutePath = controllerMapping.value()[0];
                 Method[] methods = bean.getClass().getMethods();
-                boolean hasMenuFunc = Arrays.stream(methods).filter(m -> AnnotationUtils.findAnnotation(m, MenuFunction.class) != null).count() == 1;
+                long menuFuncCount = Arrays.stream(methods).filter(m -> AnnotationUtils.findAnnotation(m, MenuFunction.class) != null).count();
+                boolean hasMenuFunc = menuFuncCount == 1;
                 if (!hasMenuFunc) {
                     Class realClass = ClassUtils.getUserClass(bean.getClass());
-                    throw new RuntimeException("@Menu needs to cooperate with @MenuFunction\n\tat " + realClass.getName() + "(" + realClass.getSimpleName() + ".java:1)");
+                    String msg = menuFuncCount == 0 ? "@Menu needs to cooperate with @MenuFunction" : "@Menu only one @MenuFunction";
+                    throw new RuntimeException(msg + "\n\tat " + realClass.getName() + "(" + realClass.getSimpleName() + ".java:1)");
                 }
 
                 Arrays.stream(methods)
