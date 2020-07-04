@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 public class AuthProperties {
     private final static Logger logger = LoggerFactory.getLogger(AuthProperties.class.getSimpleName());
     private boolean open = true;
-    private Class<? extends TokenManager> tokenImplement = JwtTokenManager.class;
+    private Class<? extends TokenManager> tokenImplement;
 
     /**
      * cookie domain
@@ -34,9 +34,11 @@ public class AuthProperties {
     private long expireTime = 2 * 24 * 60 * 60;
 
     public AuthProperties() {
+        tokenImplement = JwtTokenManager.class;
     }
 
     public AuthProperties(String key, AuthFrom keyFrom) {
+        this();
         this.key = key;
         this.keyFrom = keyFrom;
     }
@@ -57,7 +59,7 @@ public class AuthProperties {
         if (DomainNameUtil.isValidDomainAddress(domain)) {
             this.domain = domain;
         } else {
-            logger.error("["+domain+"] is not the correct domain name");
+            logger.error("[" + domain + "] is not the correct domain name");
         }
     }
 
