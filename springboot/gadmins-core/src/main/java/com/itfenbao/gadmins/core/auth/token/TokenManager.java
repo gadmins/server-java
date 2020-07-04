@@ -26,4 +26,12 @@ public interface TokenManager {
      * @param token
      */
     void removeToken(String token);
+
+    /**
+     * 刷新token
+     *
+     * @param token
+     * @param expire
+     */
+    void refreshToken(String token, long expire);
 }

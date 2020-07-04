@@ -31,4 +31,9 @@ public class JwtTokenManager implements TokenManager {
     public void removeToken(String token) {
         //jwttoken无需删除，客户端扔掉即可。
     }
+
+    @Override
+    public void refreshToken(String token, long expire) {
+        //暂无实现
+    }
 }
