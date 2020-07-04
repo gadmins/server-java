@@ -4,15 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.itfenbao.gadmins.core.utils.AlterTableUtils;
 import com.itfenbao.gadmins.core.utils.PageUtils;
-import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.query.DbTableQuery;
-import com.itfenbao.gadmins.core.web.data.dto.query.TableColumnQuery;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.*;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.DbTableQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.TableColumnQuery;
 import com.itfenbao.gadmins.core.web.mapper.DbMapper;
 import com.itfenbao.gadmins.core.web.service.IDbService;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Map;
 
 @Service
@@ -68,7 +69,7 @@ public class DbService implements IDbService {
     public IPage<Map> listTableDataByPage(DbTableQuery query) {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
-        String dbName = query.getTableName();
+        String dbName = query.getDbName();
         if (StringUtils.isBlank(dbName)) {
             dbName = mapper.queryCurrenDBName();
         }
@@ -106,7 +107,7 @@ public class DbService implements IDbService {
     public boolean updateTable(String name, UpdateTableParam param) {
         boolean has = mapper.isTableExist(name) > 0;
         if (has) {
-            mapper.renameTableComment(name, param.getComment());
+            mapper.alterTable(name, AlterTableUtils.commentSql(param.getComment()));
         }
         if (has && !name.equals(param.getNewName())) {
             mapper.renameTableName(name, param.getNewName());
@@ -114,5 +115,57 @@ public class DbService implements IDbService {
         return true;
     }
 
+    @Override
+    public boolean addColumn(AddColumnParam param) {
+        boolean has = mapper.isTableExist(param.getTableName()) > 0;
+        if (has) {
+            String type = getType(param.getColumnType(), param.getValueLength(), param.isUnsigned());
+            String condition = AlterTableUtils.addColumnSql(
+                    param.getColumnName(),
+                    type, param.isNull(),
+                    param.getDefValue(),
+                    param.getColumnComment()
+            );
+            mapper.alterTable(param.getTableName(), condition);
+        }
+        return has;
+    }
 
+    @Override
+    public boolean deleteColumn(DeleteColumnParam param) {
+        boolean has = mapper.isTableExist(param.getTableName()) > 0;
+        if (has) {
+            Arrays.stream(param.getColumnName()).forEach(c -> {
+                mapper.alterTable(param.getTableName(), AlterTableUtils.dropColumnSql(c));
+            });
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateColumn(UpdateColumnParam param) {
+        boolean has = mapper.isTableExist(param.getTableName()) > 0;
+        if (has) {
+            String type = getType(param.getColumnType(), param.getValueLength(), param.isUnsigned());
+            String condition = AlterTableUtils.updateColumnSql(
+                    param.getOldColumnName(),
+                    param.getColumnName(),
+                    type, param.isNull(),
+                    param.getDefValue(),
+                    param.getColumnComment()
+            );
+            mapper.alterTable(param.getTableName(), condition);
+        }
+        return true;
+    }
+
+    private String getType(String type, Integer length, boolean unsigned) {
+        if ("int".equalsIgnoreCase(type)) {
+            return unsigned ? String.format("int(%d) unsigned", length) : String.format("int(%d)", length);
+        }
+        if (length != null) {
+            return String.format("%s(%d)", type, length);
+        }
+        return type;
+    }
 }

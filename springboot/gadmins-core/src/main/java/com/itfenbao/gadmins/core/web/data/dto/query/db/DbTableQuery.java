@@ -1,4 +1,4 @@
-package com.itfenbao.gadmins.core.web.data.dto.query;
+package com.itfenbao.gadmins.core.web.data.dto.query.db;
 
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 

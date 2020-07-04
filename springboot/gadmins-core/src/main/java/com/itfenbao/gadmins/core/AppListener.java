@@ -7,7 +7,7 @@ import com.itfenbao.gadmins.core.web.vo.FormSchemaVO;
 import com.itfenbao.gadmins.core.web.vo.ListSchemaVO;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPointConfig;
-import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.*;
 public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private Logger log = LoggerFactory.getLogger("AppListener");
-    List<MenuConfig> menuConfigs = new ArrayList<>();
+    List<MenuBean> menuBeans = new ArrayList<>();
 
     @Autowired
     ObjectMapper objectMapper;
@@ -38,7 +38,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
         if (event.getApplicationContext().getParent() == null) {
             Map<String, Object> beans = event.getApplicationContext().getBeansWithAnnotation(Menu.class);
             beans.values().forEach(bean -> {
-                MenuConfig menuConfig = createMenuConfig(bean);
+                MenuBean menuBean = createMenuConfig(bean);
                 List<FunctionPoint> points = new ArrayList<>();
                 RequestMapping controllerMapping = AnnotationUtils.findAnnotation(bean.getClass(), RequestMapping.class);
                 String baseRoutePath = controllerMapping.value()[0];
@@ -61,17 +61,17 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
                             Function function = AnnotationUtils.findAnnotation(m, Function.class);
                             Functions functions = AnnotationUtils.findAnnotation(m, Functions.class);
                             if (function != null) {
-                                points.add(createFunctionPoint(baseRoutePath, FunctionInfo.createFunctionInfo(function, menuFunction), requestInfo, menuConfig.getUrl()));
+                                points.add(createFunctionPoint(baseRoutePath, FunctionInfo.createFunctionInfo(function, menuFunction), requestInfo, menuBean.getUrl()));
                             } else if (functions != null) {
                                 Arrays.stream(functions.value()).forEach(function1 -> {
-                                    points.add(createFunctionPoint(baseRoutePath, FunctionInfo.createFunctionInfo(function1, menuFunction), requestInfo, menuConfig.getUrl()));
+                                    points.add(createFunctionPoint(baseRoutePath, FunctionInfo.createFunctionInfo(function1, menuFunction), requestInfo, menuBean.getUrl()));
                                 });
                             }
                         });
                 points.sort(Comparator.comparing(FunctionPoint::getSort));
                 points.sort(Comparator.comparing(FunctionPoint::isMenu, (a, b) -> a.booleanValue() == true ? 1 : 0));
-                menuConfig.setFunctionPoints(points);
-                menuConfigs.add(menuConfig);
+                menuBean.setFunctionPoints(points);
+                menuBeans.add(menuBean);
             });
 //            try {
 //                log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(menuConfigs));
@@ -87,17 +87,17 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
      * @param bean
      * @return
      */
-    private MenuConfig createMenuConfig(Object bean) {
-        MenuConfig menuConfig = new MenuConfig();
+    private MenuBean createMenuConfig(Object bean) {
+        MenuBean menuBean = new MenuBean();
         Menu menu = AnnotationUtils.findAnnotation(bean.getClass(), Menu.class);
-        menuConfig.setCode(menu.value());
-        menuConfig.setParentCode(menu.parentCode());
-        menuConfig.setTitle(menu.title());
-        menuConfig.setDesc(menu.desc());
-        menuConfig.setUrl(menu.url());
-        menuConfig.setIcon(menu.icon());
-        menuConfig.setSort(menu.sort());
-        return menuConfig;
+        menuBean.setCode(menu.value());
+        menuBean.setParentCode(menu.parentCode());
+        menuBean.setTitle(menu.title());
+        menuBean.setDesc(menu.desc());
+        menuBean.setUrl(menu.url());
+        menuBean.setIcon(menu.icon());
+        menuBean.setSort(menu.sort());
+        return menuBean;
     }
 
     /**
@@ -202,8 +202,8 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent> {
         return path.length > 0 ? path[0] : "";
     }
 
-    public List<MenuConfig> getMenuConfigs() {
-        return menuConfigs;
+    public List<MenuBean> getMenuBeans() {
+        return menuBeans;
     }
 
     private static class RequestInfo {

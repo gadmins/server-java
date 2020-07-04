@@ -23,7 +23,7 @@ import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.web.vo.Tree;
-import com.itfenbao.gadmins.core.web.vo.menu.MenuConfig;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,19 +59,19 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     IRlMenuRoleService menuRoleService;
 
     @Override
-    public boolean saveOrUpdate(MenuConfig menuConfig) {
-        Menu one = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getCode()));
+    public boolean saveOrUpdate(MenuBean menuBean) {
+        Menu one = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuBean.getCode()));
         if (one == null) {
-            Menu menu = createMenu(menuConfig);
+            Menu menu = createMenu(menuBean);
             if (this.save(menu)) {
                 return true;
             }
         } else {
             Menu _update = new Menu();
             _update.setId(one.getId());
-            _update.setSortNumber(menuConfig.getSort());
-            _update.setIcon(menuConfig.getIcon());
-            _update.setTxt(menuConfig.getTitle());
+            _update.setSortNumber(menuBean.getSort());
+            _update.setIcon(menuBean.getIcon());
+            _update.setTxt(menuBean.getTitle());
             if (this.updateById(_update)) {
                 return true;
             }
@@ -79,20 +79,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return false;
     }
 
-    private Menu createMenu(MenuConfig menuConfig) {
+    private Menu createMenu(MenuBean menuBean) {
         Menu menu = new Menu();
-        menu.setSortNumber(menuConfig.getSort());
-        menu.setFuncId(menuConfig.getFuncId());
-        menu.setMCode(menuConfig.getCode());
-        menu.setTxt(menuConfig.getTitle());
-        menu.setIcon(menuConfig.getIcon());
-        if (StringUtils.isNotBlank(menuConfig.getParentCode())) {
-            Menu getMenu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuConfig.getParentCode()));
+        menu.setSortNumber(menuBean.getSort());
+        menu.setFuncId(menuBean.getFuncId());
+        menu.setMCode(menuBean.getCode());
+        menu.setTxt(menuBean.getTitle());
+        menu.setIcon(menuBean.getIcon());
+        if (StringUtils.isNotBlank(menuBean.getParentCode())) {
+            Menu getMenu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, menuBean.getParentCode()));
             if (getMenu != null) {
                 menu.setPId(getMenu.getId());
             }
         }
-        menuConfig.getParentCode();
+        menuBean.getParentCode();
         return menu;
     }
 

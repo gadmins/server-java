@@ -1,10 +1,9 @@
 package com.itfenbao.gadmins.core.web.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.query.DbTableQuery;
-import com.itfenbao.gadmins.core.web.data.dto.query.TableColumnQuery;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.*;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.DbTableQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.TableColumnQuery;
 
 import java.util.Map;
 
@@ -23,4 +22,10 @@ public interface IDbService {
     boolean truncateTable(String name);
 
     boolean updateTable(String name, UpdateTableParam param);
+
+    boolean addColumn(AddColumnParam param);
+
+    boolean deleteColumn(DeleteColumnParam param);
+
+    boolean updateColumn(UpdateColumnParam param);
 }
