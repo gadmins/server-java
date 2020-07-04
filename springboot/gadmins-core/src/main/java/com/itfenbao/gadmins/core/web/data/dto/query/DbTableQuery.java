@@ -2,9 +2,9 @@ package com.itfenbao.gadmins.core.web.data.dto.query;
 
 import com.itfenbao.gadmins.core.web.query.PageQuery;
 
-public class DbQuery extends PageQuery {
+public class DbTableQuery extends PageQuery {
     String dbName;
-    String name;
+    String tableName;
     String comment;
     String[] createdAt;
 
@@ -16,12 +16,12 @@ public class DbQuery extends PageQuery {
         this.dbName = dbName;
     }
 
-    public String getName() {
-        return name;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public String getComment() {

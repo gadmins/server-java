@@ -3,17 +3,18 @@ package com.itfenbao.gadmins.core.web.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.query.DbQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.DbTableQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.TableColumnQuery;
 
 import java.util.Map;
 
 public interface IDbService {
 
-    IPage<Map> listTableByPage(DbQuery pageQuery);
+    IPage<Map> listTableByPage(DbTableQuery pageQuery);
 
-    IPage<Map> listColumnByPage(DbQuery query);
+    IPage<Map> listColumnByPage(TableColumnQuery query);
 
-    IPage<Map> listTableDataByPage(DbQuery query);
+    IPage<Map> listTableDataByPage(DbTableQuery query);
 
     boolean createTable(AddTableParam param);
 

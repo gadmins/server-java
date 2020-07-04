@@ -7,7 +7,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.core.utils.PageUtils;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.query.DbQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.DbTableQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.TableColumnQuery;
 import com.itfenbao.gadmins.core.web.mapper.DbMapper;
 import com.itfenbao.gadmins.core.web.service.IDbService;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class DbService implements IDbService {
     }
 
     @Override
-    public IPage<Map> listTableByPage(DbQuery query) {
+    public IPage<Map> listTableByPage(DbTableQuery query) {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
         String dbName = query.getDbName();
@@ -32,8 +33,8 @@ public class DbService implements IDbService {
             dbName = mapper.queryCurrenDBName();
         }
         wrapper.eq("TABLE_SCHEMA", dbName);
-        if (StringUtils.isNotBlank(query.getName())) {
-            wrapper.like("TABLE_NAME", query.getName());
+        if (StringUtils.isNotBlank(query.getTableName())) {
+            wrapper.like("TABLE_NAME", query.getTableName());
         }
         if (StringUtils.isNotBlank(query.getComment())) {
             wrapper.like("TABLE_COMMENT", query.getComment());
@@ -46,29 +47,32 @@ public class DbService implements IDbService {
     }
 
     @Override
-    public IPage<Map> listColumnByPage(DbQuery query) {
+    public IPage<Map> listColumnByPage(TableColumnQuery query) {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
         String dbName = query.getDbName();
-        if (StringUtils.isEmpty(dbName)) {
+        if (StringUtils.isBlank(dbName)) {
             dbName = mapper.queryCurrenDBName();
         }
         wrapper.eq("TABLE_SCHEMA", dbName);
-        if (StringUtils.isNotBlank(query.getName())) {
-            wrapper.eq("TABLE_NAME", query.getName());
+        if (StringUtils.isNotBlank(query.getTableName())) {
+            wrapper.eq("TABLE_NAME", query.getTableName());
+        }
+        if (StringUtils.isNotBlank(query.getColumnName())) {
+            wrapper.like("COLUMN_NAME", query.getColumnName());
         }
         return mapper.listColumnByPage(page, wrapper);
     }
 
     @Override
-    public IPage<Map> listTableDataByPage(DbQuery query) {
+    public IPage<Map> listTableDataByPage(DbTableQuery query) {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
-        String dbName = query.getDbName();
-        if (StringUtils.isEmpty(dbName)) {
+        String dbName = query.getTableName();
+        if (StringUtils.isBlank(dbName)) {
             dbName = mapper.queryCurrenDBName();
         }
-        return mapper.listTableDataByPage(page, dbName + "." + query.getName(), wrapper);
+        return mapper.listTableDataByPage(page, dbName + "." + query.getTableName(), wrapper);
     }
 
     @Override

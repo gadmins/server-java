@@ -6,7 +6,8 @@ import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.query.DbQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.DbTableQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.TableColumnQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.service.IDbService;
@@ -29,7 +30,7 @@ public class DbController {
     @MenuFunction(value = "sys:table:list", title = "查询列表", desc = "查询数据表")
     @GetMapping("/table")
     @ApiOperation(value = "查询数据表列表")
-    public JsonPageResult<Map> listTable(DbQuery query) {
+    public JsonPageResult<Map> listTable(DbTableQuery query) {
         return JsonPageResult.success(dbService.listTableByPage(query));
     }
 
@@ -65,14 +66,14 @@ public class DbController {
     @Function(value = "sys:table:column:list", sort = 4, title = "查询表结构", desc = "查询数据表结构")
     @GetMapping("/column")
     @ApiOperation(value = "数据表结构查询")
-    public JsonPageResult<Map> listColumn(DbQuery query) {
+    public JsonPageResult<Map> listColumn(TableColumnQuery query) {
         return JsonPageResult.success(dbService.listColumnByPage(query));
     }
 
     @Function(value = "sys:table:data:list", sort = 5, title = "查询数据", desc = "查询表数据")
     @GetMapping("/data")
     @ApiOperation(value = "数据表数据")
-    public JsonPageResult<Map> listTableData(DbQuery query) {
+    public JsonPageResult<Map> listTableData(DbTableQuery query) {
         return JsonPageResult.success(dbService.listTableDataByPage(query));
     }
 
