@@ -2,7 +2,7 @@ package com.itfenbao.gadmins.core.web.vo.menu;
 
 import java.util.List;
 
-public class MenuConfig {
+public class MenuBean {
 
     private String code;
     private String parentCode;

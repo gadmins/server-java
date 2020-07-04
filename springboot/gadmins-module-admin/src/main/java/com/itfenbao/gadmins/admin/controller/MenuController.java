@@ -20,6 +20,7 @@ import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
+import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -166,8 +167,8 @@ public class MenuController {
     private void scanMenus() {
         scanMenuConfig();
         // 扫描注解菜单及功能
-        List<com.itfenbao.gadmins.core.web.vo.menu.MenuConfig> menuConfigs = appListener.getMenuConfigs();
-        menuConfigs.forEach(mc -> {
+        List<MenuBean> menuBeans = appListener.getMenuBeans();
+        menuBeans.forEach(mc -> {
             AtomicReference<Integer> funcId = new AtomicReference<>();
             // 先处理 parentCode 为空
             mc.getFunctionPoints().stream().filter(f -> StringUtils.isBlank(f.getParentCode())).forEach(fp -> {
