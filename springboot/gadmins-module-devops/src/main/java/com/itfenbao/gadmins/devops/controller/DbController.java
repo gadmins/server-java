@@ -4,10 +4,9 @@ import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Menu;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
-import com.itfenbao.gadmins.core.web.data.dto.param.db.AddTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.param.db.UpdateTableParam;
-import com.itfenbao.gadmins.core.web.data.dto.query.DbTableQuery;
-import com.itfenbao.gadmins.core.web.data.dto.query.TableColumnQuery;
+import com.itfenbao.gadmins.core.web.data.dto.param.db.*;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.DbTableQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.TableColumnQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.service.IDbService;
@@ -39,7 +38,7 @@ public class DbController {
     @ApiOperation(value = "创建数据表")
     public JsonResult addTable(@RequestBody AddTableParam param) {
         boolean result = dbService.createTable(param);
-        return result ? JsonResult.success() : JsonResult.failMessage("创建失败");
+        return result ? JsonResult.success() : JsonResult.failMessage("已存在，创建失败");
     }
 
     @Function(value = "sys:table:del", sort = 2, title = "删除", desc = "删除数据表")
@@ -68,6 +67,27 @@ public class DbController {
     @ApiOperation(value = "数据表结构查询")
     public JsonPageResult<Map> listColumn(TableColumnQuery query) {
         return JsonPageResult.success(dbService.listColumnByPage(query));
+    }
+
+    @Function(value = "sys:table:column:add", sort = 5, title = "添加表结构字段", desc = "添加表结构字段")
+    @PostMapping("/column")
+    @ApiOperation(value = "添加数据表字段")
+    public JsonResult addColumn(@RequestBody AddColumnParam param) {
+        return dbService.addColumn(param) ? JsonResult.success() : JsonResult.failMessage("添加失败");
+    }
+
+    @Function(value = "sys:table:column:del", sort = 6, title = "删除表结构字段", desc = "删除表结构字段")
+    @DeleteMapping("/column")
+    @ApiOperation(value = "删除数据表字段")
+    public JsonResult deleteColumn(DeleteColumnParam param) {
+        return dbService.deleteColumn(param) ? JsonResult.success() : JsonResult.failMessage("删除失败");
+    }
+
+    @Function(value = "sys:table:column:update", sort = 7, title = "修改表结构字段", desc = "修改表结构字段")
+    @PutMapping("/column")
+    @ApiOperation(value = "修改数据表字段")
+    public JsonResult updateColumn(@RequestBody UpdateColumnParam param) {
+        return dbService.updateColumn(param) ? JsonResult.success() : JsonResult.failMessage("修改失败");
     }
 
     @Function(value = "sys:table:data:list", sort = 5, title = "查询数据", desc = "查询表数据")

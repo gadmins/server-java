@@ -25,10 +25,6 @@
         </if>
     </select>
 
-    <select id="getCreateDDL" resultType="java.util.Map">
-        SHOW CREATE TABLE ${name}
-    </select>
-
     <update id="createTable">
         CREATE TABLE ${name} (
         `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
@@ -43,9 +39,5 @@
         PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='${comment}';
     </update>
-
-    <select id="isTableExist" resultType="int">
-        select count(*) from information_schema.TABLES where table_name = #{tableName}
-    </select>
 
 </mapper>
