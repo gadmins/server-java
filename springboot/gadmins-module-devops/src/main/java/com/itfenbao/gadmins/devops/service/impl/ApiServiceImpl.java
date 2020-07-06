@@ -27,6 +27,9 @@ public class ApiServiceImpl extends ServiceImpl<ApiMapper, DatawayApi> implement
     public IPage<DatawayApi> listByPage(ApiQuery query) {
         IPage<DatawayApi> page = PageUtils.page(query);
         LambdaQueryWrapper<DatawayApi> wrapper = Wrappers.lambdaQuery();
+        if (query.getGroupId() != null) {
+            wrapper.eq(DatawayApi::getGroupId, query.getGroupId());
+        }
         if (query.getStatus() != null) {
             wrapper.eq(DatawayApi::getStatus, query.getStatus());
         }

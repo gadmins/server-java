@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ApiQuery extends PageQuery {
+    Integer groupId;
     Integer status;
     String apiPath;
     String apiMethod;

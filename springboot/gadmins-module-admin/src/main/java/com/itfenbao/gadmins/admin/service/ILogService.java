@@ -1,7 +1,7 @@
 package com.itfenbao.gadmins.admin.service;
 
-import com.itfenbao.gadmins.admin.entity.Log;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.entity.Log;
 
 /**
  * <p>

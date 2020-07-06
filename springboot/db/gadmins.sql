@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.47)
 # Database: gadmins
-# Generation Time: 2020-03-05 08:50:31 +0000
+# Generation Time: 2020-07-06 06:11:28 +0000
 # ************************************************************
 
 
@@ -34,7 +34,7 @@ CREATE TABLE `sys_admin_account` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统账号表';
@@ -56,7 +56,7 @@ CREATE TABLE `sys_admin_dict` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统字典表';
@@ -85,7 +85,7 @@ CREATE TABLE `sys_admin_function` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统功能表';
@@ -106,7 +106,7 @@ CREATE TABLE `sys_admin_function_config` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`,`func_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统功能配置表-前端展示';
@@ -120,13 +120,15 @@ DROP TABLE IF EXISTS `sys_admin_log`;
 
 CREATE TABLE `sys_admin_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `ip` varchar(30) NOT NULL DEFAULT '' COMMENT 'ip地址',
   `log` text NOT NULL COMMENT '日志内容',
+  `uri` varchar(255) DEFAULT NULL COMMENT '请求地址',
+  `method` varchar(10) DEFAULT NULL COMMENT '请求方法',
   `tag` varchar(255) DEFAULT NULL COMMENT '标记',
+  `ip` varchar(30) NOT NULL DEFAULT '' COMMENT 'ip地址',
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统日志表';
@@ -150,7 +152,7 @@ CREATE TABLE `sys_admin_menu` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统菜单表';
@@ -169,7 +171,7 @@ CREATE TABLE `sys_admin_rl_account_role` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_role` (`account_id`,`role_id`)
@@ -189,7 +191,7 @@ CREATE TABLE `sys_admin_rl_function_role` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`),
   KEY `func_role` (`func_id`,`role_id`)
@@ -209,7 +211,7 @@ CREATE TABLE `sys_admin_rl_menu_role` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `menu_role` (`menu_id`,`role_id`)
@@ -231,27 +233,15 @@ CREATE TABLE `sys_admin_role` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统角色表';
 
 
-DROP TABLE IF EXISTS `sys_dataway_group`;
 
-CREATE TABLE `sys_dataway_group` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `group_type` varchar(50) NOT NULL COMMENT '分组',
-  `url_prefix` varchar(100) NOT NULL COMMENT '分组URL前缀',
-  `desc` varchar(255) NOT NULL COMMENT '组描述',
-  `created_by` int(11) DEFAULT NULL COMMENT '创建人',
-  `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
-  `deleted` tinyint(1) DEFAULT '0' COMMENT '逻辑删除',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='dataway分组表';
+# Dump of table sys_dataway_api
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `sys_dataway_api`;
 
@@ -270,47 +260,33 @@ CREATE TABLE `sys_dataway_api` (
   `created_by` int(11) DEFAULT NULL COMMENT '创建人',
   `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='dataway接口表';
-
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='dataway接口表';
 
 
 
+# Dump of table sys_dataway_group
+# ------------------------------------------------------------
 
-INSERT INTO `sys_admin_function` (`id`, `func_group`, `func_code`, `func_desc`, `title`, `btn_group`, `btn_icon`, `elink`, `front_url`, `menu_func_id`, `p_id`, `sort_number`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
-VALUES
-	(1, 'admin', 'sys:welcome', '欢迎页', '欢迎页', NULL, NULL, 0, '/home/welcome', 1, NULL, 0, NULL, NULL, '2020-02-28 07:16:14', '2020-02-28 07:22:52', 1);
+DROP TABLE IF EXISTS `sys_dataway_group`;
 
+CREATE TABLE `sys_dataway_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_type` varchar(50) NOT NULL COMMENT '分组',
+  `url_prefix` varchar(100) NOT NULL COMMENT '分组URL前缀',
+  `desc` varchar(255) NOT NULL COMMENT '组描述',
+  `created_by` int(11) DEFAULT NULL COMMENT '创建人',
+  `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
+  `deleted` tinyint(1) DEFAULT '0' COMMENT '逻辑删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='dataway分组表';
 
-INSERT INTO `sys_admin_menu` (`id`,`m_code`, `txt`, `icon`, `type`, `func_id`, `sort_number`, `p_id`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
-VALUES
-	(1, 'home', '首页', 'home', 'SYS_MENU', NULL, 0, NULL, NULL, NULL, '2020-02-28 07:14:47', '2020-02-28 07:14:47', 1),
-	(2, 'welcome', '欢迎', 'home', 'MENU', 1, 0, 1, NULL, NULL, '2020-02-28 07:15:25', '2020-02-28 07:20:20', 1),
-	(3, 'system', '系统管理', 'home', 'SYS_MENU', NULL, 1, NULL, NULL, NULL, '2020-02-13 17:36:56', '2020-02-28 06:58:39', 1),
-	(4, 'basemgr', '基础管理', 'profile', 'NAV_MENU', NULL, 0, 3, NULL, NULL, '2020-02-14 14:16:53', '2020-02-26 02:34:08', 1),
-	(5, 'settings', '基本设置', 'profile', 'NAV_MENU', NULL, 1, 3, NULL, NULL, '2020-02-14 14:17:40', '2020-02-16 13:16:39', 1),
-	(6, 'devops', '研发管理', 'tool', 'NAV_MENU', NULL, 2, 3, NULL, NULL, '2020-02-14 14:17:40', '2020-02-16 13:16:39', 1);
-
-INSERT INTO `sys_admin_role` (`id`, `r_code`, `name`, `r_desc`, `super_admin`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
-VALUES
-	(1, 'role:superadmin', '超级管理员', '超级管理员', 1, NULL, NULL, '2020-03-04 09:44:00', '2020-03-04 09:47:40', 1);
-
-INSERT INTO `sys_admin_account` (`id`, `name`, `password`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
-VALUES
-	(1, 'devadmin', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, '2020-02-16 15:20:39', '2020-02-25 06:03:27', 1);
-
-INSERT INTO `sys_admin_rl_account_role` (`id`, `account_id`, `role_id`, `created_by`, `updated_by`, `created_at`, `updated_at`, `enable`)
-VALUES
-	(1, 1, 1, NULL, NULL, '2020-03-04 09:44:12', '2020-03-04 09:48:28', 1);
 
 
 

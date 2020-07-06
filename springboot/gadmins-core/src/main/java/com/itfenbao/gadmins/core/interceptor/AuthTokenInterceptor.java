@@ -2,6 +2,7 @@ package com.itfenbao.gadmins.core.interceptor;
 
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.PassToken;
+import com.itfenbao.gadmins.core.auth.token.IPassTokenService;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
@@ -15,8 +16,15 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
 
     private final AppConfig.TokenType tokenType;
 
+    private IPassTokenService passTokenService;
+
     public AuthTokenInterceptor(AppConfig.TokenType tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public AuthTokenInterceptor setPassTokenService(IPassTokenService passTokenService) {
+        this.passTokenService = passTokenService;
+        return this;
     }
 
     @Override
@@ -33,6 +41,9 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
             if (passToken.required()) {
                 return true;
             }
+        }
+        if (passTokenService != null && passTokenService.passToken(request.getRequestURI(), request.getMethod())) {
+            return true;
         }
         String token = TokenUtils.getToken();
         // 检查token

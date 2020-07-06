@@ -101,7 +101,7 @@ public class DictController {
         return JsonResult.success();
     }
 
-    @Function(value = "sys:dict:data:list", sort = 5, title = "查看字典数据", desc = "查看字典数据", url = "/system/dict/list")
+    @Function(value = "sys:dict:data:list", sort = 5, title = "字典数据管理", desc = "字典数据管理", url = "/system/dict/list")
     @GetMapping("/list/{pid}")
     @ApiOperation("查询字典数据")
     @Schema(Dict.class)
