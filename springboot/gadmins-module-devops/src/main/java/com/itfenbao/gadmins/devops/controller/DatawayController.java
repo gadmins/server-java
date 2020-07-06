@@ -100,7 +100,7 @@ public class DatawayController {
     }
 
 
-    @Function(value = "sys:dataway:api:list", sort = 5, title = "查询接口列表", desc = "查询动态接口列表")
+    @Function(value = "sys:dataway:api:list", sort = 5, title = "接口列表管理", desc = "接口列表管理")
     @GetMapping("/api")
     @ApiOperation(value = "查询接口列表")
     public JsonPageResult<DatawayApi> apilist(ApiQuery query) {

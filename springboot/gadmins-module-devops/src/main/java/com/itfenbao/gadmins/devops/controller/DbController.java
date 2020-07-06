@@ -26,7 +26,7 @@ public class DbController {
     @Autowired
     IDbService dbService;
 
-    @MenuFunction(value = "sys:table:list", title = "查询列表", desc = "查询数据表")
+    @MenuFunction(value = "sys:table:list", title = "查询", desc = "查询数据表")
     @GetMapping("/table")
     @ApiOperation(value = "查询数据表列表")
     public JsonPageResult<Map> listTable(DbTableQuery query) {
@@ -62,28 +62,28 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("更新失败");
     }
 
-    @Function(value = "sys:table:column:list", sort = 4, title = "查询表结构", desc = "查询数据表结构")
+    @Function(value = "sys:table:column:list", sort = 4, title = "表结构管理", desc = "表结构管理")
     @GetMapping("/column")
     @ApiOperation(value = "数据表结构查询")
     public JsonPageResult<Map> listColumn(TableColumnQuery query) {
         return JsonPageResult.success(dbService.listColumnByPage(query));
     }
 
-    @Function(value = "sys:table:column:add", sort = 5, title = "添加表结构字段", desc = "添加表结构字段")
+    @Function(value = "sys:table:column:add", parentCode = "sys:table:column:list", sort = 5, title = "添加", desc = "添加表结构字段")
     @PostMapping("/column")
     @ApiOperation(value = "添加数据表字段")
     public JsonResult addColumn(@RequestBody AddColumnParam param) {
         return dbService.addColumn(param) ? JsonResult.success() : JsonResult.failMessage("添加失败");
     }
 
-    @Function(value = "sys:table:column:del", sort = 6, title = "删除表结构字段", desc = "删除表结构字段")
+    @Function(value = "sys:table:column:del", parentCode = "sys:table:column:list", sort = 6, title = "删除", desc = "删除表结构字段")
     @DeleteMapping("/column")
     @ApiOperation(value = "删除数据表字段")
     public JsonResult deleteColumn(DeleteColumnParam param) {
         return dbService.deleteColumn(param) ? JsonResult.success() : JsonResult.failMessage("删除失败");
     }
 
-    @Function(value = "sys:table:column:update", sort = 7, title = "修改表结构字段", desc = "修改表结构字段")
+    @Function(value = "sys:table:column:update", parentCode = "sys:table:column:list", sort = 7, title = "修改", desc = "修改表结构字段")
     @PutMapping("/column")
     @ApiOperation(value = "修改数据表字段")
     public JsonResult updateColumn(@RequestBody UpdateColumnParam param) {

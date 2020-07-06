@@ -84,7 +84,7 @@ public class FunctionController {
     }
 
     @GetMapping("/menu/points/{id}")
-    @Function(value = "sys:function:group:list", sort = 1, title = "查看功能点", desc = "查看功能点", url = "/system/function/list")
+    @Function(value = "sys:function:group:list", sort = 1, title = "功能点管理", desc = "功能点管理", url = "/system/function/list")
     @ApiOperation("功能点分页查询")
     @Schema(FunctionMenuVO.class)
     public JsonPageResult<FunctionPointVO> functionPointList(@ApiParam(value = "功能点ID", required = true) @PathVariable Integer id, PageQuery query) {

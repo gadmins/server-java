@@ -63,6 +63,8 @@ public class FunctionServiceImpl extends ServiceImpl<FunctionMapper, Function> i
             _update.setFrontUrl(functionPoint.getUrl());
             _update.setBtnGroup(functionPoint.getBtnGroup());
             _update.setSortNumber(functionPoint.getSort());
+            _update.setTitle(functionPoint.getTitle());
+            _update.setFuncDesc(functionPoint.getDesc());
             if (this.updateById(_update)) {
                 return true;
             }
