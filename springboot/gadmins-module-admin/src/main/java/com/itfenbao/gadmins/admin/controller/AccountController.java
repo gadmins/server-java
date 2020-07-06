@@ -12,11 +12,13 @@ import com.itfenbao.gadmins.admin.data.vo.AccountVO;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
 import com.itfenbao.gadmins.admin.entity.Account;
 import com.itfenbao.gadmins.admin.entity.RlAccountRole;
+import com.itfenbao.gadmins.admin.exception.LoginFailException;
 import com.itfenbao.gadmins.admin.service.IAccountService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.admin.service.IRlAccountRoleService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.*;
+import com.itfenbao.gadmins.core.utils.LogUtils;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
@@ -152,34 +154,36 @@ public class AccountController {
     @PostMapping("/login")
     @PassToken
     @ApiOperation("登录")
+    @Log(value = "登录", tags = {"ADMIN_LOGIN"})
     public JsonResult login(@RequestBody @Validated final LoginParam login, HttpServletResponse response) {
         if (LoginParam.LOGIN_TYPE_ACCOUNT.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getUserName())) {
-                return JsonResult.paramsErrorMessage("用户名不能为空");
+                throw new LoginFailException("用户名不能为空");
             }
             if (StringUtils.isEmpty(login.getPassword())) {
-                return JsonResult.paramsErrorMessage("密码不能为空");
+                throw new LoginFailException("密码不能为空");
             }
             Account account = this.accountService.getOne(Wrappers.<Account>lambdaQuery().eq(Account::getName, login.getUserName()));
             if (account != null) {
+                LogUtils.setLogUserId(account.getId());
                 if (account.getLock()) {
-                    return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
+                    throw new LoginFailException("账户已锁定，请联系管理员");
                 }
                 boolean isPwdRight = login.getPassword().equals(account.getPassword());
                 return isPwdRight ? handlePwdRight(response, account) : handlePwdError(account);
             } else {
-                return JsonResult.paramsErrorMessage("用户不存在");
+                throw new LoginFailException("用户不存在");
             }
         } else if (LoginParam.LOGIN_TYPE_MOBILE.equals(login.getType().toLowerCase())) {
             if (StringUtils.isEmpty(login.getMobile())) {
-                return JsonResult.paramsErrorMessage("手机号不能为空");
+                throw new LoginFailException("手机号不能为空");
             }
             if (StringUtils.isEmpty(login.getCaptcha())) {
-                return JsonResult.paramsErrorMessage("验证码不能为空");
+                throw new LoginFailException("验证码不能为空");
             }
-            return JsonResult.paramsErrorMessage("暂未实现手机号登录");
+            throw new LoginFailException("暂未实现手机号登录");
         }
-        return JsonResult.paramsErrorMessage("登录失败");
+        throw new LoginFailException("登录失败");
     }
 
     /**
@@ -210,20 +214,20 @@ public class AccountController {
      */
     private JsonResult handlePwdError(Account account) {
         if (accountService.isSuperAdmin(account.getId())) {
-            return JsonResult.paramsErrorMessage("密码错误");
+            throw new LoginFailException("密码错误");
         }
         if (account.getVaildErrorTimes() != null) {
             account.setVaildErrorTimes(account.getVaildErrorTimes() + 1);
             if (account.getVaildErrorTimes() >= MAX_LOGIN_ACTION) {
                 account.setLock(true);
                 this.accountService.updateById(account);
-                return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
+                throw new LoginFailException("账户已锁定，请联系管理员");
             }
         } else {
             account.setVaildErrorTimes(1);
         }
         this.accountService.updateById(account);
-        return JsonResult.paramsErrorMessage("密码错误，还剩" + (MAX_LOGIN_ACTION - account.getVaildErrorTimes()) + "次输入机会");
+        throw new LoginFailException("密码错误，还剩" + (MAX_LOGIN_ACTION - account.getVaildErrorTimes()) + "次输入机会");
     }
 
     /**

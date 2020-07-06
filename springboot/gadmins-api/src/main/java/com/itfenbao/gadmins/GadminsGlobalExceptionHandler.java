@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins;
 
+import com.itfenbao.gadmins.admin.exception.LoginFailException;
 import com.itfenbao.gadmins.core.exception.NotAuthorizedException;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
@@ -57,6 +58,8 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
                     .collect(Collectors.joining(";"));
             log.info("Global MethodArgumentNotValidException：{}", msg);
             return JsonResult.paramsErrorMessage(msg);
+        } else if (e instanceof LoginFailException) {
+            return JsonResult.paramsErrorMessage(e.getMessage());
         } else {
             log.error("Gadmins Exception", e);
             return JsonResult.http500(e.getMessage());

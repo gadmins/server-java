@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableCaching
 @EnableAsync
 @EnableSwagger2Doc
-@EnableHasor(scanPackages = {"com.itfenbao.gadmins"})
+@EnableHasor
 @MapperScan(basePackages = {"com.itfenbao.gadmins.**.mapper"})
 @SpringBootApplication(scanBasePackages = {"com.itfenbao.gadmins"})
 @ServletComponentScan(basePackages = {"com.itfenbao.gadmins"})

@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("sys_admin_log")
-@ApiModel(value="Log对象", description="系统日志表")
+@ApiModel(value = "Log对象", description = "系统日志表")
 public class Log extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -30,6 +30,12 @@ public class Log extends BaseEntity {
 
     @ApiModelProperty(value = "日志内容")
     private String log;
+
+    @ApiModelProperty(value = "请求地址")
+    private String uri;
+
+    @ApiModelProperty(value = "请求方法")
+    private String method;
 
     @ApiModelProperty(value = "标记")
     private String tag;
