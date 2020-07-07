@@ -38,11 +38,15 @@
         <!--            <appender-ref ref="logfile"/>&ndash;&gt;-->
         <!--            <appender-ref ref="stdout"/>-->
         <!--        </root>-->
-        <logger name="org.springframework" level="INFO">
+        <logger name="org.springframework" level="INFO,DEBUG">
             <appender-ref ref="logfile"/>
             <appender-ref ref="stdout"/>
         </logger>
-        <logger name="com.itfenbao.gadmins" level="ALL">
+        <logger name="com.itfenbao.gadmins" level="INFO,DEBUG">
+            <appender-ref ref="logfile"/>
+            <appender-ref ref="stdout"/>
+        </logger>
+        <logger name="p6spy" level="INFO,DEBUG">
             <appender-ref ref="logfile"/>
             <appender-ref ref="stdout"/>
         </logger>

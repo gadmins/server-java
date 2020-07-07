@@ -7,12 +7,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,21 +34,6 @@ public class RxLog {
 
     private boolean isStart = false;
 
-    //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    private CopyOnWriteArraySet<LoggingWSServer> webSocketSet = new CopyOnWriteArraySet<LoggingWSServer>();
-
-
-    public void addWebSocket(LoggingWSServer wsServer) {
-        this.webSocketSet.add(wsServer);
-    }
-
-    public void removeWebSocket(LoggingWSServer wsServer) {
-        this.webSocketSet.remove(wsServer);
-        if (this.webSocketSet.isEmpty()) {
-            stop();
-        }
-    }
-
     public void start() {
         if (isStart) {
             return;
@@ -67,7 +52,7 @@ public class RxLog {
 
                     //对日志进行着色，更加美观  PS：注意，这里要根据日志生成规则来操作
                     for (int i = 0; i < copyOfRange.length; i++) {
-                        String line = (String) copyOfRange[i];
+                        String line = copyOfRange[i];
                         //先转义
                         line = line.replaceAll("&", "&amp;")
                                 .replaceAll("<", "&lt;")
@@ -106,9 +91,9 @@ public class RxLog {
 
     private void sendMsg(String s) {
         if (StringUtils.isNotBlank(s)) {
-            webSocketSet.forEach(session -> {
+            WsSessionManager.SESSION_POOL.values().forEach(session -> {
                 try {
-                    session.sendMessage(s);
+                    session.sendMessage(new TextMessage(s));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

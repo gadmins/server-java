@@ -10,6 +10,7 @@ import com.itfenbao.gadmins.core.exception.NoMatchTokenTypeException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
@@ -68,8 +69,12 @@ public class TokenUtils implements ApplicationContextAware {
     }
 
     public static String getToken() {
+        return getToken(getTokenType());
+    }
+
+    public static String getToken(AppConfig.TokenType tokenType) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        AuthProperties authProperties = getAuthProperties(getTokenType());
+        AuthProperties authProperties = getAuthProperties(tokenType);
         String key = authProperties.getKey();
         String token = null;
         switch (authProperties.getKeyFrom()) {
@@ -87,6 +92,12 @@ public class TokenUtils implements ApplicationContextAware {
                 break;
         }
         return token;
+    }
+
+    public static String getToken(HttpHeaders httpHeaders) {
+        List<String> cookies = httpHeaders.get("Cookie");
+        List<String[]> tokens = cookies.stream().map(s -> s.split("=")).filter(s -> "Admin-Token".equals(s[0])).collect(Collectors.toList());
+        return tokens.size() > 0 ? tokens.get(0)[1] : null;
     }
 
     public static String getUniqueIdFromToken(AppConfig.TokenType tokenType, String token) {

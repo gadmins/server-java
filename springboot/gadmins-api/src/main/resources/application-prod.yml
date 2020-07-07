@@ -9,3 +9,6 @@ spring:
     password: 520Tengai
 swagger:
   enabled: false
+api-access:
+  admin:
+    domain: gadmins.itfenbao.com
