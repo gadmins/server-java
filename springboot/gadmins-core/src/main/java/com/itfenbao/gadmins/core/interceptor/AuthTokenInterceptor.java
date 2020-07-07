@@ -2,7 +2,9 @@ package com.itfenbao.gadmins.core.interceptor;
 
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.PassToken;
+import com.itfenbao.gadmins.core.auth.token.IAccountLockService;
 import com.itfenbao.gadmins.core.auth.token.IPassTokenService;
+import com.itfenbao.gadmins.core.exception.AccountLockedException;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
 import com.itfenbao.gadmins.core.utils.TokenUtils;
@@ -18,12 +20,19 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
 
     private IPassTokenService passTokenService;
 
+    private IAccountLockService accountLockService;
+
     public AuthTokenInterceptor(AppConfig.TokenType tokenType) {
         this.tokenType = tokenType;
     }
 
     public AuthTokenInterceptor setPassTokenService(IPassTokenService passTokenService) {
         this.passTokenService = passTokenService;
+        return this;
+    }
+
+    public AuthTokenInterceptor setAccountLockService(IAccountLockService accountLockService) {
+        this.accountLockService = accountLockService;
         return this;
     }
 
@@ -55,6 +64,9 @@ public class AuthTokenInterceptor implements HandlerInterceptor {
             // token失效
             TokenUtils.removeToken(token);
             throw new TokenFailException();
+        }
+        if (accountLockService != null && accountLockService.hasLock(Integer.parseInt(uniqueId))) {
+            throw new AccountLockedException();
         }
         return true;
     }

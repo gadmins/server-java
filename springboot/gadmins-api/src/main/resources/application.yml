@@ -6,6 +6,8 @@ server:
       io: 4
       worker: 160
 spring:
+  application:
+    name: gadmins
   profiles:
     #    active: docker
     active: dev
@@ -29,6 +31,10 @@ spring:
       - gadmins
     caffeine:
       spec: initialCapacity=50,maximumSize=500,expireAfterWrite=10s
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    dir: ${user.home}/logs
 mybatis-plus:
   mapper-locations:
     - classpath*:/mapper/**/*Mapper.xml

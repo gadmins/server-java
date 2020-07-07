@@ -6,7 +6,7 @@ import com.itfenbao.gadmins.core.auth.AuthAccessProperties;
 import com.itfenbao.gadmins.core.auth.AuthFrom;
 import com.itfenbao.gadmins.core.auth.AuthProperties;
 import com.itfenbao.gadmins.core.auth.token.TokenManager;
-import com.itfenbao.gadmins.core.exception.NoMatchTokeTypeException;
+import com.itfenbao.gadmins.core.exception.NoMatchTokenTypeException;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -135,7 +135,7 @@ public class TokenUtils implements ApplicationContextAware {
         } else if (matchURI(AppConfig.AppRoute.ROOT, uri)) {
             return AppConfig.TokenType.APP;
         }
-        throw new NoMatchTokeTypeException();
+        throw new NoMatchTokenTypeException();
     }
 
     private static boolean matchURI(String pattern, String uri) {

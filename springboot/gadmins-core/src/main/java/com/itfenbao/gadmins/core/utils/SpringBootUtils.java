@@ -1,5 +1,6 @@
 package com.itfenbao.gadmins.core.utils;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.ApplicationContext;
@@ -12,6 +13,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 
 /**
@@ -37,6 +40,27 @@ public class SpringBootUtils implements ApplicationContextAware {
      */
     public final static String getActiveProfile() {
         return context.getEnvironment().getActiveProfiles()[0];
+    }
+
+    public final static String getBaseUrl() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        try {
+            URL url = new URL(request.getHeader("Referer")); // request.getRequestURL().toString()
+            String protocol = url.getProtocol();
+            String host = url.getHost();
+            String contextPath = getContextPath();
+            int port = url.getPort();
+            StringBuilder sb = new StringBuilder(protocol + "://" + host);
+            if (port != 80 && port > 0) {
+                sb.append(":" + port);
+            }
+            if (StringUtils.isNotBlank(contextPath)) {
+                sb.append("/" + contextPath);
+            }
+            return sb.toString();
+        } catch (MalformedURLException e) {
+        }
+        return null;
     }
 
     public final static String getContextPath() {
