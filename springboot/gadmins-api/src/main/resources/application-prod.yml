@@ -4,8 +4,11 @@ spring:
   profiles: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8
-    username: root
-    password: java
+    url: jdbc:mysql://rm-2zei77669a75123w1125010.mysql.rds.aliyuncs.com:3306/gadmins?useUnicode=true&useSSL=false&characterEncoding=utf8
+    username: gadmins
+    password: 520Tengai
 swagger:
   enabled: false
+api-access:
+  admin:
+    domain: gadmins.itfenbao.com

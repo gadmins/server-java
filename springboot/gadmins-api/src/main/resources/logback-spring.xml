@@ -34,11 +34,19 @@
 
     <!-- 多个使用环境可以逗号隔开. -->
     <springProfile name="test,dev">
-        <logger name="org.springframework" level="INFO">
+        <!--        <root level="ALL">-->
+        <!--            <appender-ref ref="logfile"/>&ndash;&gt;-->
+        <!--            <appender-ref ref="stdout"/>-->
+        <!--        </root>-->
+        <logger name="org.springframework" level="INFO,DEBUG">
             <appender-ref ref="logfile"/>
             <appender-ref ref="stdout"/>
         </logger>
-        <logger name="com.itfenbao.gadmins" level="DEBUG">
+        <logger name="com.itfenbao.gadmins" level="INFO,DEBUG">
+            <appender-ref ref="logfile"/>
+            <appender-ref ref="stdout"/>
+        </logger>
+        <logger name="p6spy" level="INFO,DEBUG">
             <appender-ref ref="logfile"/>
             <appender-ref ref="stdout"/>
         </logger>
