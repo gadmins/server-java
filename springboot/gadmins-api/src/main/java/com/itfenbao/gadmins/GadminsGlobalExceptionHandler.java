@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins;
 
 import com.itfenbao.gadmins.admin.exception.LoginFailException;
+import com.itfenbao.gadmins.core.exception.AccountLockedException;
 import com.itfenbao.gadmins.core.exception.NotAuthorizedException;
 import com.itfenbao.gadmins.core.exception.NotLoginException;
 import com.itfenbao.gadmins.core.exception.TokenFailException;
@@ -45,7 +46,12 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
             return JsonResult.http403();
         } else if (e instanceof TokenFailException) {
             return JsonResult.failToken();
+        } else if (e instanceof LoginFailException) {
+            return JsonResult.paramsErrorMessage(e.getMessage());
+        } else if (e instanceof AccountLockedException) {
+            return JsonResult.paramsErrorMessage("账户已锁定，请联系管理员");
         } else if (e instanceof BindException) {
+            log.error(e.getMessage(), e);
             return JsonResult.paramsErrorMessage("参数绑定异常");
         } else if (e instanceof HttpRequestMethodNotSupportedException) {
             return JsonResult.http404Message(((HttpRequestMethodNotSupportedException) e).getMethod());
@@ -58,8 +64,6 @@ public class GadminsGlobalExceptionHandler implements ResponseBodyAdvice {
                     .collect(Collectors.joining(";"));
             log.info("Global MethodArgumentNotValidException：{}", msg);
             return JsonResult.paramsErrorMessage(msg);
-        } else if (e instanceof LoginFailException) {
-            return JsonResult.paramsErrorMessage(e.getMessage());
         } else {
             log.error("Gadmins Exception", e);
             return JsonResult.http500(e.getMessage());

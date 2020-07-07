@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(AppConfig.AdminRoute.DB)
 @Api(tags = "系统数据表", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "table", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 0, icon = "database", title = "数据表管理", desc = "系统数据表管理", url = "/system/table")
+@Menu(value = "table", parentCode = AppConfig.SysNavMenu.DEVOPS, icon = "database", title = "数据表管理", desc = "系统数据表管理", url = "/system/table")
 public class DbController {
 
     @Autowired
