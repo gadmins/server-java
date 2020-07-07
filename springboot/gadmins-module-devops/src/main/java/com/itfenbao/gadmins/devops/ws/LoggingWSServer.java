@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class LoggingWSServer implements ApplicationContextAware {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
-
+        log.info("onMessage(" + message + ")");
     }
 
     /**
@@ -65,6 +66,16 @@ public class LoggingWSServer implements ApplicationContextAware {
     public void onError(Session session, Throwable error) {
         log.error("发生错误");
         error.printStackTrace();
+    }
+
+    @PreDestroy
+    public void destory() throws Exception {
+        if (this.session != null) {
+            this.session.close();
+            this.session = null;
+        }
+        rxLog().removeWebSocket(this);
+        rxLog().stop();
     }
 
     /**

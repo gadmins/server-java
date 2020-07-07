@@ -9,7 +9,8 @@ spring:
   application:
     name: gadmins
   profiles:
-    #    active: docker
+#    active: prod
+#    active: docker
     active: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
