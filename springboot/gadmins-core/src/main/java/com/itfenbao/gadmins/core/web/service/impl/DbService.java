@@ -31,7 +31,7 @@ public class DbService implements IDbService {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
         String dbName = query.getDbName();
-        if (StringUtils.isEmpty(dbName)) {
+        if (StringUtils.isBlank(dbName)) {
             dbName = mapper.queryCurrenDBName();
         }
         wrapper.eq("TABLE_SCHEMA", dbName);

@@ -86,7 +86,7 @@ public class TokenUtils implements ApplicationContextAware {
                 break;
             case ALL:
                 token = request.getHeader(key);
-                if (StringUtils.isEmpty(token)) {
+                if (StringUtils.isBlank(token)) {
                     token = getTokenFromCookie(request, key);
                 }
                 break;
