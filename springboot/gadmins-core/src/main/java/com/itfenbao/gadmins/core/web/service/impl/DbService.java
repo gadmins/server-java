@@ -9,6 +9,7 @@ import com.itfenbao.gadmins.core.utils.PageUtils;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.*;
 import com.itfenbao.gadmins.core.web.data.dto.query.db.DbTableQuery;
 import com.itfenbao.gadmins.core.web.data.dto.query.db.TableColumnQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.TableDataQuery;
 import com.itfenbao.gadmins.core.web.mapper.DbMapper;
 import com.itfenbao.gadmins.core.web.service.IDbService;
 import org.springframework.stereotype.Service;
@@ -66,9 +67,12 @@ public class DbService implements IDbService {
     }
 
     @Override
-    public IPage<Map> listTableDataByPage(DbTableQuery query) {
+    public IPage<Map> listTableDataByPage(TableDataQuery query) {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
+        if (query.getId() != null) {
+            wrapper.eq("id", query.getId());
+        }
         String dbName = query.getDbName();
         if (StringUtils.isBlank(dbName)) {
             dbName = mapper.queryCurrenDBName();

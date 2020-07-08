@@ -43,8 +43,8 @@ public class DatawayApiController {
     IUserAuthService userAuthService;
 
     @GetMapping(value = {
-            AppConfig.AdminRoute.ALL,
-            AppConfig.AppRoute.ALL
+            AppConfig.Route.Admin.ALL,
+            AppConfig.Route.App.ALL
     })
     public JsonResult execApiForGet(Map<String, Object> params, HttpServletRequest request) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
@@ -56,8 +56,8 @@ public class DatawayApiController {
     }
 
     @RequestMapping(value = {
-            AppConfig.AdminRoute.ALL,
-            AppConfig.AppRoute.ALL
+            AppConfig.Route.Admin.ALL,
+            AppConfig.Route.App.ALL
     }, method = {
             RequestMethod.POST,
             RequestMethod.PUT,
@@ -72,8 +72,8 @@ public class DatawayApiController {
     }
 
     @DeleteMapping(value = {
-            AppConfig.AdminRoute.ALL,
-            AppConfig.AppRoute.ALL
+            AppConfig.Route.Admin.ALL,
+            AppConfig.Route.App.ALL
     })
     public JsonResult execApiForDelete(HttpServletRequest request) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();

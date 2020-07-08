@@ -193,8 +193,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public List<MenuTreeNode> menuTreeAndFuncs() {
         return Tree.build(this.baseMapper.getAllMenuTree(), menu -> {
-            if (AppConfig.MenuType.MENU.equals(menu.getType())) {
-                if (AppConfig.MenuType.MENU.equals(menu.getType()) && menu.getFuncId() != null) {
+            if (AppConfig.Menu.Type.MENU.equals(menu.getType())) {
+                if (AppConfig.Menu.Type.MENU.equals(menu.getType()) && menu.getFuncId() != null) {
                     List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFuncId()).orderByAsc(Function::getSortNumber).list();
                     Function queryFunc = functionService.getById(menu.getFuncId());
                     List<MenuTreeNode> funcs = getMenuTreeNodes(functions, queryFunc);
@@ -251,7 +251,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public Page<FunctionMenuVO> getListByPage(MenuQuery query) {
         Page<FunctionMenuVO> page = new Page<>(query.getCurrent(), query.getPageSize());
-        Wrapper wrapper = Wrappers.query().eq("_menu.type", AppConfig.MenuType.MENU).orderByAsc("_menu.sort_number");
+        Wrapper wrapper = Wrappers.query().eq("_menu.type", AppConfig.Menu.Type.MENU).orderByAsc("_menu.sort_number");
         return this.baseMapper.getListByPage(page, wrapper);
     }
 

@@ -46,13 +46,13 @@ public class AuthInterceptorConfig implements WebMvcConfigurer {
                     new AuthTokenInterceptor(AppConfig.TokenType.ADMIN)
                             .setPassTokenService(passTokenService)
                             .setAccountLockService(accountLockService)
-            ).addPathPatterns(AppConfig.AdminRoute.ALL);
+            ).addPathPatterns(AppConfig.Route.Admin.ALL);
         }
         if (app.isOpen()) {
             registry.addInterceptor(
                     new AuthTokenInterceptor(AppConfig.TokenType.APP)
                             .setPassTokenService(passTokenService)
-            ).addPathPatterns(AppConfig.AppRoute.ALL);
+            ).addPathPatterns(AppConfig.Route.App.ALL);
         }
     }
 

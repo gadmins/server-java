@@ -31,9 +31,9 @@ import java.util.List;
  * @since 2020-02-13
  */
 @RestController
-@RequestMapping(AppConfig.AdminRoute.DICT)
+@RequestMapping(AppConfig.Route.Admin.DICT)
 @Api(tags = "系统字典", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "dict", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 4, title = "字典管理", desc = "系统字典管理", url = "/system/dict")
+@Menu(value = "dict", parentCode = AppConfig.Menu.Nav.BASE_MGR, sort = 4, title = "字典管理", desc = "系统字典管理", url = "/system/dict")
 public class DictController {
 
     @Autowired

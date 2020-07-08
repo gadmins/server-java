@@ -46,9 +46,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.ACCOUNT)
+@RequestMapping(AppConfig.Route.Admin.ACCOUNT)
 @Api(tags = "系统账号", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "account", parentCode = AppConfig.SysNavMenu.BASE_MGR, sort = 2, title = "账户管理", desc = "系统账户管理", url = "/system/account")
+@Menu(value = "account", parentCode = AppConfig.Menu.Nav.BASE_MGR, sort = 2, title = "账户管理", desc = "系统账户管理", url = "/system/account")
 public class AccountController {
 
     @Autowired

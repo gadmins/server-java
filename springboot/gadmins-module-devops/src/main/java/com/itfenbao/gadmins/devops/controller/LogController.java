@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/log")
-@Menu(value = "log", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 2, icon = "file", title = "日志查看", desc = "日志查看", url = "/system/log")
+@Menu(value = "log", parentCode = AppConfig.Menu.Nav.DEVOPS, sort = 2, icon = "file", title = "日志查看", desc = "日志查看", url = "/system/log")
 public class LogController {
 
     @GetMapping("/")

@@ -42,9 +42,9 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.MENU)
+@RequestMapping(AppConfig.Route.Admin.MENU)
 @Api(tags = "系统菜单", hidden = AppConfig.HIDDEN_SYS_API)
-@com.itfenbao.gadmins.core.annotation.Menu(value = "menu", sort = 1, parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "menu", sort = 1, parentCode = AppConfig.Menu.Nav.BASE_MGR, title = "菜单管理", desc = "系统菜单管理", url = "/system/menu")
 public class MenuController {
 
     @Autowired
@@ -202,7 +202,7 @@ public class MenuController {
                     menu = new Menu();
                     menu.setMCode(sys.getCode());
                 }
-                menu.setType(AppConfig.MenuType.SYS_MENU);
+                menu.setType(AppConfig.Menu.Type.SYS_MENU);
                 menu.setTxt(sys.getTitle());
                 menu.setSortNumber(sys.getSort());
                 menuService.saveOrUpdate(menu);
@@ -215,7 +215,7 @@ public class MenuController {
                     menu.setMCode(nav.getCode());
                 }
                 menu.setPId(parentMenu.getId());
-                menu.setType(AppConfig.MenuType.NAV_MENU);
+                menu.setType(AppConfig.Menu.Type.NAV_MENU);
                 menu.setTxt(nav.getTitle());
                 menu.setSortNumber(nav.getSort());
                 menuService.saveOrUpdate(menu);
