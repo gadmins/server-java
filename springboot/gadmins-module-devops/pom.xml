@@ -23,6 +23,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.hasor</groupId>
@@ -54,24 +55,24 @@
     </dependencies>
 
     <build>
-<!--        <plugins>-->
-<!--            &lt;!&ndash; DataQL introspection &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>net.hasor</groupId>-->
-<!--                <artifactId>dataql-maven-plugin</artifactId>-->
-<!--                <version>${hasor.version}</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>dataql</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <ignoreError>false</ignoreError>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
+        <!--        <plugins>-->
+        <!--            &lt;!&ndash; DataQL introspection &ndash;&gt;-->
+        <!--            <plugin>-->
+        <!--                <groupId>net.hasor</groupId>-->
+        <!--                <artifactId>dataql-maven-plugin</artifactId>-->
+        <!--                <version>${hasor.version}</version>-->
+        <!--                <executions>-->
+        <!--                    <execution>-->
+        <!--                        <goals>-->
+        <!--                            <goal>dataql</goal>-->
+        <!--                        </goals>-->
+        <!--                    </execution>-->
+        <!--                </executions>-->
+        <!--                <configuration>-->
+        <!--                    <ignoreError>false</ignoreError>-->
+        <!--                </configuration>-->
+        <!--            </plugin>-->
+        <!--        </plugins>-->
         <resources>
             <resource>
                 <!-- xml放在java目录下-->

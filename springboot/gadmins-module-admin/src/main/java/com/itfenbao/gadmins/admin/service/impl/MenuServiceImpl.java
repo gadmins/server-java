@@ -213,7 +213,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
      */
     private List<MenuTreeNode> getMenuTreeNodes(List<Function> functions, Function queryFunc) {
         if (queryFunc != null) {
-            if (StringUtils.isEmpty(queryFunc.getTitle())) {
+            if (StringUtils.isBlank(queryFunc.getTitle())) {
                 queryFunc.setTitle("查询");
             }
             functions.add(0, queryFunc);

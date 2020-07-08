@@ -72,9 +72,43 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 常规配置↓ -->
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
                 </configuration>
+                <!-- packaging=jar瘦身配置↓ -->
+                <!--                <configuration>-->
+                <!--                    <layout>ZIP</layout>-->
+                <!--                    <includes>-->
+                <!--                        <include>-->
+                <!--                            <groupId>com.itfenbao</groupId>-->
+                <!--                            <artifactId>gadmins-core</artifactId>-->
+                <!--                        </include>-->
+                <!--                        <include>-->
+                <!--                            <groupId>com.itfenbao</groupId>-->
+                <!--                            <artifactId>gadmins-core-config</artifactId>-->
+                <!--                        </include>-->
+                <!--                        <include>-->
+                <!--                            <groupId>com.itfenbao</groupId>-->
+                <!--                            <artifactId>spring-boot-starter-swagger</artifactId>-->
+                <!--                        </include>-->
+                <!--                        <include>-->
+                <!--                            <groupId>com.itfenbao</groupId>-->
+                <!--                            <artifactId>gadmins-module-admin</artifactId>-->
+                <!--                        </include>-->
+                <!--                        <include>-->
+                <!--                            <groupId>com.itfenbao</groupId>-->
+                <!--                            <artifactId>gadmins-module-devops</artifactId>-->
+                <!--                        </include>-->
+                <!--                    </includes>-->
+                <!--                </configuration>-->
+                <!--                <executions>-->
+                <!--                    <execution>-->
+                <!--                        <goals>-->
+                <!--                            <goal>repackage</goal>-->
+                <!--                        </goals>-->
+                <!--                    </execution>-->
+                <!--                </executions>-->
             </plugin>
         </plugins>
     </build>

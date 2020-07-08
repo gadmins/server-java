@@ -82,8 +82,8 @@ public class SwaggerApiFilter implements Filter {
         generateDatawayApi(groupName, context, nameGenerator, documentation);
         Swagger swagger = mapper.mapDocumentation(documentation);
         UriComponents uriComponents = componentsFrom(servletRequest, swagger.getBasePath());
-        swagger.basePath(StringUtils.isEmpty(uriComponents.getPath()) ? "/" : uriComponents.getPath());
-        if (StringUtils.isEmpty(swagger.getHost())) {
+        swagger.basePath(StringUtils.isBlank(uriComponents.getPath()) ? "/" : uriComponents.getPath());
+        if (StringUtils.isBlank(swagger.getHost())) {
             swagger.host(hostName(uriComponents, hostNameOverride));
         }
         return objectMapper.writeValueAsString(swagger);
