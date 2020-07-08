@@ -20,75 +20,83 @@ public final class AppConfig {
         public static final String APP_TOKEN = "Access-Token";
     }
 
-    private static final String ALL = "/**/*";
 
     /**
-     * 管理端接口路由
+     * 路由配置
      */
-    public static final class AdminRoute {
-        public static final String ROOT = "/adminapi";
-        public static final String ALL = ROOT + AppConfig.ALL;
-        public static final String ACCOUNT = ROOT + "/account";
-        public static final String FUNCTION = ROOT + "/function";
-        public static final String MENU = ROOT + "/menu";
-        public static final String ROLE = ROOT + "/role";
-        public static final String DICT = ROOT + "/dict";
-        public static final String SETTINGS = ROOT + "/settings";
-        public static final String DB = ROOT + "/db";
-        public static final String DATAWAY = ROOT + "/dataway";
-        public static final String TOOL = ROOT + "/tool";
+    public static final class Route {
+        private static final String ALL = "/**/*";
+
+        /**
+         * 管理端接口路由
+         */
+        public static final class Admin {
+            public static final String ROOT = "/adminapi";
+            public static final String ALL = ROOT + Route.ALL;
+            public static final String ACCOUNT = ROOT + "/account";
+            public static final String FUNCTION = ROOT + "/function";
+            public static final String MENU = ROOT + "/menu";
+            public static final String ROLE = ROOT + "/role";
+            public static final String DICT = ROOT + "/dict";
+            public static final String SETTINGS = ROOT + "/settings";
+            public static final String DB = ROOT + "/db";
+            public static final String DATAWAY = ROOT + "/dataway";
+            public static final String TOOL = ROOT + "/tool";
+        }
+
+        /**
+         * App端接口路由
+         */
+        public static final class App {
+            public static final String ROOT = "/appapi";
+            public static final String ALL = ROOT + Route.ALL;
+        }
     }
 
     /**
-     * App端接口路由
+     * 菜单配置
      */
-    public static final class AppRoute {
-        public static final String ROOT = "/appapi";
-        public static final String ALL = ROOT + AppConfig.ALL;
-    }
+    public static final class Menu {
+        public static final class Type {
+            public static final String SYS_MENU = "SYS_MENU";
+            public static final String NAV_MENU = "NAV_MENU";
+            public static final String MENU = "MENU";
+        }
 
-    public static final class MenuType {
-        public static final String SYS_MENU = "SYS_MENU";
-        public static final String NAV_MENU = "NAV_MENU";
-        public static final String MENU = "MENU";
-    }
+        /**
+         * 系统菜单
+         */
+        public static final class Sys {
+            // 默认菜单 -- start --
+            public static final String HOME = "home";
+            public static final String SYSTEM = "system";
+            // 默认菜单 -- end --
+        }
 
-    /**
-     * 系统菜单
-     */
-    public static final class SysMenu {
-        // 默认菜单 -- start --
-        public static final String SYS_HOME = "home";
-        public static final String SYS_SYSTEM = "system";
-        // 默认菜单 -- end --
-    }
-
-    /**
-     * 系统内置导航菜单，便于菜单挂载
-     */
-    public static final class SysNavMenu {
-        // 默认菜单 -- start --
-        public static final String BASE_MGR = "basemgr";
-        public static final String SETTINGS = "settings";
-        public static final String DEVOPS = "devops";
-        // 默认菜单 -- end --
+        /**
+         * 导航菜单
+         */
+        public static final class Nav {
+            // 默认菜单 -- start --
+            public static final String BASE_MGR = "basemgr";
+            public static final String SETTINGS = "settings";
+            public static final String DEVOPS = "devops";
+            // 默认菜单 -- end --
+        }
     }
 
     public static final boolean HIDDEN_SYS_API = false;
 
     // 统一接口组 描述
     public static final Group[] GROUPS = new Group[]{
-            new Group("adminapi", "后台接口", AdminRoute.ROOT),
-            new Group("appapi", "APP接口", AppRoute.ROOT)
+            new Group("adminapi", "后台接口", Route.Admin.ROOT),
+            new Group("appapi", "APP接口", Route.App.ROOT)
     };
 
     private static class Group {
         String type;
         String label;
         String urlPrefix;
-
-        public Group() {
-        }
 
         public Group(String type, String label, String urlPrefix) {
             this.type = type;

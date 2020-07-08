@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"APP测试"})
 @RestController
-@RequestMapping(AppConfig.AppRoute.ROOT + "/test")
+@RequestMapping(AppConfig.Route.App.ROOT + "/test")
 public class AppTestController {
 
     @ApiOperation("")

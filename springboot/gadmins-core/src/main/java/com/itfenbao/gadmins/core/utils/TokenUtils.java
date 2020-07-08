@@ -141,9 +141,9 @@ public class TokenUtils implements ApplicationContextAware {
     private static AppConfig.TokenType getTokenType() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String uri = request.getRequestURI();
-        if (matchURI(AppConfig.AdminRoute.ROOT, uri)) {
+        if (matchURI(AppConfig.Route.Admin.ROOT, uri)) {
             return AppConfig.TokenType.ADMIN;
-        } else if (matchURI(AppConfig.AppRoute.ROOT, uri)) {
+        } else if (matchURI(AppConfig.Route.App.ROOT, uri)) {
             return AppConfig.TokenType.APP;
         }
         throw new NoMatchTokenTypeException();

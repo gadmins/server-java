@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
-@RequestMapping(AppConfig.AdminRoute.SETTINGS)
+@RequestMapping(AppConfig.Route.Admin.SETTINGS)
 @Api(tags = "系统设置", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "accountsettings", parentCode = AppConfig.SysNavMenu.SETTINGS, sort = 7, title = "账户设置", desc = "当前账户设置", url = "/system/accountsettings")
+@Menu(value = "accountsettings", parentCode = AppConfig.Menu.Nav.SETTINGS, sort = 7, title = "账户设置", desc = "当前账户设置", url = "/system/accountsettings")
 public class AccountSettingsController {
 
     @GetMapping

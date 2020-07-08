@@ -7,6 +7,7 @@ import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.web.data.dto.param.db.*;
 import com.itfenbao.gadmins.core.web.data.dto.query.db.DbTableQuery;
 import com.itfenbao.gadmins.core.web.data.dto.query.db.TableColumnQuery;
+import com.itfenbao.gadmins.core.web.data.dto.query.db.TableDataQuery;
 import com.itfenbao.gadmins.core.web.result.JsonPageResult;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import com.itfenbao.gadmins.core.web.service.IDbService;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(AppConfig.AdminRoute.DB)
+@RequestMapping(AppConfig.Route.Admin.DB)
 @Api(tags = "系统数据表", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "table", parentCode = AppConfig.SysNavMenu.DEVOPS, icon = "database", title = "数据表管理", desc = "系统数据表管理", url = "/system/table")
+@Menu(value = "table", parentCode = AppConfig.Menu.Nav.DEVOPS, icon = "database", title = "数据表管理", desc = "系统数据表管理", url = "/system/table")
 public class DbController {
 
     @Autowired
@@ -93,7 +94,7 @@ public class DbController {
     @Function(value = "sys:table:data:list", sort = 5, title = "查询数据", desc = "查询表数据")
     @GetMapping("/data")
     @ApiOperation(value = "数据表数据")
-    public JsonPageResult<Map> listTableData(DbTableQuery query) {
+    public JsonPageResult<Map> listTableData(TableDataQuery query) {
         return JsonPageResult.success(dbService.listTableDataByPage(query));
     }
 

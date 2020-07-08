@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.ROLE)
+@RequestMapping(AppConfig.Route.Admin.ROLE)
 @Api(tags = "系统角色", hidden = AppConfig.HIDDEN_SYS_API)
-@com.itfenbao.gadmins.core.annotation.Menu(value = "role", sort = 3, parentCode = AppConfig.SysNavMenu.BASE_MGR, title = "角色管理", desc = "系统角色管理", url = "/system/role")
+@com.itfenbao.gadmins.core.annotation.Menu(value = "role", sort = 3, parentCode = AppConfig.Menu.Nav.BASE_MGR, title = "角色管理", desc = "系统角色管理", url = "/system/role")
 public class RoleController {
 
     @Autowired

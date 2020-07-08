@@ -29,9 +29,9 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(AppConfig.AdminRoute.DATAWAY)
+@RequestMapping(AppConfig.Route.Admin.DATAWAY)
 @Api(tags = "系统动态接口", hidden = AppConfig.HIDDEN_SYS_API)
-@Menu(value = "dataway", parentCode = AppConfig.SysNavMenu.DEVOPS, sort = 1, icon = "cloud", title = "动态接口管理", desc = "动态接口管理", url = "/system/dataway")
+@Menu(value = "dataway", parentCode = AppConfig.Menu.Nav.DEVOPS, sort = 1, icon = "cloud", title = "动态接口管理", desc = "动态接口管理", url = "/system/dataway")
 public class DatawayController {
 
     @Autowired

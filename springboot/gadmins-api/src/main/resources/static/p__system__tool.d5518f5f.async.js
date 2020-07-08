@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([[23],{"7Gwd":function(n,e,t){"use strict";t.r(e);var a=t("q1tI"),c=t.n(a),l=t("Hx5s");e["default"]=function(){return c.a.createElement(l["c"],null,c.a.createElement("div",null,"tool"))}}}]);
