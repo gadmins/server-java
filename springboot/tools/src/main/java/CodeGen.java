@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.po.LikeTable;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.itfenbao.gadmins.core.entity.BaseEntity;
 
 /**
  * 代码生成器
@@ -66,7 +67,7 @@ public class CodeGen {
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
-        strategy.setSuperEntityClass("com.itfenbao.gadmins.core.entity.BaseEntity");
+        strategy.setSuperEntityClass(BaseEntity.class);
         strategy.setSuperEntityColumns("id", "created_by", "updated_by", "created_at", "updated_at", "enable");
         strategy.setTablePrefix(TABLE_PREFIX);
         strategy.setLikeTable(new LikeTable(TABLE_PREFIX, SqlLike.RIGHT));

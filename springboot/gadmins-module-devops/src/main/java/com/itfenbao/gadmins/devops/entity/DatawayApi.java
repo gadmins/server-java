@@ -1,6 +1,5 @@
 package com.itfenbao.gadmins.devops.entity;
 
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.itfenbao.gadmins.core.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -29,12 +28,6 @@ public class DatawayApi extends BaseEntity {
     @ApiModelProperty(value = "分组ID")
     private Integer groupId;
 
-    @ApiModelProperty(value = "功能CODE")
-    private String funcCode;
-
-    @ApiModelProperty(value = "状态：0 草稿 1 发布")
-    private Integer status;
-
     @ApiModelProperty(value = "请求方法")
     private String apiMethod;
 
@@ -56,8 +49,10 @@ public class DatawayApi extends BaseEntity {
     @ApiModelProperty(value = "脚本类型")
     private String scriptType;
 
+    @ApiModelProperty(value = "状态：0 草稿 1 发布")
+    private Integer status;
+
     @ApiModelProperty(value = "逻辑删除")
-    @TableLogic
     private Boolean deleted;
 
 }
