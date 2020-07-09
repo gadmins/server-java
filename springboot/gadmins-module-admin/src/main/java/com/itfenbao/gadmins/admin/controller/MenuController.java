@@ -19,6 +19,7 @@ import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
 import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
+import com.itfenbao.gadmins.core.web.service.IMenuScanService;
 import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 import io.swagger.annotations.Api;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -181,6 +183,11 @@ public class MenuController {
                 mc.setFuncId(funcId.get());
             }
             menuService.saveOrUpdate(mc);
+        });
+        // 扫描IMenuScanService
+        Map<String, IMenuScanService> menuScanServices = SpringBootUtils.getMenuScanServices();
+        menuScanServices.values().forEach(menuScanService -> {
+            menuScanService.scanMenu();
         });
     }
 

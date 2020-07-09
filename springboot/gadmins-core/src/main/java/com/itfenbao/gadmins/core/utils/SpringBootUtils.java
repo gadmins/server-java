@@ -1,6 +1,7 @@
 package com.itfenbao.gadmins.core.utils;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.itfenbao.gadmins.core.web.service.IMenuScanService;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.ApplicationContext;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * TODO
@@ -87,6 +89,15 @@ public class SpringBootUtils implements ApplicationContextAware {
     public static void executeSqlScript(DataSource datasource, String path) throws SQLException {
         Resource resource = context.getResource(path);
         ScriptUtils.executeSqlScript(datasource.getConnection(), resource);
+    }
+
+    /**
+     * 获取IMenuScanService的所有实现
+     *
+     * @return
+     */
+    public static Map<String, IMenuScanService> getMenuScanServices() {
+        return context.getBeansOfType(IMenuScanService.class);
     }
 
 }

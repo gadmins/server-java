@@ -248,7 +248,6 @@ DROP TABLE IF EXISTS `sys_dataway_api`;
 CREATE TABLE `sys_dataway_api` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `group_id` int(11) NOT NULL COMMENT '分组ID',
-  `func_code` varchar(255) DEFAULT NULL COMMENT '功能CODE',
   `api_method` varchar(12) NOT NULL COMMENT '请求方法',
   `api_path` varchar(512) NOT NULL COMMENT '请求路径',
   `api_comment` varchar(255) NOT NULL COMMENT '注释',
