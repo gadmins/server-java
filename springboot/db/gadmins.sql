@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.47)
 # Database: gadmins
-# Generation Time: 2020-07-06 06:11:28 +0000
+# Generation Time: 2020-07-09 01:31:11 +0000
 # ************************************************************
 
 
@@ -261,9 +261,32 @@ CREATE TABLE `sys_dataway_api` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
-  `deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除',
+  `deleted` tinyint(1) DEFAULT '0' COMMENT '逻辑删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='dataway接口表';
+
+
+
+# Dump of table sys_dataway_function
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `sys_dataway_function`;
+
+CREATE TABLE `sys_dataway_function` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `api_id` int(11) unsigned NOT NULL COMMENT 'api id',
+  `menu` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否关联菜单',
+  `f_code` varchar(255) NOT NULL COMMENT '功能编码',
+  `f_name` varchar(255) NOT NULL COMMENT '功能名称',
+  `p_f_code` varchar(255) DEFAULT NULL COMMENT '父级功能编码',
+  `sort_number` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `created_by` int(11) DEFAULT NULL COMMENT '创建人',
+  `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='dataway功能表';
 
 
 
@@ -285,6 +308,29 @@ CREATE TABLE `sys_dataway_group` (
   `deleted` tinyint(1) DEFAULT '0' COMMENT '逻辑删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='dataway分组表';
+
+
+
+# Dump of table sys_dataway_menu
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `sys_dataway_menu`;
+
+CREATE TABLE `sys_dataway_menu` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `group_id` int(11) NOT NULL COMMENT 'group id',
+  `p_code` varchar(255) NOT NULL COMMENT '菜单父级编码',
+  `m_code` varchar(255) NOT NULL COMMENT '菜单编码',
+  `title` varchar(255) NOT NULL COMMENT '菜单标题',
+  `link` varchar(255) NOT NULL COMMENT '菜单链接',
+  `sort_number` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `created_by` int(11) DEFAULT NULL COMMENT '创建人',
+  `updated_by` int(11) DEFAULT NULL COMMENT '更新人',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `enable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='dataway菜单表';
 
 
 

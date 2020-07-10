@@ -5,6 +5,7 @@ import com.itfenbao.gadmins.core.web.vo.TreeNode;
 public class SysMenuTreeNode extends TreeNode<SysMenuTreeNode> {
     private Integer funcId;
     private String path;
+    private String key;
     private String name;
 
     private String target;
@@ -23,6 +24,14 @@ public class SysMenuTreeNode extends TreeNode<SysMenuTreeNode> {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {

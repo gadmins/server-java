@@ -153,8 +153,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             sysMenuTreeNode.setId(menu.getId());
             sysMenuTreeNode.setFuncId(menu.getFuncId());
             sysMenuTreeNode.setParentId(menu.getPId());
-            sysMenuTreeNode.setKey(menu.getMCode());
             sysMenuTreeNode.setName(menu.getMCode());
+            sysMenuTreeNode.setKey("/" + menu.getMCode());
             sysMenuTreeNode.setIcon(menu.getIcon());
             sysMenuTreeNode.setPath(menu.getFrontUrl());
             if (menu.getElink()) {
@@ -222,7 +222,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             MenuTreeNode authBtn = new MenuTreeNode();
             authBtn.setType("FUNC");
             authBtn.setId(func.getId());
-            authBtn.setKey(func.getFuncCode());
+            authBtn.setName(func.getFuncCode());
             authBtn.setTitle(func.getTitle());
             if (func.getVirtualMenu()) {
                 List<Function> childFuncs = functionService.lambdaQuery().eq(Function::getPId, func.getId()).orderByAsc(Function::getSortNumber).list();
