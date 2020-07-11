@@ -100,7 +100,10 @@ public class DatawayController {
     }
 
 
-    @Function(value = "sys:dataway:api:list", sort = 5, title = "接口列表管理", desc = "接口列表管理")
+    @Function(
+            value = "sys:dataway:api:list", sort = 5, title = "接口列表管理",
+            desc = "接口列表管理", url = "/system/dataway/:groupId/apilist"
+    )
     @GetMapping("/api")
     @ApiOperation(value = "查询接口列表")
     public JsonPageResult<DatawayApi> apilist(ApiQuery query) {
@@ -123,7 +126,10 @@ public class DatawayController {
         return ret ? JsonResult.success() : JsonResult.failMessage("创建失败");
     }
 
-    @Function(value = "sys:dataway:api:getbyid", parentCode = "sys:dataway:api:list", sort = 7, title = "查询接口详情", desc = "查询接口详情")
+    @Function(
+            value = "sys:dataway:api:getbyid", parentCode = "sys:dataway:api:list", sort = 7,
+            title = "查询接口详情", desc = "查询接口详情", url = "/system/dataway/editapi/:id"
+    )
     @GetMapping("/api/{id}")
     @ApiOperation(value = "查询接口详情")
     public JsonResult detailApi(@PathVariable Integer id) {

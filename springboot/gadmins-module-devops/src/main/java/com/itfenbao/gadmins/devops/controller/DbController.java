@@ -63,7 +63,7 @@ public class DbController {
         return result ? JsonResult.success() : JsonResult.failMessage("更新失败");
     }
 
-    @Function(value = "sys:table:column:list", sort = 4, title = "表结构管理", desc = "表结构管理")
+    @Function(value = "sys:table:column:list", sort = 4, title = "表结构管理", desc = "表结构管理", url = "/system/table/struct/:name")
     @GetMapping("/column")
     @ApiOperation(value = "数据表结构查询")
     public JsonPageResult<Map> listColumn(TableColumnQuery query) {
@@ -91,7 +91,7 @@ public class DbController {
         return dbService.updateColumn(param) ? JsonResult.success() : JsonResult.failMessage("修改失败");
     }
 
-    @Function(value = "sys:table:data:list", sort = 5, title = "查询数据", desc = "查询表数据")
+    @Function(value = "sys:table:data:list", sort = 5, title = "查询数据", desc = "查询表数据", url = "/system/table/data/:name")
     @GetMapping("/data")
     @ApiOperation(value = "数据表数据")
     public JsonPageResult<Map> listTableData(TableDataQuery query) {

@@ -4,11 +4,21 @@ import com.itfenbao.gadmins.core.web.vo.TreeNode;
 
 
 public class MenuTreeNode extends TreeNode<MenuTreeNode> {
+    private String key;
     private Integer sortNumber;
     private Integer funcId;
     private String type;
     private Boolean elink;
     private String url;
+
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public Integer getSortNumber() {
         return sortNumber;
