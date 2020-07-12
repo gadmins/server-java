@@ -251,9 +251,9 @@ public class AccountController {
         if (account == null) {
             return JsonResult.failMessage("用户不存在不存在");
         }
-        final Account user = new Account();
-        user.setName(account.getName());
-        return JsonResult.success(user);
+        final Account newAccount = new Account();
+        newAccount.setName(newAccount.getName());
+        return JsonResult.success(account);
     }
 
     @PostMapping("/logout")
