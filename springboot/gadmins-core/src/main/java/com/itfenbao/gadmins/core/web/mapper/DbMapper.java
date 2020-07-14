@@ -12,6 +12,10 @@ import java.util.Map;
 
 public interface DbMapper {
 
+    @Select("SELECT count(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = (SELECT DATABASE())")
+    @ResultType(Integer.class)
+    int countTable();
+
     @Select("select database()")
     String queryCurrenDBName();
 

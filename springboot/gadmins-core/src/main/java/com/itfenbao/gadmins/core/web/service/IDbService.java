@@ -10,6 +10,8 @@ import java.util.Map;
 
 public interface IDbService {
 
+    int countTable();
+
     IPage<Map> listTableByPage(DbTableQuery pageQuery);
 
     IPage<Map> listColumnByPage(TableColumnQuery query);

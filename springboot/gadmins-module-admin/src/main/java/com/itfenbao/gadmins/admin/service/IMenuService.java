@@ -65,4 +65,7 @@ public interface IMenuService extends IService<Menu> {
     Page<FunctionMenuVO> getListByPage(MenuQuery query);
 
     boolean updatePidIsNULL(Integer id);
+
+    void updateScanMenus();
+
 }

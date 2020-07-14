@@ -22,7 +22,12 @@ import com.itfenbao.gadmins.admin.entity.RlMenuRole;
 import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.config.menu.MenuConfig;
+import com.itfenbao.gadmins.core.AppListener;
+import com.itfenbao.gadmins.core.utils.SpringBootUtils;
+import com.itfenbao.gadmins.core.web.service.IMenuScanService;
 import com.itfenbao.gadmins.core.web.vo.Tree;
+import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +37,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -57,6 +63,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Autowired
     IRlMenuRoleService menuRoleService;
+
+    @Autowired
+    IFunctionConfigService functionConfigService;
+
+    @Autowired
+    AppListener appListener;
 
     @Override
     public boolean saveOrUpdate(MenuBean menuBean) {
@@ -260,5 +272,90 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public boolean updatePidIsNULL(Integer id) {
         return SqlHelper.retBool(this.baseMapper.updatePidIsNULL(id));
+    }
+
+    @Override
+    public void updateScanMenus() {
+        scanMenus();
+    }
+
+    /**
+     * 扫描所有菜单
+     */
+    private void scanMenus() {
+        scanMenuConfig();
+        // 扫描注解菜单及功能
+        List<MenuBean> menuBeans = appListener.getMenuBeans();
+        menuBeans.forEach(mc -> {
+            AtomicReference<Integer> funcId = new AtomicReference<>();
+            // 先处理 parentCode 为空
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isBlank(f.getParentCode())).forEach(fp -> {
+                saveFunctionPointAndConfig(funcId, fp);
+            });
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isNotBlank(f.getParentCode())).forEach(fp -> {
+                saveFunctionPointAndConfig(funcId, fp);
+            });
+            if (funcId.get() != null) {
+                mc.setFuncId(funcId.get());
+            }
+            this.saveOrUpdate(mc);
+        });
+        // 扫描IMenuScanService
+        Map<String, IMenuScanService> menuScanServices = SpringBootUtils.getMenuScanServices();
+        menuScanServices.values().forEach(menuScanService -> {
+            menuScanService.scanMenu();
+        });
+    }
+
+    MenuConfig menuConfig;
+
+    @Autowired(required = false)
+    public void setMenuConfig(MenuConfig menuConfig) {
+        this.menuConfig = menuConfig;
+    }
+
+    /**
+     * 扫码Bean配置菜单
+     */
+    private void scanMenuConfig() {
+        if (menuConfig != null && com.baomidou.mybatisplus.core.toolkit.CollectionUtils.isNotEmpty(menuConfig.getNavMenus())) {
+            menuConfig.getSysMenus().forEach(sys -> {
+                Menu menu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, sys.getCode()));
+                if (menu == null) {
+                    menu = new Menu();
+                    menu.setMCode(sys.getCode());
+                }
+                menu.setType(AppConfig.Menu.Type.SYS_MENU);
+                menu.setTxt(sys.getTitle());
+                menu.setSortNumber(sys.getSort());
+                this.saveOrUpdate(menu);
+            });
+            menuConfig.getNavMenus().forEach(nav -> {
+                Menu parentMenu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, nav.getParentCode()));
+                Menu menu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, nav.getCode()));
+                if (menu == null) {
+                    menu = new Menu();
+                    menu.setMCode(nav.getCode());
+                }
+                menu.setPId(parentMenu.getId());
+                menu.setType(AppConfig.Menu.Type.NAV_MENU);
+                menu.setTxt(nav.getTitle());
+                menu.setSortNumber(nav.getSort());
+                this.saveOrUpdate(menu);
+            });
+        }
+    }
+
+    private void saveFunctionPointAndConfig(AtomicReference<Integer> funcId, FunctionPoint fp) {
+        if (funcId.get() != null) {
+            fp.setParentFuncId(funcId.get());
+        }
+        if (functionService.saveOrUpdate(fp)) {
+            if (fp.isMenu()) {
+                funcId.set(fp.getFuncId());
+            }
+            fp.getPointConfig().setFuncId(fp.getFuncId());
+            functionConfigService.saveOrUpdate(fp.getPointConfig());
+        }
     }
 }
