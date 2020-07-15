@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
+import com.itfenbao.gadmins.admin.data.dto.param.menu.UpdateMenuParam;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.treenode.SysMenuTreeNode;
@@ -22,16 +24,26 @@ import com.itfenbao.gadmins.admin.entity.RlMenuRole;
 import com.itfenbao.gadmins.admin.mapper.MenuMapper;
 import com.itfenbao.gadmins.admin.service.*;
 import com.itfenbao.gadmins.config.AppConfig;
+import com.itfenbao.gadmins.config.menu.MenuConfig;
+import com.itfenbao.gadmins.core.AppListener;
+import com.itfenbao.gadmins.core.utils.SpringBootUtils;
+import com.itfenbao.gadmins.core.utils.TokenUtils;
+import com.itfenbao.gadmins.core.web.service.IMenuScanService;
 import com.itfenbao.gadmins.core.web.vo.Tree;
+import com.itfenbao.gadmins.core.web.vo.menu.FunctionPoint;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -57,6 +69,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Autowired
     IRlMenuRoleService menuRoleService;
+
+    @Autowired
+    IFunctionConfigService functionConfigService;
+
+    @Autowired
+    AppListener appListener;
+
+    private final String SCHEMA_SQL = "classpath:sql/menu_init_data.sql";
+
+    // admin(2) 用户禁用菜单
+    private final List<Integer> adminNoMenuIds = Arrays.asList(6, 11, 16);
+
+    private DataSource datasource;
+
+    @Autowired
+    public void setDatasource(DataSource datasource) {
+        this.datasource = datasource;
+    }
 
     @Override
     public boolean saveOrUpdate(MenuBean menuBean) {
@@ -145,6 +175,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
                 }
             } while (pids.size() > 0);
             allMenu = allMenu.stream().filter(m -> menuIds.indexOf(m.getId()) > -1).collect(Collectors.toList());
+        } else {
+            if (accountId == 2) {
+                allMenu = allMenu.stream().filter(m -> adminNoMenuIds.indexOf(m.getId()) == -1).collect(Collectors.toList());
+            }
         }
         Map<String, String> defMenuTxtMap = new CamelCaseLinkedMap();
         List<SysMenuTreeNode> sysMenuTreeNodes = allMenu.stream().sorted(Comparator.comparing(Menu::getSortNumber)).map(menu -> {
@@ -193,7 +227,19 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     public List<MenuTreeNode> menuTreeAndFuncs() {
-        return Tree.build(this.baseMapper.getAllMenuTree(), menu -> {
+        List<MenuTreeNode> treeNodes = this.baseMapper.getAllMenuTree();
+        String id = TokenUtils.getUniqueIdFromToken();
+        if (Integer.parseInt(id) == 2) {
+            treeNodes = treeNodes.stream().filter(menuTreeNode -> {
+                if (AppConfig.Menu.Type.SYS_MENU.equals(menuTreeNode.getType())
+                        || AppConfig.Menu.Type.NAV_MENU.equals(menuTreeNode.getType())
+                        || AppConfig.Menu.Type.MENU.equals(menuTreeNode.getType())) {
+                    return adminNoMenuIds.indexOf(menuTreeNode.getId()) == -1;
+                }
+                return true;
+            }).collect(Collectors.toList());
+        }
+        return Tree.build(treeNodes, menu -> {
             if (AppConfig.Menu.Type.MENU.equals(menu.getType())) {
                 if (AppConfig.Menu.Type.MENU.equals(menu.getType()) && menu.getFuncId() != null) {
                     List<Function> functions = functionService.lambdaQuery().eq(Function::getPId, menu.getFuncId()).orderByAsc(Function::getSortNumber).list();
@@ -260,5 +306,145 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public boolean updatePidIsNULL(Integer id) {
         return SqlHelper.retBool(this.baseMapper.updatePidIsNULL(id));
+    }
+
+    @Override
+    public void updateScanMenus() {
+        scanMenus();
+    }
+
+    @Override
+    public void resetMenus() throws SQLException {
+        SpringBootUtils.executeSqlScript(datasource, SCHEMA_SQL);
+        this.updateScanMenus();
+        scanMenus();
+    }
+
+    @Override
+    public boolean updateById(Integer id, UpdateMenuParam param) {
+        if (this.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()).ne(Menu::getId, id)) > 0) {
+            return false;
+        }
+        Menu menu = new Menu();
+        menu.setPId(param.getParentId());
+        menu.setTxt(param.getTxt());
+        menu.setMCode(param.getMcode());
+        menu.setIcon(param.getIcon());
+        menu.setSortNumber(param.getSortNumber());
+        menu.setId(id);
+        updateFunction(param, menu);
+        if (param.getParentId() == null) {
+            this.updatePidIsNULL(menu.getId());
+        }
+        this.updateById(menu);
+        return true;
+    }
+
+    @Override
+    public boolean add(AddMenuParam param) {
+        if (this.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode())) > 0) {
+            return false;
+        }
+        Menu menu = new Menu();
+        menu.setPId(param.getParentId());
+        menu.setTxt(param.getTxt());
+        menu.setMCode(param.getMcode());
+        menu.setIcon(param.getIcon());
+        menu.setSortNumber(param.getSortNumber());
+        menu.setType(param.getType());
+        updateFunction(param, menu);
+        this.save(menu);
+        return true;
+    }
+
+    private void updateFunction(UpdateMenuParam param, Menu menu) {
+        if (param.getFuncId() != null) {
+            menu.setFuncId(param.getFuncId());
+            Function function = new Function();
+            function.setId(param.getFuncId());
+            function.setElink(param.getElink());
+            function.setFrontUrl(param.getUrl());
+            functionService.updateById(function);
+        }
+    }
+
+    /**
+     * 扫描所有菜单
+     */
+    private void scanMenus() {
+        scanMenuConfig();
+        // 扫描注解菜单及功能
+        List<MenuBean> menuBeans = appListener.getMenuBeans();
+        menuBeans.forEach(mc -> {
+            AtomicReference<Integer> funcId = new AtomicReference<>();
+            // 先处理 parentCode 为空
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isBlank(f.getParentCode())).forEach(fp -> {
+                saveFunctionPointAndConfig(funcId, fp);
+            });
+            mc.getFunctionPoints().stream().filter(f -> StringUtils.isNotBlank(f.getParentCode())).forEach(fp -> {
+                saveFunctionPointAndConfig(funcId, fp);
+            });
+            if (funcId.get() != null) {
+                mc.setFuncId(funcId.get());
+            }
+            this.saveOrUpdate(mc);
+        });
+        // 扫描IMenuScanService
+        Map<String, IMenuScanService> menuScanServices = SpringBootUtils.getMenuScanServices();
+        menuScanServices.values().forEach(menuScanService -> {
+            menuScanService.scanMenu();
+        });
+    }
+
+    MenuConfig menuConfig;
+
+    @Autowired(required = false)
+    public void setMenuConfig(MenuConfig menuConfig) {
+        this.menuConfig = menuConfig;
+    }
+
+    /**
+     * 扫码Bean配置菜单
+     */
+    private void scanMenuConfig() {
+        if (menuConfig != null && com.baomidou.mybatisplus.core.toolkit.CollectionUtils.isNotEmpty(menuConfig.getNavMenus())) {
+            menuConfig.getSysMenus().forEach(sys -> {
+                Menu menu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, sys.getCode()));
+                if (menu == null) {
+                    menu = new Menu();
+                    menu.setMCode(sys.getCode());
+                }
+                menu.setType(AppConfig.Menu.Type.SYS_MENU);
+                menu.setTxt(sys.getTitle());
+                menu.setSortNumber(sys.getSort());
+                this.saveOrUpdate(menu);
+            });
+            menuConfig.getNavMenus().forEach(nav -> {
+                Menu parentMenu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, nav.getParentCode()));
+                Menu menu = this.getOne(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, nav.getCode()));
+                if (menu == null) {
+                    menu = new Menu();
+                    menu.setMCode(nav.getCode());
+                }
+                menu.setPId(parentMenu.getId());
+                menu.setType(AppConfig.Menu.Type.NAV_MENU);
+                menu.setTxt(nav.getTitle());
+                menu.setSortNumber(nav.getSort());
+                this.saveOrUpdate(menu);
+            });
+        }
+    }
+
+    private void saveFunctionPointAndConfig(AtomicReference<Integer> funcId, FunctionPoint fp) {
+        if (funcId.get() != null) {
+            fp.setParentFuncId(funcId.get());
+        }
+        if (functionService.saveOrUpdate(fp)) {
+            if (fp.isMenu()) {
+                funcId.set(fp.getFuncId());
+            }
+            fp.getPointConfig().setFuncId(fp.getFuncId());
+            functionConfigService.saveOrUpdate(fp.getPointConfig());
+        }
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,8 +25,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenUtils implements ApplicationContextAware {
-
-    private static AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private static AuthAccessProperties authAccessProperties;
 
@@ -141,16 +138,12 @@ public class TokenUtils implements ApplicationContextAware {
     private static AppConfig.TokenType getTokenType() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String uri = request.getRequestURI();
-        if (matchURI(AppConfig.Route.Admin.ROOT, uri)) {
+        if (UriPathUtils.matchURI(AppConfig.Route.Admin.ROOT, uri)) {
             return AppConfig.TokenType.ADMIN;
-        } else if (matchURI(AppConfig.Route.App.ROOT, uri)) {
+        } else if (UriPathUtils.matchURI(AppConfig.Route.App.ROOT, uri)) {
             return AppConfig.TokenType.APP;
         }
         throw new NoMatchTokenTypeException();
-    }
-
-    private static boolean matchURI(String pattern, String uri) {
-        return pathMatcher.match("/**/" + pattern + "/**", uri);
     }
 
 }

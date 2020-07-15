@@ -12,9 +12,6 @@ import java.util.List;
 @Data
 public class UpdateAccountParam {
     @NotNull
-    @ApiModelProperty("账号")
-    private String name;
-    @NotNull
     @ApiModelProperty("角色类型")
     private List<Integer> roles;
 }

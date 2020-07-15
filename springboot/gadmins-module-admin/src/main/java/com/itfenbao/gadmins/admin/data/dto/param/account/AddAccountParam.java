@@ -14,6 +14,9 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = false)
 public class AddAccountParam extends UpdateAccountParam {
     @NotNull
+    @ApiModelProperty("账号")
+    private String name;
+    @NotNull
     @ApiModelProperty("密码")
     private String password;
 }

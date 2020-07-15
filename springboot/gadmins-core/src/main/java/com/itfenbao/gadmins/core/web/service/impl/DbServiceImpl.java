@@ -27,6 +27,11 @@ public class DbServiceImpl implements IDbService {
     }
 
     @Override
+    public int countTable() {
+        return this.mapper.countTable();
+    }
+
+    @Override
     public IPage<Map> listTableByPage(DbTableQuery query) {
         IPage<Map> page = PageUtils.page(query);
         QueryWrapper wrapper = Wrappers.query();
