@@ -1,18 +1,15 @@
 package com.itfenbao.gadmins.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
 import com.itfenbao.gadmins.admin.data.dto.param.menu.UpdateMenuParam;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
-import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.admin.service.IFunctionService;
 import com.itfenbao.gadmins.admin.service.IMenuService;
 import com.itfenbao.gadmins.config.AppConfig;
 import com.itfenbao.gadmins.core.annotation.Function;
 import com.itfenbao.gadmins.core.annotation.Functions;
 import com.itfenbao.gadmins.core.annotation.MenuFunction;
-import com.itfenbao.gadmins.core.utils.SpringBootUtils;
 import com.itfenbao.gadmins.core.web.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -71,53 +67,14 @@ public class MenuController {
     @PostMapping
     @ApiOperation("添加菜单")
     public JsonResult add(@RequestBody AddMenuParam param) {
-        if (menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode())) > 0) {
-            return JsonResult.failMessage("编码已存在");
-        }
-        Menu menu = new Menu();
-        menu.setPId(param.getParentId());
-        menu.setTxt(param.getTxt());
-        menu.setMCode(param.getMcode());
-        menu.setIcon(param.getIcon());
-        menu.setSortNumber(param.getSortNumber());
-        menu.setType(param.getType());
-        updateFunction(param, menu);
-        menuService.save(menu);
-
-        return JsonResult.success();
+        return this.menuService.add(param) ? JsonResult.success() : JsonResult.failMessage("编码已存在");
     }
 
     @Function(value = "sys.menu.edit", sort = 2, title = "编辑", desc = "编辑菜单", btnGroup = Function.BtnGroup.TOOLBAR)
     @PutMapping("/{id}")
     @ApiOperation("修改菜单")
     public JsonResult update(@PathVariable("id") Integer id, @RequestBody UpdateMenuParam param) {
-        if (menuService.count(Wrappers.<Menu>lambdaQuery().eq(Menu::getMCode, param.getMcode()).ne(Menu::getId, id)) > 0) {
-            return JsonResult.failMessage("编码已存在");
-        }
-        Menu menu = new Menu();
-        menu.setPId(param.getParentId());
-        menu.setTxt(param.getTxt());
-        menu.setMCode(param.getMcode());
-        menu.setIcon(param.getIcon());
-        menu.setSortNumber(param.getSortNumber());
-        menu.setId(id);
-        updateFunction(param, menu);
-        if (param.getParentId() == null) {
-            menuService.updatePidIsNULL(menu.getId());
-        }
-        menuService.updateById(menu);
-        return JsonResult.success();
-    }
-
-    private void updateFunction(UpdateMenuParam param, Menu menu) {
-        if (param.getFuncId() != null) {
-            menu.setFuncId(param.getFuncId());
-            com.itfenbao.gadmins.admin.entity.Function function = new com.itfenbao.gadmins.admin.entity.Function();
-            function.setId(param.getFuncId());
-            function.setElink(param.getElink());
-            function.setFrontUrl(param.getUrl());
-            functionService.updateById(function);
-        }
+        return this.menuService.updateById(id, param) ? JsonResult.success() : JsonResult.failMessage("编码已存在");
     }
 
     @Function(value = "sys.menu.del", sort = 3, title = "批量删除", desc = "批量删除", btnGroup = Function.BtnGroup.TOOLBAR)
@@ -135,20 +92,10 @@ public class MenuController {
         return JsonResult.success();
     }
 
-    private final String SCHEMA_SQL = "classpath:sql/menu_init_data.sql";
-
-    private DataSource datasource;
-
-    @Autowired
-    public void setDatasource(DataSource datasource) {
-        this.datasource = datasource;
-    }
-
     @GetMapping("/reset")
     @ApiOperation("重置菜单")
     public JsonResult reset() throws SQLException {
-        SpringBootUtils.executeSqlScript(datasource, SCHEMA_SQL);
-        menuService.updateScanMenus();
+        menuService.resetMenus();
         return JsonResult.success();
     }
 

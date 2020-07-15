@@ -9,5 +9,6 @@ import java.sql.SQLException;
  * @date :2020/7/14 8:35 下午
  */
 public interface InitService {
+    boolean isInit();
     boolean init() throws SQLException;
 }

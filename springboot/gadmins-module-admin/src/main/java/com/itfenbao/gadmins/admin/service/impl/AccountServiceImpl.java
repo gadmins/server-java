@@ -55,6 +55,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         if (joinSelect) {
             // 只查询非管理员账号
             wrapper.eq("_role.super_admin", 0);
+        } else {
+            // 过滤devadmin(1)、admin(2)
+            wrapper.notIn("_account.id", 1, 2);
         }
         String accountId = TokenUtils.getUniqueIdFromToken();
         if (StringUtils.isNotBlank(accountId)) {
@@ -79,11 +82,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     @Override
     public void updateAccount(Integer id, UpdateAccountParam param) {
-        // 更新account
-//        Account account = new Account();
-//        account.setId(id);
-//        this.updateById(account);
-
         this.accountRoleService.remove(Wrappers.<RlAccountRole>lambdaQuery().eq(RlAccountRole::getAccountId, id));
         List<RlAccountRole> roles = new ArrayList<>();
         param.getRoles().forEach(roleId -> {

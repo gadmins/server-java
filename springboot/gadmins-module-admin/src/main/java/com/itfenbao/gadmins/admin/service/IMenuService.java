@@ -2,6 +2,8 @@ package com.itfenbao.gadmins.admin.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itfenbao.gadmins.admin.data.dto.param.menu.AddMenuParam;
+import com.itfenbao.gadmins.admin.data.dto.param.menu.UpdateMenuParam;
 import com.itfenbao.gadmins.admin.data.dto.query.MenuQuery;
 import com.itfenbao.gadmins.admin.data.treenode.MenuTreeNode;
 import com.itfenbao.gadmins.admin.data.vo.CoreMenuData;
@@ -10,6 +12,7 @@ import com.itfenbao.gadmins.admin.data.vo.MenuVO;
 import com.itfenbao.gadmins.admin.entity.Menu;
 import com.itfenbao.gadmins.core.web.vo.menu.MenuBean;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -67,5 +70,11 @@ public interface IMenuService extends IService<Menu> {
     boolean updatePidIsNULL(Integer id);
 
     void updateScanMenus();
+
+    void resetMenus() throws SQLException;
+
+    boolean updateById(Integer id, UpdateMenuParam param);
+
+    boolean add(AddMenuParam param);
 
 }

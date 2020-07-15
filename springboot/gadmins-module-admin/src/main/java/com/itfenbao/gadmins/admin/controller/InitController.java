@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @author itfenbao
  * @version 1.0
  * @description:
- * @date :2020/7/14 8:51 下午
+ * @date 2020/7/14 8:51 下午
  */
 @RestController
 @RequestMapping("/system")
@@ -31,5 +31,11 @@ public class InitController {
     @PassToken
     public JsonResult init() throws SQLException {
         return JsonResult.success(this.initService.init() ? "系统初始化成功" : "系统已经初始化");
+    }
+
+    @GetMapping("/init/check")
+    @PassToken
+    public JsonResult check() {
+        return this.initService.isInit() ? JsonResult.success("系统已经初始化") : JsonResult.fail();
     }
 }

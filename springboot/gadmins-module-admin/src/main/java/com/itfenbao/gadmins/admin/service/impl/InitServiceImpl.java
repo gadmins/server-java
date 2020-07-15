@@ -45,15 +45,20 @@ public class InitServiceImpl implements InitService {
     }
 
     @Override
+    public boolean isInit() {
+        return dbMapper.countTable() > 0;
+    }
+
+    @Override
     public boolean init() throws SQLException {
-        if (dbMapper.countTable() == 0) {
-            SpringBootUtils.executeSqlScript(datasource, CREATE_TABLES_SQL);
-            SpringBootUtils.executeSqlScript(datasource, INIT_DATA_SQL);
-            SpringBootUtils.executeSqlScript(datasource, MENU_INIT_SQL);
-            menuService.updateScanMenus();
-            return true;
+        if (isInit()) {
+            return false;
         }
-        return false;
+        SpringBootUtils.executeSqlScript(datasource, CREATE_TABLES_SQL);
+        SpringBootUtils.executeSqlScript(datasource, INIT_DATA_SQL);
+        SpringBootUtils.executeSqlScript(datasource, MENU_INIT_SQL);
+        menuService.updateScanMenus();
+        return true;
     }
 
 }
