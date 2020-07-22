@@ -79,7 +79,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     private final String SCHEMA_SQL = "classpath:sql/menu_init_data.sql";
 
     // admin(2) 用户禁用菜单
-    private final List<Integer> adminNoMenuIds = Arrays.asList(6, 11, 16);
+    private List<Integer> adminNoMenuIds = Arrays.asList(6, 7, 8, 9, 10, 11, 16);
 
     private DataSource datasource;
 
@@ -132,18 +132,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         // 获取全部菜单
         List<MenuVO> allMenu = this.getAllMenu();
         // 获取全部功能
-        List<AuthFunciontVO> funciontVOS = this.functionService.list().stream().map(i -> {
-            AuthFunciontVO funciontVO = new AuthFunciontVO();
-            funciontVO.setId(i.getId());
-            funciontVO.setUrl(i.getFrontUrl());
-            funciontVO.setCode(i.getFuncCode());
-            return funciontVO;
-        }).collect(Collectors.toList());
+        List<AuthFunciontVO> functionVOS = null;
 
         if (!isSuperAdmin) {
             List<Integer> roleIds = accountRoleService.getRoleIdsByAccountId(accountId);
             List<Integer> funcPids = this.functionService.getPIdsByRoles(roleIds);
-            funciontVOS = this.functionService.getAuthFunciontVOS(roleIds);
+            functionVOS = this.functionService.getAuthFunciontVOS(roleIds);
 
             // 查询角色菜单ids
             LambdaQueryWrapper<RlMenuRole> wrapper = Wrappers.<RlMenuRole>lambdaQuery();
@@ -176,7 +170,26 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             } while (pids.size() > 0);
             allMenu = allMenu.stream().filter(m -> menuIds.indexOf(m.getId()) > -1).collect(Collectors.toList());
         } else {
-            if (accountId == 2) {
+            if (accountId == 1) {
+                // devadmin
+                functionVOS = this.functionService.list().stream().map(i -> createAuthFunction(i)).collect(Collectors.toList());
+            } else if (accountId == 2) {
+                // admin
+                // 过滤菜单关联功能id
+                List<Integer> funcIds = allMenu.stream().
+                        filter(m -> adminNoMenuIds.indexOf(m.getId()) > -1)
+                        .map(m -> m.getFuncId()).filter(i -> i != null).collect(Collectors.toList());
+                // 过滤功能id及子id
+                funcIds = this.functionService.list(
+                        Wrappers.<Function>lambdaQuery().in(Function::getId, funcIds).or().in(Function::getPId, funcIds)
+                ).stream().map(i -> i.getId()).collect(Collectors.toList());
+
+                final List<Integer> finalFuncIds = funcIds;
+                functionVOS = this.functionService.list().stream()
+                        .filter(i -> finalFuncIds.indexOf(i.getId()) == -1)
+                        .filter(i -> i.getPId() == null || finalFuncIds.indexOf(i.getPId()) == -1)
+                        .map(i -> createAuthFunction(i)).collect(Collectors.toList());
+
                 allMenu = allMenu.stream().filter(m -> adminNoMenuIds.indexOf(m.getId()) == -1).collect(Collectors.toList());
             }
         }
@@ -201,8 +214,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         menuTree.stream().forEach(item -> {
             item.setPath(getPath(item));
         });
-        funciontVOS = funciontVOS.stream().filter(i -> !i.getCode().endsWith("-vm")).collect(Collectors.toList());
-        return new CoreMenuData(menuTree, funciontVOS, defMenuTxtMap);
+        functionVOS = functionVOS.stream().filter(i -> !i.getCode().endsWith("-vm")).collect(Collectors.toList());
+        return new CoreMenuData(menuTree, functionVOS, defMenuTxtMap);
+    }
+
+    private AuthFunciontVO createAuthFunction(Function i) {
+        AuthFunciontVO functionVO = new AuthFunciontVO();
+        functionVO.setId(i.getId());
+        functionVO.setUrl(i.getFrontUrl());
+        functionVO.setCode(i.getFuncCode());
+        return functionVO;
     }
 
     /**
